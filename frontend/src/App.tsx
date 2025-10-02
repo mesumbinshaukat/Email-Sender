@@ -14,6 +14,7 @@ import { Emails } from './pages/Emails';
 import { Analytics } from './pages/Analytics';
 import { Settings } from './pages/Settings';
 import { Campaigns } from './pages/Campaigns';
+import { AIWriter } from './pages/AIWriter';
 
 function App() {
   const { checkAuth } = useAuthStore();
@@ -106,6 +107,15 @@ function App() {
           element={
             <ProtectedRoute>
               <Campaigns />
+            </ProtectedRoute>
+          }
+        />
+        
+        <Route
+          path="/ai-writer"
+          element={
+            <ProtectedRoute>
+              <AIWriter />
             </ProtectedRoute>
           }
         />

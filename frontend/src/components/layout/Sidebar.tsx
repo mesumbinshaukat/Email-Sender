@@ -1,5 +1,5 @@
 import { NavLink } from 'react-router-dom';
-import { Home, Send, Mail, BarChart3, Settings, Zap } from 'lucide-react';
+import { Home, Send, Mail, BarChart3, Settings, Zap, Wand2 } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { cn } from '../../lib/utils';
 
@@ -8,6 +8,7 @@ const navItems = [
   { name: 'Send Email', path: '/send', icon: Send },
   { name: 'Emails', path: '/emails', icon: Mail },
   { name: 'Analytics', path: '/analytics', icon: BarChart3 },
+  { name: 'AI Writer', path: '/ai-writer', icon: Wand2 },
   { name: 'AI Campaigns', path: '/campaigns', icon: Zap },
   { name: 'Settings', path: '/settings', icon: Settings },
 ];
