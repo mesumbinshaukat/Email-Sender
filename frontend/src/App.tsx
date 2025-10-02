@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import { Toaster } from 'react-hot-toast';
 import { useAuthStore } from './store/authStore';
 import { ProtectedRoute } from './components/ProtectedRoute';
+import { Chatbot } from './components/Chatbot';
 
 // Pages
 import { Login } from './pages/Login';
@@ -46,6 +47,8 @@ function App() {
           },
         }}
       />
+      
+      <Chatbot />
       
       <Routes>
         <Route path="/" element={<Navigate to="/dashboard" replace />} />

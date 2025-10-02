@@ -24,6 +24,11 @@ export default {
         'fade-in': 'fadeIn 0.5s ease-in-out',
         'slide-up': 'slideUp 0.5s ease-out',
         'slide-down': 'slideDown 0.5s ease-out',
+        'bounce': 'bounce 1s infinite',
+      },
+      animationDelay: {
+        '100': '100ms',
+        '200': '200ms',
       },
       keyframes: {
         fadeIn: {
