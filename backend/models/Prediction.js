@@ -13,6 +13,21 @@ const predictionSchema = new mongoose.Schema(
       ref: 'Email',
       index: true,
     },
+    status: {
+      type: String,
+      enum: ['generated', 'saved', 'sent', 'tracked'],
+      default: 'generated',
+    },
+    emailData: {
+      subject: String,
+      recipientEmail: String,
+      body: String,
+    },
+    confidence: {
+      type: Number,
+      min: 0,
+      max: 100,
+    },
     subject: {
       type: String,
       required: true,
