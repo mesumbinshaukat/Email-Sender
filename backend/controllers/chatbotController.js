@@ -86,7 +86,7 @@ export const chat = async (req, res) => {
     const response = await axios.post(
       'https://openrouter.ai/api/v1/chat/completions',
       {
-        model: 'x-ai/grok-beta',
+        model: 'x-ai/grok-2-1212',
         messages: messages,
         temperature: 0.7,
         max_tokens: 1000,
