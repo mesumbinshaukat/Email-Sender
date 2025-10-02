@@ -1,5 +1,5 @@
 import { NavLink } from 'react-router-dom';
-import { Home, Send, Mail, BarChart3, Settings, Zap, Wand2, Focus } from 'lucide-react';
+import { Home, Send, Mail, BarChart3, Settings, Zap, Wand2, Eye } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { cn } from '../../lib/utils';
 
