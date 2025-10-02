@@ -26,6 +26,8 @@ const aiInsightSchema = new mongoose.Schema(
         'segmentation',
         'health_score',
         'conversation_intelligence',
+        'campaign_optimization',
+        'competitive_intelligence',
       ],
       required: true,
     },
