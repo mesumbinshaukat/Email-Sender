@@ -1,15 +1,15 @@
-import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { LayoutDashboard, Send, Mail, BarChart3, Settings } from 'lucide-react';
+import { Home, Send, Mail, BarChart3, Settings, Zap } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { cn } from '../../lib/utils';
 
-const menuItems = [
-  { icon: LayoutDashboard, label: 'Dashboard', path: '/dashboard' },
-  { icon: Send, label: 'Send Email', path: '/send' },
-  { icon: Mail, label: 'Emails', path: '/emails' },
-  { icon: BarChart3, label: 'Analytics', path: '/analytics' },
-  { icon: Settings, label: 'Settings', path: '/settings' },
+const navItems = [
+  { name: 'Dashboard', path: '/dashboard', icon: Home },
+  { name: 'Send Email', path: '/send', icon: Send },
+  { name: 'Emails', path: '/emails', icon: Mail },
+  { name: 'Analytics', path: '/analytics', icon: BarChart3 },
+  { name: 'AI Campaigns', path: '/campaigns', icon: Zap },
+  { name: 'Settings', path: '/settings', icon: Settings },
 ];
 
 export const Sidebar: React.FC = () => {
@@ -20,7 +20,7 @@ export const Sidebar: React.FC = () => {
       className="w-64 bg-white shadow-lg h-[calc(100vh-4rem)] sticky top-16"
     >
       <nav className="p-4 space-y-2">
-        {menuItems.map((item, index) => (
+        {navItems.map((item) => (
           <NavLink
             key={item.path}
             to={item.path}
@@ -36,7 +36,7 @@ export const Sidebar: React.FC = () => {
             {({ isActive }) => (
               <>
                 <item.icon className={cn('h-5 w-5', isActive && 'animate-pulse')} />
-                <span className="font-medium">{item.label}</span>
+                <span className="font-medium">{item.name}</span>
               </>
             )}
           </NavLink>

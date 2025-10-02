@@ -13,6 +13,7 @@ import { SendEmail } from './pages/SendEmail';
 import { Emails } from './pages/Emails';
 import { Analytics } from './pages/Analytics';
 import { Settings } from './pages/Settings';
+import { Campaigns } from './pages/Campaigns';
 
 function App() {
   const { checkAuth } = useAuthStore();
@@ -96,6 +97,15 @@ function App() {
           element={
             <ProtectedRoute>
               <Settings />
+            </ProtectedRoute>
+          }
+        />
+        
+        <Route
+          path="/campaigns"
+          element={
+            <ProtectedRoute>
+              <Campaigns />
             </ProtectedRoute>
           }
         />

@@ -13,6 +13,7 @@ import smtpRoutes from './routes/smtpRoutes.js';
 import emailRoutes from './routes/emailRoutes.js';
 import trackingRoutes from './routes/trackingRoutes.js';
 import chatbotRoutes from './routes/chatbotRoutes.js';
+import agenticRoutes from './routes/agenticRoutes.js';
 
 // Load environment variables
 dotenv.config();
@@ -79,6 +80,7 @@ app.use('/api/smtp', smtpRoutes);
 app.use('/api/emails', emailRoutes);
 app.use('/api/track', trackingRoutes);
 app.use('/api/chatbot', chatbotRoutes);
+app.use('/api/agentic', agenticRoutes);
 
 // Error handling middleware
 app.use(notFound);
