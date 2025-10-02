@@ -171,6 +171,54 @@ export const updatePrediction = async (req, res) => {
 };
 
 /**
+ * @desc    Save a prediction for future reference
+ * @route   POST /api/predictor/save
+ * @access  Private
+ */
+export const savePrediction = async (req, res) => {
+  try {
+    const userId = req.user._id;
+    const { subject, recipientEmail, body, prediction } = req.body;
+
+    if (!prediction || !subject || !recipientEmail) {
+      return res.status(400).json({
+        success: false,
+        message: 'Prediction data, subject, and recipient email are required',
+      });
+    }
+
+    // Create saved prediction record
+    const savedPrediction = await Prediction.create({
+      userId,
+      emailData: {
+        subject,
+        recipientEmail,
+        body,
+      },
+      predictions: prediction.predictions,
+      historicalData: prediction.historicalData,
+      confidence: prediction.confidence,
+      status: 'saved', // Mark as saved for future reference
+    });
+
+    res.status(201).json({
+      success: true,
+      data: {
+        predictionId: savedPrediction._id,
+        savedAt: savedPrediction.createdAt,
+      },
+      message: 'Prediction saved successfully',
+    });
+  } catch (error) {
+    console.error('Save prediction error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Failed to save prediction',
+    });
+  }
+};
+
+/**
  * @desc    Get prediction insights
  * @route   GET /api/predictor/insights
  * @access  Private
