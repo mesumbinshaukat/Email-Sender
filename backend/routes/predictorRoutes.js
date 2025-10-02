@@ -6,6 +6,7 @@ import {
   getPredictionAccuracy,
   updatePrediction,
   getPredictionInsights,
+  savePrediction,
 } from '../controllers/predictorController.js';
 
 const router = express.Router();
@@ -15,6 +16,7 @@ router.use(protect);
 
 // Performance prediction
 router.post('/performance', predictPerformance);
+router.post('/save', savePrediction);
 router.get('/history/:emailId', getPredictionHistory);
 router.get('/accuracy', getPredictionAccuracy);
 router.post('/update/:predictionId', updatePrediction);

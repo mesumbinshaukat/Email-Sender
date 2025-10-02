@@ -102,6 +102,63 @@ export const PerformancePredictor: React.FC = () => {
     return 'Low';
   };
 
+  const handleSavePrediction = async () => {
+    if (!prediction) {
+      toast.error('No prediction to save');
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const response = await axios.post('/predictor/save', {
+        subject,
+        recipientEmail,
+        body,
+        prediction,
+      });
+
+      if (response.data.success) {
+        toast.success('Prediction saved successfully!');
+      }
+    } catch (error: any) {
+      toast.error(error.response?.data?.message || 'Failed to save prediction');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleSendEmailNow = async () => {
+    if (!subject.trim() || !recipientEmail.trim()) {
+      toast.error('Please enter subject and recipient email');
+      return;
+    }
+
+    // Show confirmation dialog
+    const confirmSend = window.confirm(
+      `Send email now to ${recipientEmail}?\n\nSubject: ${subject}\n\nThis will send the email immediately with the predicted optimal settings.`
+    );
+
+    if (!confirmSend) return;
+
+    setLoading(true);
+    try {
+      const response = await axios.post('/emails/send', {
+        subject,
+        recipients: [recipientEmail], // Send to single recipient
+        body,
+      });
+
+      if (response.data.success) {
+        toast.success('Email sent successfully!');
+        // Optionally clear the form or redirect
+      }
+    } catch (error: any) {
+      toast.error(error.response?.data?.message || 'Failed to send email');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <DashboardLayout>
       <motion.div
@@ -321,10 +378,19 @@ export const PerformancePredictor: React.FC = () => {
 
                   {/* Action Buttons */}
                   <div className="flex space-x-2 pt-4">
-                    <Button variant="outline" className="flex-1">
+                    <Button 
+                      variant="outline" 
+                      className="flex-1"
+                      onClick={handleSavePrediction}
+                      disabled={loading || !prediction}
+                    >
                       Save Prediction
                     </Button>
-                    <Button className="flex-1">
+                    <Button 
+                      className="flex-1"
+                      onClick={handleSendEmailNow}
+                      disabled={loading || !subject.trim() || !recipientEmail.trim()}
+                    >
                       Send Email Now
                     </Button>
                   </div>
