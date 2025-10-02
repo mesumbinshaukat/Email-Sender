@@ -171,49 +171,76 @@ export const updatePrediction = async (req, res) => {
 };
 
 /**
- * @desc    Save a prediction for future reference
- * @route   POST /api/predictor/save
+ * @desc    Get prediction insights
+ * @route   GET /api/predictor/insights
  * @access  Private
  */
-export const savePrediction = async (req, res) => {
+export const getPredictionInsights = async (req, res) => {
   try {
     const userId = req.user._id;
-    const { subject, recipientEmail, body, prediction } = req.body;
 
-    if (!prediction || !subject || !recipientEmail) {
-      return res.status(400).json({
-        success: false,
-        message: 'Prediction data, subject, and recipient email are required',
+    // Get recent predictions
+    const recentPredictions = await Prediction.find({ userId })
+      .sort({ createdAt: -1 })
+      .limit(10)
+      .select('predictions historicalData createdAt');
+
+    // Calculate trends
+    const insights = {
+      averageConfidence: 0,
+      topFactors: {},
+      bestPerformingTimes: {},
+      improvementAreas: [],
+    };
+
+    if (recentPredictions.length > 0) {
+      // Average confidence
+      const totalConfidence = recentPredictions.reduce((sum, pred) => {
+        return sum + (
+          pred.predictions.openRate.confidence +
+          pred.predictions.clickRate.confidence +
+          pred.predictions.conversionRate.confidence
+        ) / 3;
+      }, 0);
+      insights.averageConfidence = Math.round(totalConfidence / recentPredictions.length);
+
+      // Top factors
+      recentPredictions.forEach(pred => {
+        [...pred.predictions.openRate.factors, ...pred.predictions.clickRate.factors].forEach(factor => {
+          insights.topFactors[factor] = (insights.topFactors[factor] || 0) + 1;
+        });
       });
+
+      // Best performing times
+      recentPredictions.forEach(pred => {
+        const hour = pred.predictions.bestSendTime.hour;
+        insights.bestPerformingTimes[hour] = (insights.bestPerformingTimes[hour] || 0) + 1;
+      });
+
+      // Improvement areas (low confidence predictions)
+      const lowConfidence = recentPredictions.filter(pred =>
+        pred.predictions.openRate.confidence < 50 ||
+        pred.predictions.clickRate.confidence < 50
+      );
+
+      if (lowConfidence.length > recentPredictions.length * 0.5) {
+        insights.improvementAreas.push('Send more emails to build better prediction models');
+      }
     }
 
-    // Create saved prediction record
-    const savedPrediction = await Prediction.create({
-      userId,
-      emailData: {
-        subject,
-        recipientEmail,
-        body,
-      },
-      predictions: prediction.predictions,
-      historicalData: prediction.historicalData,
-      confidence: prediction.confidence,
-      status: 'saved', // Mark as saved for future reference
-    });
-
-    res.status(201).json({
+    res.json({
       success: true,
       data: {
-        predictionId: savedPrediction._id,
-        savedAt: savedPrediction.createdAt,
+        insights,
+        recentPredictionsCount: recentPredictions.length,
+        lastUpdated: recentPredictions[0]?.createdAt,
       },
-      message: 'Prediction saved successfully',
     });
   } catch (error) {
-    console.error('Save prediction error:', error);
+    console.error('Get prediction insights error:', error);
     res.status(500).json({
       success: false,
-      message: 'Failed to save prediction',
+      message: 'Failed to fetch prediction insights',
     });
   }
 };
