@@ -5,7 +5,7 @@ class AIService {
   constructor() {
     this.apiKey = process.env.OPEN_ROUTER_API_KEY;
     this.baseURL = 'https://openrouter.ai/api/v1/chat/completions';
-    this.model = 'meta-llama/llama-3.2-3b-instruct:free';
+    this.model = 'x-ai/grok-4-fast:free';
   }
 
   async callAI(messages, userId, insightType, metadata = {}) {
