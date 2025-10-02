@@ -83,6 +83,7 @@ app.use('/api/track', trackingRoutes);
 app.use('/api/chatbot', chatbotRoutes);
 app.use('/api/agentic', agenticRoutes);
 app.use('/api/ai', generativeRoutes);
+app.use('/api/predictor', predictorRoutes);
 
 // Error handling middleware
 app.use(notFound);

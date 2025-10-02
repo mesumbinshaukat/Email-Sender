@@ -119,6 +119,15 @@ function App() {
             </ProtectedRoute>
           }
         />
+        
+        <Route
+          path="/predictor"
+          element={
+            <ProtectedRoute>
+              <PerformancePredictor />
+            </ProtectedRoute>
+          }
+        />
       </Routes>
     </Router>
   );

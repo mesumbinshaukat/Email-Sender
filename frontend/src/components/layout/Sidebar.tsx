@@ -8,6 +8,7 @@ const navItems = [
   { name: 'Send Email', path: '/send', icon: Send },
   { name: 'Emails', path: '/emails', icon: Mail },
   { name: 'Analytics', path: '/analytics', icon: BarChart3 },
+  { name: 'Performance Predictor', path: '/predictor', icon: Target },
   { name: 'AI Writer', path: '/ai-writer', icon: Wand2 },
   { name: 'AI Campaigns', path: '/campaigns', icon: Zap },
   { name: 'Settings', path: '/settings', icon: Settings },
