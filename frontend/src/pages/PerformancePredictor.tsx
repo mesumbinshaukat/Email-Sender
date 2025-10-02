@@ -111,7 +111,7 @@ export const PerformancePredictor: React.FC = () => {
       >
         <div>
           <h1 className="text-3xl font-bold text-gray-900 flex items-center">
-            <Target className="h-8 w-8 mr-3 text-blue-600" />
+            <Crosshair className="h-8 w-8 mr-3 text-blue-600" />
             Performance Predictor
           </h1>
           <p className="text-gray-600 mt-2">AI-powered predictions for email performance before you send</p>
@@ -331,7 +331,7 @@ export const PerformancePredictor: React.FC = () => {
                 </div>
               ) : (
                 <div className="text-center py-12 text-gray-500">
-                  <Target className="h-16 w-16 mx-auto mb-4 text-gray-400" />
+                  <Crosshair className="h-16 w-16 mx-auto mb-4 text-gray-400" />
                   <h3 className="text-lg font-semibold text-gray-900 mb-2">Ready to Predict</h3>
                   <p className="text-gray-600">
                     Enter your email details above to get AI-powered performance predictions
