@@ -77,6 +77,12 @@ export const chat = async (req, res) => {
     ];
 
     // Call OpenRouter API
+    const apiKey = process.env.OPEN_ROUTER_API_KEY;
+    
+    if (!apiKey) {
+      throw new Error('OpenRouter API key not configured');
+    }
+
     const response = await axios.post(
       'https://openrouter.ai/api/v1/chat/completions',
       {
@@ -87,7 +93,7 @@ export const chat = async (req, res) => {
       },
       {
         headers: {
-          'Authorization': `Bearer ${process.env.OPEN_ROUTER_API_KEY}`,
+          'Authorization': `Bearer ${apiKey}`,
           'HTTP-Referer': process.env.BACKEND_URL || 'http://localhost:5000',
           'X-Title': 'Email Tracker Assistant',
           'Content-Type': 'application/json',
