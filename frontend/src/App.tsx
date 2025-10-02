@@ -15,6 +15,7 @@ import { Analytics } from './pages/Analytics';
 import { Settings } from './pages/Settings';
 import { Campaigns } from './pages/Campaigns';
 import { AIWriter } from './pages/AIWriter';
+import { PerformancePredictor } from './pages/PerformancePredictor';
 
 function App() {
   const { checkAuth } = useAuthStore();
