@@ -145,7 +145,9 @@ export const PerformancePredictor: React.FC = () => {
       const response = await axios.post('/emails/send', {
         subject,
         recipients: { to: [recipientEmail] }, // Correct format for validation
-        body,
+        body: {
+          text: body, // Email body as text
+        },
       });
 
       if (response.data.success) {
