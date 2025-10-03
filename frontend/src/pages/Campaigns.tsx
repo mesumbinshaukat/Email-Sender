@@ -35,6 +35,8 @@ export const Campaigns: React.FC = () => {
   const [campaigns, setCampaigns] = useState<Campaign[]>([]);
   const [loading, setLoading] = useState(true);
   const [showCreateModal, setShowCreateModal] = useState(false);
+  const [showSettingsModal, setShowSettingsModal] = useState(false);
+  const [selectedCampaign, setSelectedCampaign] = useState<Campaign | null>(null);
   const [optimizing, setOptimizing] = useState<string | null>(null);
   const [newCampaign, setNewCampaign] = useState({
     name: '',
@@ -109,6 +111,35 @@ export const Campaigns: React.FC = () => {
       toast.error('Failed to optimize campaign');
     } finally {
       setOptimizing(null);
+    }
+  };
+
+  const handleOpenSettings = (campaign: Campaign) => {
+    setSelectedCampaign(campaign);
+    setShowSettingsModal(true);
+  };
+
+  const handleUpdateCampaign = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!selectedCampaign) return;
+
+    try {
+      const response = await axios.put(`/agentic/campaigns/${selectedCampaign._id}`, {
+        name: selectedCampaign.name,
+        description: selectedCampaign.description,
+        status: selectedCampaign.status,
+        aiOptimization: selectedCampaign.aiOptimization,
+      });
+      
+      if (response.data.success) {
+        toast.success('Campaign updated successfully!');
+        setShowSettingsModal(false);
+        setSelectedCampaign(null);
+        fetchCampaigns();
+      }
+    } catch (error: any) {
+      toast.error(error.response?.data?.message || 'Failed to update campaign');
     }
   };
 
@@ -242,7 +273,7 @@ export const Campaigns: React.FC = () => {
                         <Zap className="h-4 w-4 mr-2" />
                         Optimize Now
                       </Button>
-                      <Button variant="outline" size="sm">
+                      <Button variant="outline" size="sm" onClick={() => handleOpenSettings(campaign)}>
                         <Settings className="h-4 w-4" />
                       </Button>
                     </div>
@@ -365,6 +396,143 @@ export const Campaigns: React.FC = () => {
               </Button>
             </div>
           </form>
+        </Modal>
+
+        {/* Settings Modal */}
+        <Modal
+          isOpen={showSettingsModal}
+          onClose={() => {
+            setShowSettingsModal(false);
+            setSelectedCampaign(null);
+          }}
+          title="Campaign Settings"
+          size="lg"
+        >
+          {selectedCampaign && (
+            <form onSubmit={handleUpdateCampaign} className="space-y-6">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Campaign Name *
+                </label>
+                <input
+                  type="text"
+                  value={selectedCampaign.name}
+                  onChange={(e) => setSelectedCampaign({ ...selectedCampaign, name: e.target.value })}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
+                  required
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Description
+                </label>
+                <textarea
+                  value={selectedCampaign.description}
+                  onChange={(e) => setSelectedCampaign({ ...selectedCampaign, description: e.target.value })}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
+                  rows={3}
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Status
+                </label>
+                <select
+                  value={selectedCampaign.status}
+                  onChange={(e) => setSelectedCampaign({ ...selectedCampaign, status: e.target.value as any })}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
+                >
+                  <option value="draft">Draft</option>
+                  <option value="scheduled">Scheduled</option>
+                  <option value="active">Active</option>
+                  <option value="paused">Paused</option>
+                  <option value="completed">Completed</option>
+                </select>
+              </div>
+
+              <div className="bg-purple-50 rounded-lg p-4">
+                <h4 className="text-sm font-semibold text-purple-900 mb-3 flex items-center">
+                  <Zap className="h-4 w-4 mr-2" />
+                  AI Optimization Settings
+                </h4>
+                <div className="space-y-3">
+                  <label className="flex items-center space-x-3 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={selectedCampaign.aiOptimization.enabled}
+                      onChange={(e) => setSelectedCampaign({
+                        ...selectedCampaign,
+                        aiOptimization: { ...selectedCampaign.aiOptimization, enabled: e.target.checked }
+                      })}
+                      className="w-4 h-4 text-primary-600 rounded focus:ring-primary-500"
+                    />
+                    <span className="text-sm text-gray-700">Enable AI optimization</span>
+                  </label>
+
+                  {selectedCampaign.aiOptimization.enabled && (
+                    <>
+                      <label className="flex items-center space-x-3 cursor-pointer ml-7">
+                        <input
+                          type="checkbox"
+                          checked={selectedCampaign.aiOptimization.autoAdjustSendTime}
+                          onChange={(e) => setSelectedCampaign({
+                            ...selectedCampaign,
+                            aiOptimization: { ...selectedCampaign.aiOptimization, autoAdjustSendTime: e.target.checked }
+                          })}
+                          className="w-4 h-4 text-primary-600 rounded focus:ring-primary-500"
+                        />
+                        <span className="text-sm text-gray-700">Auto-adjust send times</span>
+                      </label>
+
+                      <label className="flex items-center space-x-3 cursor-pointer ml-7">
+                        <input
+                          type="checkbox"
+                          checked={selectedCampaign.aiOptimization.autoOptimizeSubject}
+                          onChange={(e) => setSelectedCampaign({
+                            ...selectedCampaign,
+                            aiOptimization: { ...selectedCampaign.aiOptimization, autoOptimizeSubject: e.target.checked }
+                          })}
+                          className="w-4 h-4 text-primary-600 rounded focus:ring-primary-500"
+                        />
+                        <span className="text-sm text-gray-700">Optimize subject lines</span>
+                      </label>
+
+                      <label className="flex items-center space-x-3 cursor-pointer ml-7">
+                        <input
+                          type="checkbox"
+                          checked={selectedCampaign.aiOptimization.autoFollowUp}
+                          onChange={(e) => setSelectedCampaign({
+                            ...selectedCampaign,
+                            aiOptimization: { ...selectedCampaign.aiOptimization, autoFollowUp: e.target.checked }
+                          })}
+                          className="w-4 h-4 text-primary-600 rounded focus:ring-primary-500"
+                        />
+                        <span className="text-sm text-gray-700">Intelligent follow-ups</span>
+                      </label>
+                    </>
+                  )}
+                </div>
+              </div>
+
+              <div className="flex space-x-3">
+                <Button type="submit" className="flex-1">
+                  Update Campaign
+                </Button>
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => {
+                    setShowSettingsModal(false);
+                    setSelectedCampaign(null);
+                  }}
+                >
+                  Cancel
+                </Button>
+              </div>
+            </form>
+          )}
         </Modal>
       </motion.div>
     </DashboardLayout>
