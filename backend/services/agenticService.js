@@ -98,17 +98,27 @@ class AgenticService {
 
     const avgOpenRate = subjectPerformance.reduce((sum, s) => sum + s.openRate, 0) / subjectPerformance.length;
 
-    // AI-powered subject analysis
-    const prompt = `Analyze these email subject lines and their performance:
+    let aiRecommendations = 'AI recommendations unavailable - please configure OPEN_ROUTER_API_KEY';
+
+    // Check if AI service is available
+    if (aiService.isAvailable()) {
+      try {
+        // AI-powered subject analysis
+        const prompt = `Analyze these email subject lines and their performance:
 ${subjectPerformance.map(s => `"${s.subject}" - Opened: ${s.openRate > 0 ? 'Yes' : 'No'}`).join('\n')}
 
 Provide 3 specific recommendations to improve subject line performance. Be concise.`;
 
-    const aiRecommendations = await aiService.callAI(
-      [{ role: 'user', content: prompt }],
-      userId,
-      'subject_optimization'
-    );
+        aiRecommendations = await aiService.callAI(
+          [{ role: 'user', content: prompt }],
+          userId,
+          'subject_optimization'
+        );
+      } catch (error) {
+        console.warn('AI subject optimization failed, using fallback:', error.message);
+        aiRecommendations = 'Use clear, benefit-focused subject lines under 60 characters. Include numbers or questions for better open rates. Test different approaches to find what works best for your audience.';
+      }
+    }
 
     return {
       avgOpenRate: (avgOpenRate * 100).toFixed(2),
@@ -217,7 +227,12 @@ Provide 3 specific recommendations to improve subject line performance. Be conci
   }
 
   async generateRecommendations(analytics, optimizations, userId) {
-    const prompt = `Based on this email campaign performance:
+    let recommendations = 'AI recommendations unavailable - please configure OPEN_ROUTER_API_KEY. Basic recommendations: Send emails during optimal times, use compelling subject lines, and follow up with engaged recipients.';
+
+    // Check if AI service is available
+    if (aiService.isAvailable()) {
+      try {
+        const prompt = `Based on this email campaign performance:
 - Open Rate: ${analytics.openRate}%
 - Click Rate: ${analytics.clickRate}%
 - Best Send Time: ${optimizations.sendTimeAdjustments.recommendedHour}:00
@@ -225,11 +240,16 @@ Provide 3 specific recommendations to improve subject line performance. Be conci
 
 Provide 5 specific, actionable recommendations to improve campaign performance. Be concise and practical.`;
 
-    const recommendations = await aiService.callAI(
-      [{ role: 'user', content: prompt }],
-      userId,
-      'campaign_optimization'
-    );
+        recommendations = await aiService.callAI(
+          [{ role: 'user', content: prompt }],
+          userId,
+          'campaign_optimization'
+        );
+      } catch (error) {
+        console.warn('AI campaign recommendations failed, using fallback:', error.message);
+        recommendations = `1. Optimize send times to ${optimizations.sendTimeAdjustments.recommendedHour}:00 based on your audience's patterns. 2. Create subject lines under 60 characters with clear benefits. 3. Follow up with ${optimizations.followUpTriggers.length} recipients who opened but didn't click. 4. Segment your audience based on engagement levels. 5. A/B test different subject lines and content variations.`;
+      }
+    }
 
     return recommendations;
   }
@@ -320,17 +340,29 @@ Provide 5 specific, actionable recommendations to improve campaign performance. 
   }
 
   async generateBetterSubject(originalSubject, userId) {
-    const prompt = `Original subject line: "${originalSubject}"
+    let newSubject = `Re: ${originalSubject}`; // Fallback subject
+
+    // Check if AI service is available
+    if (aiService.isAvailable()) {
+      try {
+        const prompt = `Original subject line: "${originalSubject}"
 
 This email wasn't opened. Generate 1 alternative subject line that's more compelling and likely to get opened. Only return the subject line, nothing else.`;
 
-    const newSubject = await aiService.callAI(
-      [{ role: 'user', content: prompt }],
-      userId,
-      'subject_optimization'
-    );
+        newSubject = await aiService.callAI(
+          [{ role: 'user', content: prompt }],
+          userId,
+          'subject_optimization'
+        );
 
-    return newSubject.trim().replace(/^["']|["']$/g, '');
+        newSubject = newSubject.trim().replace(/^["']|["']$/g, '');
+      } catch (error) {
+        console.warn('AI subject generation failed, using fallback:', error.message);
+        // Keep the fallback subject
+      }
+    }
+
+    return newSubject;
   }
 
   // Feature 8: Competitive Intelligence (using user's own data as benchmark)
@@ -370,11 +402,21 @@ This email wasn't opened. Generate 1 alternative subject line that's more compel
 
 Provide 3 specific recommendations to improve performance and reach industry standards.`;
 
-    const recommendations = await aiService.callAI(
-      [{ role: 'user', content: prompt }],
-      userId,
-      'competitive_intelligence'
-    );
+    let recommendations = 'AI analysis unavailable. Basic recommendations: Focus on improving open rates through better subject lines, optimize send times, and segment your audience for more targeted campaigns.';
+
+    // Check if AI service is available
+    if (aiService.isAvailable()) {
+      try {
+        recommendations = await aiService.callAI(
+          [{ role: 'user', content: prompt }],
+          userId,
+          'competitive_intelligence'
+        );
+      } catch (error) {
+        console.warn('AI benchmark analysis failed, using fallback:', error.message);
+        recommendations = `1. Aim to improve open rate to at least ${industryBenchmarks.avgOpenRate}% through compelling subject lines. 2. Focus on increasing click rates above ${industryBenchmarks.avgClickRate}% with better content and CTAs. 3. Test sending times and days to optimize delivery.`;
+      }
+    }
 
     return {
       userMetrics,

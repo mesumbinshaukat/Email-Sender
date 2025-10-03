@@ -8,7 +8,18 @@ class AIService {
     this.model = 'x-ai/grok-4-fast:free';
   }
 
+  // Check if AI service is available
+  isAvailable() {
+    return !!this.apiKey && this.apiKey !== 'your_openrouter_api_key_here';
+  }
+
   async callAI(messages, userId, insightType, metadata = {}) {
+    // Check if API key is available
+    if (!this.isAvailable()) {
+      console.warn('AI Service unavailable: OPEN_ROUTER_API_KEY not configured');
+      throw new Error('AI service is not configured. Please set OPEN_ROUTER_API_KEY environment variable.');
+    }
+
     const startTime = Date.now();
 
     try {
@@ -49,6 +60,12 @@ class AIService {
       return aiResponse;
     } catch (error) {
       console.error('AI Service Error:', error.response?.data || error.message);
+
+      // If it's an authentication error, provide a clearer message
+      if (error.response?.status === 401) {
+        throw new Error('AI service authentication failed. Please check your OPEN_ROUTER_API_KEY.');
+      }
+
       throw error;
     }
   }
