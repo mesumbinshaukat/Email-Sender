@@ -77,7 +77,7 @@ const emailSchema = new mongoose.Schema(
 
 // Indexes for better query performance
 emailSchema.index({ userId: 1, createdAt: -1 });
-emailSchema.index({ trackingId: 1 });
+// emailSchema.index({ trackingId: 1 }); // Removed - already indexed via index: true
 emailSchema.index({ 'tracking.firstOpenedAt': 1 });
 
 const Email = mongoose.model('Email', emailSchema);
