@@ -1,4 +1,5 @@
 import axios from 'axios';
+import FormData from 'form-data';
 import aiService from '../services/aiService.js';
 import Email from '../models/Email.js';
 
@@ -14,18 +15,28 @@ export const transcribeAudio = async (req, res) => {
       });
     }
 
-    const audioBuffer = req.body; // Raw audio data
+    if (!req.file) {
+      return res.status(400).json({
+        success: false,
+        message: 'No audio file provided',
+      });
+    }
 
     const formData = new FormData();
-    formData.append('file', new Blob([audioBuffer]), 'audio.wav');
+    formData.append('file', req.file.buffer, {
+      filename: 'audio.wav',
+      contentType: req.file.mimetype,
+    });
     formData.append('model', 'whisper-1');
     formData.append('language', 'en');
 
     const response = await axios.post('https://api.openai.com/v1/audio/transcriptions', formData, {
       headers: {
         'Authorization': `Bearer ${OPENAI_API_KEY}`,
-        'Content-Type': 'multipart/form-data',
+        ...formData.getHeaders(),
       },
+      maxContentLength: Infinity,
+      maxBodyLength: Infinity,
     });
 
     res.json({
@@ -103,24 +114,29 @@ Examples:
   }
 };
 
-// Orchestrate full voice email composition
 export const composeEmailFromVoice = async (req, res) => {
   try {
     const { voiceInput, campaignId } = req.body;
     const userId = req.user._id;
 
-    // Step 1: Transcribe if it's audio, or use text directly
+    // Step 1: Transcribe if audio file is provided, or use text directly
     let transcription = voiceInput;
     if (req.file) {
       // Handle audio transcription
       const formData = new FormData();
-      formData.append('file', req.file.buffer, 'audio.wav');
+      formData.append('file', req.file.buffer, {
+        filename: 'audio.wav',
+        contentType: req.file.mimetype,
+      });
       formData.append('model', 'whisper-1');
 
       const whisperResponse = await axios.post('https://api.openai.com/v1/audio/transcriptions', formData, {
         headers: {
           'Authorization': `Bearer ${OPENAI_API_KEY}`,
+          ...formData.getHeaders(),
         },
+        maxContentLength: Infinity,
+        maxBodyLength: Infinity,
       });
       transcription = whisperResponse.data.text;
     }
