@@ -255,10 +255,10 @@ export const getQueue = async (req, res) => {
 
 // Helper: Determine optimal send time using AI
 async function determineOptimalTime(userId, recipientEmail, userTimezone) {
-  try {
-    // Get engagement history
-    const engagement = await analyzeRecipientEngagement(userId, recipientEmail);
+  // Get engagement history first (needed for both AI and fallback)
+  const engagement = await analyzeRecipientEngagement(userId, recipientEmail);
 
+  try {
     // Use AI to analyze and determine optimal time
     if (engagement.totalEmails >= 3 && aiService.isAvailable()) {
       const prompt = `Analyze this email engagement data and determine the optimal send time:
@@ -336,7 +336,7 @@ Return JSON only:
     optimalTime: fallbackTime.toJSDate(),
     timezone: tz,
     confidence: 0.5,
-    engagementScore: 0,
+    engagementScore: engagement.openRate || 0,
     fallbackReason: engagement.totalEmails < 3 
       ? 'Insufficient engagement data' 
       : 'AI analysis unavailable',
