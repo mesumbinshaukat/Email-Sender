@@ -69,6 +69,23 @@ export const sendTrackedEmail = async (transporter, emailData, trackingId, backe
   
   console.log('📝 Original HTML length:', htmlBody.length);
   console.log('📝 Has HTML content:', !!htmlBody);
+  console.log('📝 Has text content:', !!emailData.body.text);
+  
+  // If no HTML but we have text, create simple HTML wrapper for tracking
+  if (!htmlBody && emailData.body.text) {
+    // Convert text to HTML and wrap links
+    let textWithTrackedLinks = emailData.body.text;
+    
+    // Simple URL regex to find links in text
+    const urlRegex = /(https?:\/\/[^\s]+)/g;
+    textWithTrackedLinks = textWithTrackedLinks.replace(urlRegex, (url) => {
+      const encodedUrl = encodeURIComponent(url);
+      return `${backendUrl}/api/track/click/${trackingId}?url=${encodedUrl}`;
+    });
+    
+    htmlBody = `<html><body><pre style="font-family: monospace; white-space: pre-wrap;">${textWithTrackedLinks.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</pre></body></html>`;
+    console.log('🔄 Converted text to HTML with link tracking');
+  }
   
   // Inject tracking pixel
   if (htmlBody) {
