@@ -1,5 +1,6 @@
 import Email from '../models/Email.js';
 import User from '../models/User.js';
+import Campaign from '../models/Campaign.js';
 import {
   createTransporter,
   generateTrackingId,
@@ -13,7 +14,7 @@ import {
  */
 export const sendEmail = async (req, res) => {
   try {
-    const { subject, recipients, body } = req.body;
+    const { subject, recipients, body, campaignId } = req.body;
 
     // Get user with SMTP config
     const user = await User.findById(req.user._id).select('+smtpConfig.password');
@@ -39,12 +40,22 @@ export const sendEmail = async (req, res) => {
     // Create email record
     const email = await Email.create({
       userId: user._id,
+      campaignId: campaignId || null,
       trackingId,
       subject,
       recipients,
       body,
       status: 'pending',
     });
+
+    // If campaignId is provided, add email to campaign
+    if (campaignId) {
+      const campaign = await Campaign.findOne({ _id: campaignId, userId: user._id });
+      if (campaign) {
+        campaign.emails.push(email._id);
+        await campaign.save();
+      }
+    }
 
     try {
       // Create transporter

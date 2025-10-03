@@ -8,6 +8,11 @@ const emailSchema = new mongoose.Schema(
       required: true,
       index: true,
     },
+    campaignId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Campaign',
+      index: true,
+    },
     trackingId: {
       type: String,
       required: true,

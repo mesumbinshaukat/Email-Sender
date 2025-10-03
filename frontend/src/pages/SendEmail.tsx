@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Send, Plus, X } from 'lucide-react';
 import { DashboardLayout } from '../components/layout/DashboardLayout';
@@ -10,6 +10,13 @@ import toast from 'react-hot-toast';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 
+interface Campaign {
+  _id: string;
+  name: string;
+  description: string;
+  status: string;
+}
+
 export const SendEmail: React.FC = () => {
   const [subject, setSubject] = useState('');
   const [recipients, setRecipients] = useState<string[]>(['']);
@@ -20,6 +27,23 @@ export const SendEmail: React.FC = () => {
   const [showCc, setShowCc] = useState(false);
   const [showBcc, setShowBcc] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [campaigns, setCampaigns] = useState<Campaign[]>([]);
+  const [selectedCampaignId, setSelectedCampaignId] = useState<string>('');
+
+  useEffect(() => {
+    fetchCampaigns();
+  }, []);
+
+  const fetchCampaigns = async () => {
+    try {
+      const response = await axios.get('/agentic/campaigns');
+      if (response.data.success) {
+        setCampaigns(response.data.data);
+      }
+    } catch (error) {
+      console.error('Failed to fetch campaigns:', error);
+    }
+  };
 
   const addRecipient = (type: 'to' | 'cc' | 'bcc') => {
     if (type === 'to') setRecipients([...recipients, '']);
@@ -84,6 +108,7 @@ export const SendEmail: React.FC = () => {
           html: htmlBody,
           text: textBody,
         },
+        campaignId: selectedCampaignId || null,
       });
 
       if (response.data.success) {
@@ -97,6 +122,7 @@ export const SendEmail: React.FC = () => {
         setTextBody('');
         setShowCc(false);
         setShowBcc(false);
+        setSelectedCampaignId('');
       }
     } catch (error: any) {
       toast.error(error.response?.data?.message || 'Failed to send email');
@@ -288,7 +314,27 @@ export const SendEmail: React.FC = () => {
                 required
               />
 
-              {/* Email Body */}
+              {/* Campaign Selection */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Campaign (Optional)
+                </label>
+                <select
+                  value={selectedCampaignId}
+                  onChange={(e) => setSelectedCampaignId(e.target.value)}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
+                >
+                  <option value="">No campaign - standalone email</option>
+                  {campaigns.map((campaign) => (
+                    <option key={campaign._id} value={campaign._id}>
+                      {campaign.name} ({campaign.status})
+                    </option>
+                  ))}
+                </select>
+                <p className="text-xs text-gray-500 mt-1">
+                  Associating emails with campaigns enables performance tracking and AI optimization.
+                </p>
+              </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   Email Content <span className="text-red-500">*</span>
@@ -325,8 +371,11 @@ export const SendEmail: React.FC = () => {
                   onClick={() => {
                     setSubject('');
                     setRecipients(['']);
+                    setCc([]);
+                    setBcc([]);
                     setHtmlBody('');
                     setTextBody('');
+                    setSelectedCampaignId('');
                   }}
                 >
                   Clear
