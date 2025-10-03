@@ -34,11 +34,26 @@ const emailSchema = new mongoose.Schema(
     },
     status: {
       type: String,
-      enum: ['sent', 'failed', 'pending'],
+      enum: ['sent', 'failed', 'pending', 'queued', 'draft'],
       default: 'pending',
     },
     sentAt: {
       type: Date,
+    },
+    scheduledAt: {
+      type: Date,
+      index: true,
+    },
+    queueJobId: {
+      type: String,
+      index: true,
+    },
+    schedulingMetadata: {
+      optimalTime: Date,
+      timezone: String,
+      aiConfidence: Number,
+      engagementScore: Number,
+      fallbackReason: String,
     },
     tracking: {
       opens: [

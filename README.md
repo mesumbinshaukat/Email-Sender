@@ -36,6 +36,14 @@ A full-fledged email tracking tool built with the MERN stack (MongoDB, Express, 
 - **Smart Commands**: Say "to john@company.com" or "subject meeting tomorrow" to auto-fill fields
 - **Campaign Integration**: Associate voice-composed emails with campaigns
 
+### 📅 Smart Email Scheduler
+- **AI-Powered Timing**: Automatically determines optimal send times per recipient
+- **Engagement Analysis**: Analyzes past open/click patterns for best timing
+- **Timezone-Aware**: Handles multiple timezones with IANA format support
+- **Queue Management**: Bull/Redis queue for reliable scheduled sends
+- **Multiple Suggestions**: Get 3+ AI-recommended times with confidence scores
+- **Reschedule Support**: Easily update scheduled times before sending
+
 ### 🤖 AI-Powered Features
 - **Performance Prediction**: AI analysis of email success rates before sending
 - **Smart Optimization**: AI-generated subject lines and content improvements
@@ -69,6 +77,7 @@ A full-fledged email tracking tool built with the MERN stack (MongoDB, Express, 
 
 - Node.js (v16 or higher)
 - MongoDB (local or Atlas)
+- **Redis** (for email scheduling queue)
 - SMTP credentials (Gmail, Outlook, etc.)
 - **OpenAI API Key** (for voice transcription and AI features)
 - **Microphone access** (for voice dictation)
@@ -168,6 +177,22 @@ npm run dev
 
 **Note**: Voice features require OpenAI API key for full functionality.
 
+### 📅 Using Smart Email Scheduler
+
+1. **Compose Email**: Fill in subject, recipients, and body on Send Email page
+2. **Click "Schedule"**: Opens AI scheduling modal
+3. **View AI Suggestions**: See 3+ optimal send times with confidence scores
+4. **Select Time**: Choose AI recommendation or set custom time
+5. **Confirm Schedule**: Email queued for optimal delivery
+6. **Manage Queue**: Visit `/queue` to view/reschedule/cancel scheduled emails
+
+**Features:**
+- AI analyzes recipient's past engagement (open times, response patterns)
+- Automatically detects and handles timezones
+- Fallback to 10am local time if insufficient data
+- Reschedule anytime before sending
+- Real-time queue status monitoring
+
 ## 🔌 API Endpoints
 
 ### Authentication
@@ -199,6 +224,12 @@ npm run dev
 - `POST /api/voice/command` - Parse voice command
 - `POST /api/voice/compose` - Compose email from voice
 - `GET /api/voice/supported-commands` - Get voice commands list
+
+### Smart Email Scheduler
+- `POST /api/scheduler/schedule-email` - Schedule email with AI optimal time
+- `GET /api/scheduler/optimal-times/:recipientEmail` - Get AI time suggestions
+- `PUT /api/scheduler/reschedule/:emailId` - Reschedule queued email
+- `GET /api/scheduler/queue` - Get user's scheduled emails queue
 
 ## 🚢 Deployment to Vercel
 

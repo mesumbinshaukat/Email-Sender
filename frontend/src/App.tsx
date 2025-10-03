@@ -16,6 +16,7 @@ import { Settings } from './pages/Settings';
 import { Campaigns } from './pages/Campaigns';
 import { AIWriter } from './pages/AIWriter';
 import { PerformancePredictor } from './pages/PerformancePredictor';
+import { EmailQueue } from './pages/EmailQueue';
 
 function App() {
   const { checkAuth } = useAuthStore();
@@ -126,6 +127,15 @@ function App() {
           element={
             <ProtectedRoute>
               <PerformancePredictor />
+            </ProtectedRoute>
+          }
+        />
+        
+        <Route
+          path="/queue"
+          element={
+            <ProtectedRoute>
+              <EmailQueue />
             </ProtectedRoute>
           }
         />

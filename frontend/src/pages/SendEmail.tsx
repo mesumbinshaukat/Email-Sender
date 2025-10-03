@@ -1,10 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
-import { Send, Plus, X, Mic, MicOff, Square, Loader } from 'lucide-react';
+import { Send, Plus, X, Mic, MicOff, Square, Loader, Clock } from 'lucide-react';
 import { DashboardLayout } from '../components/layout/DashboardLayout';
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/Card';
 import { Button } from '../components/ui/Button';
 import { Input } from '../components/ui/Input';
+import { ScheduleEmailModal } from '../components/ScheduleEmailModal';
 import axios from '../lib/axios';
 import toast from 'react-hot-toast';
 import ReactQuill from 'react-quill';
@@ -35,6 +36,9 @@ export const SendEmail: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [campaigns, setCampaigns] = useState<Campaign[]>([]);
   const [selectedCampaignId, setSelectedCampaignId] = useState<string>('');
+
+  // Scheduling state
+  const [showScheduleModal, setShowScheduleModal] = useState(false);
 
   // Voice state
   const [isRecording, setIsRecording] = useState(false);
@@ -659,7 +663,7 @@ export const SendEmail: React.FC = () => {
                 />
               </div>
 
-              {/* Submit Button */}
+              {/* Submit Buttons */}
               <div className="flex justify-end space-x-4">
                 <Button
                   type="button"
@@ -676,14 +680,52 @@ export const SendEmail: React.FC = () => {
                 >
                   Clear
                 </Button>
+                <Button
+                  type="button"
+                  variant="secondary"
+                  onClick={() => setShowScheduleModal(true)}
+                  disabled={!subject.trim() || recipients.filter(r => r.trim()).length === 0}
+                >
+                  <Clock className="h-5 w-5 mr-2" />
+                  Schedule
+                </Button>
                 <Button type="submit" isLoading={loading}>
                   <Send className="h-5 w-5 mr-2" />
-                  Send Email
+                  Send Now
                 </Button>
               </div>
             </form>
           </CardContent>
         </Card>
+
+        {/* Schedule Email Modal */}
+        <ScheduleEmailModal
+          isOpen={showScheduleModal}
+          onClose={() => setShowScheduleModal(false)}
+          emailData={{
+            subject,
+            recipients: {
+              to: recipients.filter(r => r.trim()),
+              cc: cc.filter(c => c.trim()),
+              bcc: bcc.filter(b => b.trim()),
+            },
+            body: {
+              html: htmlBody,
+              text: textBody,
+            },
+            campaignId: selectedCampaignId || undefined,
+          }}
+          onScheduled={(scheduledEmail) => {
+            // Reset form after scheduling
+            setSubject('');
+            setRecipients(['']);
+            setCc([]);
+            setBcc([]);
+            setHtmlBody('');
+            setTextBody('');
+            setSelectedCampaignId('');
+          }}
+        />
       </motion.div>
     </DashboardLayout>
   );
