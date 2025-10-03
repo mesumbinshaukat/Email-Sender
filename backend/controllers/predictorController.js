@@ -190,6 +190,8 @@ export const savePrediction = async (req, res) => {
     // Create saved prediction record
     const savedPrediction = await Prediction.create({
       userId,
+      subject,
+      recipientEmail,
       emailData: {
         subject,
         recipientEmail,
