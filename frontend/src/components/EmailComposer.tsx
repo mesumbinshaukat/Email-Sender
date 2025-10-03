@@ -11,13 +11,11 @@ interface VoiceCommand {
 }
 
 interface EmailComposerProps {
-  onEmailComposed?: (emailData: any) => void;
   onSendEmail?: (emailData: any) => void;
-  campaigns?: Array<{ _id: string; name: string; status: string }>;
+  campaigns?: Array<{ _id: string; name: string; description: string; status: string }>;
 }
 
 export const EmailComposer: React.FC<EmailComposerProps> = ({
-  onEmailComposed,
   onSendEmail,
   campaigns = [],
 }) => {
@@ -45,7 +43,7 @@ export const EmailComposer: React.FC<EmailComposerProps> = ({
   // Initialize Web Speech API
   useEffect(() => {
     if (typeof window !== 'undefined' && 'webkitSpeechRecognition' in window) {
-      const SpeechRecognition = window.webkitSpeechRecognition || window.SpeechRecognition;
+      const SpeechRecognition = (window as any).webkitSpeechRecognition || (window as any).SpeechRecognition;
       recognitionRef.current = new SpeechRecognition();
       recognitionRef.current.continuous = true;
       recognitionRef.current.interimResults = true;
@@ -225,7 +223,7 @@ export const EmailComposer: React.FC<EmailComposerProps> = ({
         break;
 
       default:
-        toast.info('Command recognized but not implemented yet.');
+        toast('Command recognized but not implemented yet.', { icon: 'ℹ️' });
     }
   };
 
@@ -275,7 +273,7 @@ export const EmailComposer: React.FC<EmailComposerProps> = ({
     if (!handsFreeMode) {
       toast.success('Hands-free mode activated! Say "new email" to start.');
     } else {
-      toast.info('Hands-free mode deactivated.');
+      toast('Hands-free mode deactivated.', { icon: 'ℹ️' });
     }
   };
 
@@ -286,7 +284,7 @@ export const EmailComposer: React.FC<EmailComposerProps> = ({
         <div className="flex items-center space-x-4">
           <Button
             onClick={isRecording ? stopRecording : startRecording}
-            variant={isRecording ? "destructive" : "outline"}
+            variant={isRecording ? "danger" : "outline"}
             className={`flex items-center space-x-2 ${isRecording ? 'animate-pulse' : ''}`}
             disabled={isProcessing}
           >
@@ -296,7 +294,7 @@ export const EmailComposer: React.FC<EmailComposerProps> = ({
 
           <Button
             onClick={toggleHandsFreeMode}
-            variant={handsFreeMode ? "default" : "outline"}
+            variant={handsFreeMode ? "primary" : "outline"}
             className="flex items-center space-x-2"
           >
             <Square className="h-5 w-5" />
