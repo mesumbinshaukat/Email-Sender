@@ -40,8 +40,25 @@ export const injectTrackingPixel = (html, trackingId, backendUrl) => {
 };
 
 /**
- * Wrap plain URLs in HTML with tracking links (for text content within HTML)
+ * Wrap links in HTML with tracking redirects
  */
+export const wrapLinksWithTracking = (html, trackingId, backendUrl) => {
+  // Match all href attributes in anchor tags
+  const linkRegex = /<a\s+(?:[^>]*?\s+)?href=(["'])(.*?)\1/gi;
+
+  return html.replace(linkRegex, (match, quote, url) => {
+    // Skip if already a tracking link or anchor link
+    if (url.startsWith('#') || url.includes('/api/track/click/')) {
+      return match;
+    }
+
+    // Encode the original URL
+    const encodedUrl = encodeURIComponent(url);
+    const trackingUrl = `${backendUrl}/api/track/click/${trackingId}?url=${encodedUrl}`;
+
+    return `<a href=${quote}${trackingUrl}${quote}`;
+  });
+};
 export const wrapPlainUrlsInHtml = (html, trackingId, backendUrl) => {
   // This is a simple implementation - find URLs not already in anchor tags
   // More complex HTML parsing would be needed for production
