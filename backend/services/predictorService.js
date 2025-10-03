@@ -105,6 +105,8 @@ class PredictorService {
       }
     } catch (error) {
       console.error('AI prediction failed:', error.message);
+      factors.push('Statistical prediction (AI unavailable)');
+      // Continue with statistical prediction only
     }
 
     return {
