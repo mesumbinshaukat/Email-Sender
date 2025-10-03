@@ -5,10 +5,9 @@ import crypto from 'crypto';
  * Create a nodemailer transporter with user's SMTP config
  */
 export const createTransporter = (smtpConfig) => {
-  if (!smtpConfig || !smtpConfig.host || !smtpConfig.user) {
+  if (!smtpConfig || !smtpConfig.host || !smtpConfig.user || !smtpConfig.password) {
     throw new Error('Invalid SMTP configuration');
   }
-
   return nodemailer.createTransport({
     host: smtpConfig.host,
     port: smtpConfig.port || 587,
@@ -41,23 +40,28 @@ export const injectTrackingPixel = (html, trackingId, backendUrl) => {
 };
 
 /**
- * Wrap links in HTML with tracking redirects
+ * Wrap plain URLs in HTML with tracking links (for text content within HTML)
  */
-export const wrapLinksWithTracking = (html, trackingId, backendUrl) => {
-  // Match all href attributes in anchor tags
-  const linkRegex = /<a\s+(?:[^>]*?\s+)?href=(["'])(.*?)\1/gi;
+export const wrapPlainUrlsInHtml = (html, trackingId, backendUrl) => {
+  // This is a simple implementation - find URLs not already in anchor tags
+  // More complex HTML parsing would be needed for production
+  const urlRegex = /(https?:\/\/[^\s<>"']+)/g;
   
-  return html.replace(linkRegex, (match, quote, url) => {
-    // Skip if already a tracking link or anchor link
-    if (url.startsWith('#') || url.includes('/api/track/click/')) {
-      return match;
+  return html.replace(urlRegex, (url) => {
+    // Check if this URL is already inside an anchor tag (simple check)
+    const beforeUrl = html.substring(0, html.indexOf(url));
+    const anchorCount = (beforeUrl.match(/<a\s/gi) || []).length;
+    const closingAnchorCount = (beforeUrl.match(/<\/a>/gi) || []).length;
+    
+    // If we're inside an anchor tag, don't wrap
+    if (anchorCount > closingAnchorCount) {
+      return url;
     }
     
-    // Encode the original URL
+    // Wrap the URL in an anchor tag
     const encodedUrl = encodeURIComponent(url);
     const trackingUrl = `${backendUrl}/api/track/click/${trackingId}?url=${encodedUrl}`;
-    
-    return `<a href=${quote}${trackingUrl}${quote}`;
+    return `<a href="${trackingUrl}" style="color: #3b82f6; text-decoration: underline;">${url}</a>`;
   });
 };
 
@@ -74,21 +78,28 @@ export const sendTrackedEmail = async (transporter, emailData, trackingId, backe
   // If no HTML but we have text, create simple HTML wrapper for tracking
   if (!htmlBody && emailData.body.text) {
     // Convert text to HTML and wrap links
-    let textWithTrackedLinks = emailData.body.text;
+    let textContent = emailData.body.text;
     
     // Simple URL regex to find links in text
     const urlRegex = /(https?:\/\/[^\s]+)/g;
-    textWithTrackedLinks = textWithTrackedLinks.replace(urlRegex, (url) => {
+    textContent = textContent.replace(urlRegex, (url) => {
       const encodedUrl = encodeURIComponent(url);
-      return `${backendUrl}/api/track/click/${trackingId}?url=${encodedUrl}`;
+      const trackingUrl = `${backendUrl}/api/track/click/${trackingId}?url=${encodedUrl}`;
+      return `<a href="${trackingUrl}" style="color: #3b82f6; text-decoration: underline;">${url}</a>`;
     });
     
-    htmlBody = `<html><body><pre style="font-family: monospace; white-space: pre-wrap;">${textWithTrackedLinks.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</pre></body></html>`;
+    // Convert line breaks to <br> and wrap in pre for formatting
+    textContent = textContent.replace(/\n/g, '<br>');
+    
+    htmlBody = `<html><body><div style="font-family: Arial, sans-serif; line-height: 1.6;">${textContent}</div></body></html>`;
     console.log('🔄 Converted text to HTML with link tracking');
   }
   
   // Inject tracking pixel
   if (htmlBody) {
+    // Also wrap any plain URLs in HTML that aren't already in anchor tags
+    htmlBody = wrapPlainUrlsInHtml(htmlBody, trackingId, backendUrl);
+    
     htmlBody = injectTrackingPixel(htmlBody, trackingId, backendUrl);
     htmlBody = wrapLinksWithTracking(htmlBody, trackingId, backendUrl);
     console.log('✅ Tracking pixel injected');
