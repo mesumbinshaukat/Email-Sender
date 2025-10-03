@@ -164,9 +164,37 @@ export const getCampaigns = async (req, res) => {
       .populate('emails')
       .sort({ createdAt: -1 });
 
+    // Calculate real-time performance metrics for each campaign
+    const campaignsWithMetrics = campaigns.map(campaign => {
+      const emails = campaign.emails || [];
+      const totalSent = emails.length;
+      const totalOpens = emails.reduce((sum, e) => sum + (e.tracking?.totalOpens || 0), 0);
+      const totalClicks = emails.reduce((sum, e) => sum + (e.tracking?.totalClicks || 0), 0);
+      const uniqueOpens = emails.filter(e => (e.tracking?.totalOpens || 0) > 0).length;
+
+      // Update campaign performance metrics
+      campaign.performance = {
+        totalSent,
+        totalOpens,
+        totalClicks,
+        openRate: totalSent > 0 ? parseFloat(((uniqueOpens / totalSent) * 100).toFixed(2)) : 0,
+        clickRate: totalOpens > 0 ? parseFloat(((totalClicks / totalOpens) * 100).toFixed(2)) : 0,
+        totalResponses: 0, // Could be calculated from replies if tracked
+        responseRate: 0,
+        revenue: 0, // Would need e-commerce integration
+      };
+
+      return campaign;
+    });
+
+    // Save updated performance metrics to database (async, don't wait)
+    campaignsWithMetrics.forEach(async (campaign) => {
+      await campaign.save().catch(err => console.warn('Failed to save campaign metrics:', err));
+    });
+
     res.json({
       success: true,
-      data: campaigns,
+      data: campaignsWithMetrics,
     });
   } catch (error) {
     console.error('Get campaigns error:', error);
@@ -232,6 +260,27 @@ export const getCampaign = async (req, res) => {
         message: 'Campaign not found',
       });
     }
+
+    // Calculate real-time performance metrics
+    const emails = campaign.emails || [];
+    const totalSent = emails.length;
+    const totalOpens = emails.reduce((sum, e) => sum + (e.tracking?.totalOpens || 0), 0);
+    const totalClicks = emails.reduce((sum, e) => sum + (e.tracking?.totalClicks || 0), 0);
+    const uniqueOpens = emails.filter(e => (e.tracking?.totalOpens || 0) > 0).length;
+
+    campaign.performance = {
+      totalSent,
+      totalOpens,
+      totalClicks,
+      openRate: totalSent > 0 ? parseFloat(((uniqueOpens / totalSent) * 100).toFixed(2)) : 0,
+      clickRate: totalOpens > 0 ? parseFloat(((totalClicks / totalOpens) * 100).toFixed(2)) : 0,
+      totalResponses: 0,
+      responseRate: 0,
+      revenue: 0,
+    };
+
+    // Save updated metrics (async)
+    campaign.save().catch(err => console.warn('Failed to save campaign metrics:', err));
 
     res.json({
       success: true,

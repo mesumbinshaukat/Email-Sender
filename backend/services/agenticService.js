@@ -30,6 +30,18 @@ class AgenticService {
       performance: analytics,
     };
 
+    // Also update the main performance metrics
+    campaign.performance = {
+      totalSent: analytics.totalSent,
+      totalOpens: analytics.totalOpens,
+      totalClicks: analytics.totalClicks,
+      openRate: parseFloat(analytics.openRate),
+      clickRate: parseFloat(analytics.clickRate),
+      totalResponses: 0,
+      responseRate: 0,
+      revenue: 0,
+    };
+
     await campaign.save();
 
     return {
