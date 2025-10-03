@@ -16,6 +16,7 @@ import chatbotRoutes from './routes/chatbotRoutes.js';
 import agenticRoutes from './routes/agenticRoutes.js';
 import generativeRoutes from './routes/generativeRoutes.js';
 import predictorRoutes from './routes/predictorRoutes.js';
+import voiceRoutes from './routes/voice.js';
 
 // Load environment variables
 dotenv.config();
@@ -100,6 +101,7 @@ app.use('/api/chatbot', chatbotRoutes);
 app.use('/api/agentic', agenticRoutes);
 app.use('/api/ai', generativeRoutes);
 app.use('/api/predictor', predictorRoutes);
+app.use('/api/voice', voiceRoutes);
 
 // Error handling middleware
 app.use(notFound);

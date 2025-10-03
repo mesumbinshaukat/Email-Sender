@@ -73,6 +73,12 @@ const emailSchema = new mongoose.Schema(
     metadata: {
       messageId: String,
       errorMessage: String,
+      voiceTranscript: {
+        text: String,
+        confidence: Number,
+        duration: Number,
+        processedAt: Date,
+      },
     },
   },
   {

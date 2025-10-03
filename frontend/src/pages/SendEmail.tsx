@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
-import { Send, Plus, X } from 'lucide-react';
+import { Send, Plus, X, Mic, MicOff, Square, Loader } from 'lucide-react';
 import { DashboardLayout } from '../components/layout/DashboardLayout';
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/Card';
 import { Button } from '../components/ui/Button';
@@ -9,6 +9,12 @@ import axios from '../lib/axios';
 import toast from 'react-hot-toast';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
+
+interface VoiceCommand {
+  action: string;
+  params: any;
+  confidence: number;
+}
 
 interface Campaign {
   _id: string;
@@ -30,8 +36,22 @@ export const SendEmail: React.FC = () => {
   const [campaigns, setCampaigns] = useState<Campaign[]>([]);
   const [selectedCampaignId, setSelectedCampaignId] = useState<string>('');
 
+  // Voice state
+  const [isRecording, setIsRecording] = useState(false);
+  const [isProcessing, setIsProcessing] = useState(false);
+  const [transcription, setTranscription] = useState('');
+  const [voiceCommands, setVoiceCommands] = useState<VoiceCommand[]>([]);
+  const [handsFreeMode, setHandsFreeMode] = useState(false);
+  const [supportedCommands, setSupportedCommands] = useState<any[]>([]);
+
+  // Refs
+  const recognitionRef = useRef<any>(null);
+  const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+  const audioChunksRef = useRef<Blob[]>([]);
+
   useEffect(() => {
     fetchCampaigns();
+    initializeVoice();
   }, []);
 
   const fetchCampaigns = async () => {
@@ -42,6 +62,203 @@ export const SendEmail: React.FC = () => {
       }
     } catch (error) {
       console.error('Failed to fetch campaigns:', error);
+    }
+  };
+
+  const initializeVoice = () => {
+    // Initialize Web Speech API
+    if (typeof window !== 'undefined' && 'webkitSpeechRecognition' in window) {
+      const SpeechRecognition = (window as any).webkitSpeechRecognition || (window as any).SpeechRecognition;
+      recognitionRef.current = new SpeechRecognition();
+      recognitionRef.current.continuous = true;
+      recognitionRef.current.interimResults = true;
+      recognitionRef.current.lang = 'en-US';
+
+      recognitionRef.current.onresult = (event: any) => {
+        let finalTranscript = '';
+        let interimTranscript = '';
+
+        for (let i = event.resultIndex; i < event.results.length; i++) {
+          const transcript = event.results[i][0].transcript;
+          if (event.results[i].isFinal) {
+            finalTranscript += transcript;
+          } else {
+            interimTranscript += transcript;
+          }
+        }
+
+        setTranscription(finalTranscript + interimTranscript);
+      };
+
+      recognitionRef.current.onend = () => {
+        setIsRecording(false);
+        if (transcription.trim()) {
+          processVoiceCommand(transcription.trim());
+        }
+      };
+
+      recognitionRef.current.onerror = (event: any) => {
+        console.error('Speech recognition error:', event.error);
+        setIsRecording(false);
+        toast.error('Voice recognition failed. Try again.');
+      };
+    }
+
+    // Load supported commands
+    loadSupportedCommands();
+  };
+
+  const loadSupportedCommands = async () => {
+    try {
+      const response = await axios.get('/voice/supported-commands');
+      if (response.data.success) {
+        setSupportedCommands(response.data.commands);
+      }
+    } catch (error) {
+      console.error('Failed to load supported commands:', error);
+    }
+  };
+
+  const startRecording = async () => {
+    try {
+      if (recognitionRef.current) {
+        // Use Web Speech API
+        recognitionRef.current.start();
+        setIsRecording(true);
+        setTranscription('');
+      } else {
+        // Fallback to MediaRecorder
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        mediaRecorderRef.current = new MediaRecorder(stream);
+
+        audioChunksRef.current = [];
+        mediaRecorderRef.current.ondataavailable = (event) => {
+          audioChunksRef.current.push(event.data);
+        };
+
+        mediaRecorderRef.current.onstop = async () => {
+          const audioBlob = new Blob(audioChunksRef.current, { type: 'audio/wav' });
+          await processAudioBlob(audioBlob);
+          stream.getTracks().forEach(track => track.stop());
+        };
+
+        mediaRecorderRef.current.start();
+        setIsRecording(true);
+      }
+    } catch (error) {
+      console.error('Error starting recording:', error);
+      toast.error('Microphone access denied or unavailable.');
+    }
+  };
+
+  const stopRecording = () => {
+    if (recognitionRef.current) {
+      recognitionRef.current.stop();
+    } else if (mediaRecorderRef.current) {
+      mediaRecorderRef.current.stop();
+    }
+    setIsRecording(false);
+  };
+
+  const processAudioBlob = async (audioBlob: Blob) => {
+    setIsProcessing(true);
+    try {
+      const formData = new FormData();
+      formData.append('audio', audioBlob, 'recording.wav');
+
+      const response = await axios.post('/voice/transcribe', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      });
+
+      if (response.data.success) {
+        setTranscription(response.data.transcription);
+        await processVoiceCommand(response.data.transcription);
+      }
+    } catch (error) {
+      console.error('Audio processing error:', error);
+      toast.error('Failed to process audio. Try speaking more clearly.');
+    } finally {
+      setIsProcessing(false);
+    }
+  };
+
+  const processVoiceCommand = async (text: string) => {
+    setIsProcessing(true);
+    try {
+      const response = await axios.post('/voice/command', { text });
+
+      if (response.data.success) {
+        const parsed = response.data.parsed;
+        setVoiceCommands(prev => [...prev.slice(-4), parsed]); // Keep last 5
+
+        // Execute command
+        executeCommand(parsed);
+      }
+    } catch (error) {
+      console.error('Command processing error:', error);
+      toast.error('Failed to process voice command.');
+    } finally {
+      setIsProcessing(false);
+    }
+  };
+
+  const executeCommand = (command: VoiceCommand) => {
+    switch (command.action) {
+      case 'compose':
+        if (command.params.subject) setSubject(command.params.subject);
+        if (command.params.body) setTextBody(command.params.body);
+        if (command.params.email) {
+          setRecipients([command.params.email]);
+        }
+        toast.success('Email composed from voice!');
+        break;
+
+      case 'send':
+        if (subject && recipients[0] && (htmlBody || textBody)) {
+          handleSubmit({ preventDefault: () => {} } as any);
+        } else {
+          toast.error('Please complete the email details first.');
+        }
+        break;
+
+      case 'add_recipient':
+        if (command.params.email) {
+          setRecipients(prev => [...prev.filter(r => r), command.params.email]);
+          toast.success(`Added recipient: ${command.params.email}`);
+        }
+        break;
+
+      case 'set_subject':
+        if (command.params.subject) {
+          setSubject(command.params.subject);
+          toast.success('Subject set!');
+        }
+        break;
+
+      case 'cancel':
+        setSubject('');
+        setRecipients(['']);
+        setCc([]);
+        setBcc([]);
+        setHtmlBody('');
+        setTextBody('');
+        setSelectedCampaignId('');
+        setTranscription('');
+        setVoiceCommands([]);
+        toast.success('Composition cancelled.');
+        break;
+
+      default:
+        toast('Command recognized but not implemented yet.', { icon: 'ℹ️' });
+    }
+  };
+
+  const toggleHandsFreeMode = () => {
+    setHandsFreeMode(!handsFreeMode);
+    if (!handsFreeMode) {
+      toast.success('Hands-free mode activated! Say "new email" to start.');
+    } else {
+      toast('Hands-free mode deactivated.', { icon: 'ℹ️' });
     }
   };
 
@@ -159,6 +376,85 @@ export const SendEmail: React.FC = () => {
             <CardTitle>Compose Email</CardTitle>
           </CardHeader>
           <CardContent>
+            {/* Voice Control Bar */}
+            <div className="mb-6 p-4 bg-gray-50 rounded-lg">
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center space-x-4">
+                  <Button
+                    onClick={isRecording ? stopRecording : startRecording}
+                    variant={isRecording ? "danger" : "outline"}
+                    className={`flex items-center space-x-2 ${isRecording ? 'animate-pulse' : ''}`}
+                    disabled={isProcessing}
+                  >
+                    {isRecording ? <MicOff className="h-5 w-5" /> : <Mic className="h-5 w-5" />}
+                    <span>{isRecording ? 'Stop Recording' : 'Start Voice'}</span>
+                  </Button>
+
+                  <Button
+                    onClick={toggleHandsFreeMode}
+                    variant={handsFreeMode ? "primary" : "outline"}
+                    className="flex items-center space-x-2"
+                  >
+                    <Square className="h-5 w-5" />
+                    <span>Hands-Free Mode</span>
+                  </Button>
+                </div>
+
+                {isProcessing && (
+                  <div className="flex items-center space-x-2 text-blue-600">
+                    <Loader className="h-4 w-4 animate-spin" />
+                    <span>Processing...</span>
+                  </div>
+                )}
+              </div>
+
+              {/* Real-time Transcription */}
+              {transcription && (
+                <div className="mb-4 p-3 bg-blue-50 rounded-lg">
+                  <h4 className="font-semibold text-blue-900 mb-1">Voice Input:</h4>
+                  <p className="text-blue-800">{transcription}</p>
+                </div>
+              )}
+
+              {/* Recent Commands */}
+              {voiceCommands.length > 0 && (
+                <div className="p-3 bg-green-50 rounded-lg">
+                  <h4 className="font-semibold text-green-900 mb-2">Recent Commands:</h4>
+                  <div className="space-y-1">
+                    {voiceCommands.slice(-3).map((cmd, idx) => (
+                      <div key={idx} className="text-sm text-green-800">
+                        <span className="font-medium">{cmd.action}</span>
+                        {cmd.params.email && <span> → {cmd.params.email}</span>}
+                        {cmd.params.subject && <span> → "{cmd.params.subject}"</span>}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Hands-Free Mode Overlay */}
+            {handsFreeMode && (
+              <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                <div className="bg-white p-8 rounded-lg max-w-md w-full mx-4">
+                  <h3 className="text-xl font-bold mb-4">Hands-Free Mode Active</h3>
+                  <p className="text-gray-600 mb-4">
+                    Say commands like "new email to john@company.com" or "send email"
+                  </p>
+                  <div className="space-y-2 mb-4">
+                    {supportedCommands.slice(0, 5).map((cmd: any, idx: number) => (
+                      <div key={idx} className="text-sm">
+                        <strong>"{cmd.command}"</strong> - {cmd.description}
+                      </div>
+                    ))}
+                  </div>
+                  <Button onClick={toggleHandsFreeMode} className="w-full">
+                    Exit Hands-Free Mode
+                  </Button>
+                </div>
+              </div>
+            )}
+
             <form onSubmit={handleSubmit} className="space-y-6">
               {/* Recipients */}
               <div>

@@ -29,13 +29,18 @@ A full-fledged email tracking tool built with the MERN stack (MongoDB, Express, 
 - Interactive charts with Recharts
 - Email history with detailed tracking data
 
-### 🎨 Modern UI/UX
-- Responsive design with TailwindCSS
-- Smooth animations with Framer Motion
-- Beautiful icons with Lucide React
-- Toast notifications
-- Modal dialogs
-- Loading states and spinners
+### 🎙️ Voice-to-Email
+- **Speech-to-Text**: Dictate emails using browser speech recognition or OpenAI Whisper
+- **Voice Commands**: Hands-free email composition with natural language commands
+- **Real-time Transcription**: See your words transcribed instantly
+- **Smart Commands**: Say "to john@company.com" or "subject meeting tomorrow" to auto-fill fields
+- **Campaign Integration**: Associate voice-composed emails with campaigns
+
+### 🤖 AI-Powered Features
+- **Performance Prediction**: AI analysis of email success rates before sending
+- **Smart Optimization**: AI-generated subject lines and content improvements
+- **Campaign Intelligence**: Automated segmentation and follow-up suggestions
+- **Sentiment Analysis**: AI-powered tone and content analysis
 
 ## 🛠️ Tech Stack
 
@@ -65,6 +70,8 @@ A full-fledged email tracking tool built with the MERN stack (MongoDB, Express, 
 - Node.js (v16 or higher)
 - MongoDB (local or Atlas)
 - SMTP credentials (Gmail, Outlook, etc.)
+- **OpenAI API Key** (for voice transcription and AI features)
+- **Microphone access** (for voice dictation)
 
 ## 🚀 Installation & Setup
 
@@ -142,6 +149,25 @@ npm run dev
 - Emails: List of sent emails with tracking data
 - Analytics: Detailed charts and insights
 
+### 🎙️ Using Voice-to-Email
+
+1. **Enable Voice Features**: Go to Send Email page
+2. **Grant Microphone Permission**: Click "Start Voice" and allow access
+3. **Dictate Your Email**: Speak naturally:
+   - "New email to john@company.com"
+   - "Subject meeting at 3pm tomorrow"
+   - "Dear John, please review the attached report"
+   - "Send"
+4. **Voice Commands**: Try these commands:
+   - "to [email]" - Add recipient
+   - "cc [email]" - Add CC recipient
+   - "subject [text]" - Set subject
+   - "send" - Send the email
+   - "cancel" - Clear composition
+5. **Hands-Free Mode**: Click "Hands-Free Mode" for overlay with command suggestions
+
+**Note**: Voice features require OpenAI API key for full functionality.
+
 ## 🔌 API Endpoints
 
 ### Authentication
@@ -167,6 +193,12 @@ npm run dev
 - `GET /api/track/open/:trackingId` - Track email open
 - `GET /api/track/click/:trackingId` - Track link click
 - `POST /api/track/readtime/:trackingId` - Track read time
+
+### Voice-to-Email
+- `POST /api/voice/transcribe` - Transcribe audio to text
+- `POST /api/voice/command` - Parse voice command
+- `POST /api/voice/compose` - Compose email from voice
+- `GET /api/voice/supported-commands` - Get voice commands list
 
 ## 🚢 Deployment to Vercel
 
