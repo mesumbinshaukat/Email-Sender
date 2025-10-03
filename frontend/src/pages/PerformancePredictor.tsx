@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { TrendingUp, Target, Clock, Zap, CheckCircle, AlertTriangle, Eye, MousePointer, DollarSign, Crosshair } from 'lucide-react';
+import { TrendingUp, Clock, Zap, CheckCircle, AlertTriangle, Eye, MousePointer, DollarSign, Crosshair } from 'lucide-react';
 import { DashboardLayout } from '../components/layout/DashboardLayout';
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/Card';
 import { Button } from '../components/ui/Button';
