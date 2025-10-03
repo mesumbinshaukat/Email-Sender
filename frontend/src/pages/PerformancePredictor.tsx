@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { TrendingUp, Target, Clock, Zap, CheckCircle, AlertTriangle, Eye, MousePointer, DollarSign, Crosshair } from 'lucide-react';
 import { DashboardLayout } from '../components/layout/DashboardLayout';
@@ -6,6 +6,13 @@ import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/Card'
 import { Button } from '../components/ui/Button';
 import axios from '../lib/axios';
 import toast from 'react-hot-toast';
+
+interface Campaign {
+  _id: string;
+  name: string;
+  description: string;
+  status: string;
+}
 
 interface Prediction {
   predictionId: string;
@@ -46,6 +53,23 @@ export const PerformancePredictor: React.FC = () => {
   const [prediction, setPrediction] = useState<Prediction | null>(null);
   const [loading, setLoading] = useState(false);
   const [showAdvanced, setShowAdvanced] = useState(false);
+  const [campaigns, setCampaigns] = useState<Campaign[]>([]);
+  const [selectedCampaignId, setSelectedCampaignId] = useState<string>('');
+
+  useEffect(() => {
+    fetchCampaigns();
+  }, []);
+
+  const fetchCampaigns = async () => {
+    try {
+      const response = await axios.get('/agentic/campaigns');
+      if (response.data.success) {
+        setCampaigns(response.data.data);
+      }
+    } catch (error) {
+      console.error('Failed to fetch campaigns:', error);
+    }
+  };
 
   const handlePredict = async () => {
     if (!subject.trim() || !recipientEmail.trim()) {
@@ -148,6 +172,7 @@ export const PerformancePredictor: React.FC = () => {
         body: {
           text: body, // Email body as text
         },
+        campaignId: selectedCampaignId || null,
       });
 
       if (response.data.success) {
@@ -225,6 +250,28 @@ export const PerformancePredictor: React.FC = () => {
                 />
                 <p className="text-xs text-gray-500 mt-1">
                   {body.length} characters
+                </p>
+              </div>
+
+              {/* Campaign Selection */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Campaign (Optional)
+                </label>
+                <select
+                  value={selectedCampaignId}
+                  onChange={(e) => setSelectedCampaignId(e.target.value)}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  <option value="">No campaign - standalone email</option>
+                  {campaigns.map((campaign) => (
+                    <option key={campaign._id} value={campaign._id}>
+                      {campaign.name} ({campaign.status})
+                    </option>
+                  ))}
+                </select>
+                <p className="text-xs text-gray-500 mt-1">
+                  Associating emails with campaigns enables performance tracking and AI optimization.
                 </p>
               </div>
 
