@@ -100,6 +100,72 @@ class AIService {
 
     return preferences;
   }
+
+  // Generate personalized talking points for a contact
+  async generateTalkingPoints({ contact, context, tone = 'professional' }) {
+    const messages = [
+      {
+        role: 'system',
+        content: `You are an expert at generating personalized talking points for business conversations. Generate 3-5 relevant talking points based on the contact's information and the conversation context. Each talking point should include a topic and brief content.`
+      },
+      {
+        role: 'user',
+        content: `Generate talking points for a conversation with ${contact.name?.full || contact.email} who works at ${contact.company?.name || 'Unknown Company'} as a ${contact.position?.title || 'Professional'}. 
+
+Context: ${context}
+Tone: ${tone}
+
+Contact information:
+- Company: ${contact.company?.name || 'N/A'}
+- Position: ${contact.position?.title || 'N/A'}
+- Industry: ${contact.company?.industry || 'N/A'}
+- Location: ${contact.location?.city || 'N/A'}, ${contact.location?.country || 'N/A'}
+
+Please provide talking points as a JSON array with objects containing: topic, content, relevance (0-1), category.`
+      }
+    ];
+
+    try {
+      const response = await this.callAI(messages, contact.userId, 'contact_enrichment', {
+        temperature: 0.7,
+        maxTokens: 1000,
+      });
+
+      // Parse the JSON response
+      const talkingPoints = JSON.parse(response);
+
+      // Validate and clean the response
+      return talkingPoints.map(point => ({
+        topic: point.topic || 'General Topic',
+        content: point.content || 'Discussion point',
+        relevance: Math.min(Math.max(point.relevance || 0.5, 0), 1),
+        category: point.category || 'professional',
+      }));
+    } catch (error) {
+      console.error('Error generating talking points:', error);
+      // Fallback talking points
+      return [
+        {
+          topic: 'Industry Trends',
+          content: `Discussion about current trends in ${contact.company?.industry || 'your industry'}`,
+          relevance: 0.7,
+          category: 'professional',
+        },
+        {
+          topic: 'Company Updates',
+          content: `Updates on ${contact.company?.name || 'your company'}'s recent developments`,
+          relevance: 0.8,
+          category: 'company',
+        },
+        {
+          topic: 'Professional Growth',
+          content: `Career development and opportunities in ${contact.position?.title || 'your field'}`,
+          relevance: 0.6,
+          category: 'personal',
+        },
+      ];
+    }
+  }
 }
 
 export default new AIService();

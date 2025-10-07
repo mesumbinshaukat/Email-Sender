@@ -48,7 +48,17 @@ A full-fledged email tracking tool built with the MERN stack (MongoDB, Express, 
 - **Performance Prediction**: AI analysis of email success rates before sending
 - **Smart Optimization**: AI-generated subject lines and content improvements
 - **Campaign Intelligence**: Automated segmentation and follow-up suggestions
-- **Sentiment Analysis**: AI-powered tone and content analysis
+### 🚀 Advanced Unique Features
+- **Inbox Rotation & Dual Warmup AI**: Automatically rotates email sends across multiple connected inboxes with AI-powered dual warmup algorithms to build sender reputation dynamically, reducing spam flags by 40-50%.
+- **Interactive AMP Email Builder**: AI-generated emails with embedded interactive elements (forms, polls, calendars) using AMP for Gmail/Outlook, enabling real-time user actions without leaving the inbox.
+- **Real-Time Visual Personalization Engine**: Uses AI to dynamically update email images/videos based on recipient's live data (weather, location, behavior), creating hyper-personalized visuals on-the-fly.
+- **Goal-Based AI Automation Designer**: Users input high-level goals (e.g., "increase repeat purchases by 20%"), and AI auto-builds/adjusts multi-step workflows across email/SMS, predicting and testing paths.
+- **Predictive CLV & Next-Order Timing**: AI forecasts individual customer lifetime value and exact next-purchase windows using historical patterns, triggering proactive "pre-need" emails.
+- **AI Conversation Agents for Replies**: Autonomous agents analyze incoming replies, categorize sentiment, generate context-aware responses, and escalate to humans only for complex cases.
+- **Staggered Send Optimization with Engagement Waves**: AI schedules emails in adaptive waves based on real-time opens to maximize collective deliverability and virality.
+- **Liquid Dynamic Personalization Layer**: Applies advanced templating (Liquid syntax) for hyper-variable content, auto-swapping subject lines/CTAs based on micro-segments with seamless A/B testing.
+- **Cross-Channel Journey AI Adapter**: AI maps and adapts email journeys to other channels (SMS/push), predicting optimal channel switches based on user fatigue.
+- **Privacy-First Zero-Party Data AI Enricher**: Uses interactive email quizzes/polls to collect zero-party data, then AI enriches profiles without third-party tracking, ensuring GDPR compliance.
 
 ## 🛠️ Tech Stack
 
@@ -230,6 +240,43 @@ npm run dev
 - `GET /api/scheduler/optimal-times/:recipientEmail` - Get AI time suggestions
 - `PUT /api/scheduler/reschedule/:emailId` - Reschedule queued email
 - `GET /api/scheduler/queue` - Get user's scheduled emails queue
+
+### Inbox Rotation & Dual Warmup AI
+- `GET /api/inbox-rotation` - Get all inboxes
+- `POST /api/inbox-rotation` - Add new inbox
+- `POST /api/inbox-rotation/:inboxId/warmup` - Start warmup
+- `GET /api/inbox-rotation/rotation/recommend` - Get rotation recommendation
+- `PUT /api/inbox-rotation/:inboxId/send-count` - Update send count
+- `GET /api/inbox-rotation/:inboxId/test` - Test inbox connection
+
+### Interactive AMP Email Builder
+- `POST /api/amp/generate` - Generate AMP email
+
+### Real-Time Visual Personalization Engine
+- `POST /api/visual-personalization/generate` - Generate personalized visual
+- `GET /api/visual-personalization/live-data/:email` - Get live recipient data
+
+### Goal-Based AI Automation Designer
+- `POST /api/goal-automation/design` - Design workflow from goal
+
+### Predictive CLV & Next-Order Timing
+- `GET /api/clv/predict/:contactId` - Predict CLV and next order
+
+### AI Conversation Agents for Replies
+- `POST /api/conversation-agents/respond` - Generate AI response
+
+### Staggered Send Optimization
+- `POST /api/staggered-send/optimize` - Optimize send waves
+
+### Liquid Dynamic Personalization Layer
+- `POST /api/liquid/personalize` - Apply liquid templating
+
+### Cross-Channel Journey AI Adapter
+- `POST /api/cross-channel/adapt` - Adapt journey to other channels
+
+### Privacy-First Zero-Party Data AI Enricher
+- `POST /api/zero-party/collect` - Collect zero-party data
+- `POST /api/zero-party/enrich` - Enrich profile with AI
 
 ## 🚢 Deployment to Vercel
 

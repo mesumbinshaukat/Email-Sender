@@ -1,0 +1,360 @@
+import asyncHandler from 'express-async-handler';
+import { Gamification, VoiceEmail, TemplateMarketplace, AICoach, BlockchainVerification } from '../models/gamificationSchemas.js';
+import Email from '../models/Email.js';
+import { getEnvVar } from '../utils/envManager.js';
+
+// Gamification Controllers
+const getGamificationProfile = asyncHandler(async (req, res) => {
+  const userId = req.user._id;
+
+  let profile = await Gamification.findOne({ user: userId });
+
+  if (!profile) {
+    profile = await Gamification.create({
+      user: userId,
+      achievements: [
+        { type: 'emails_sent', count: 0, target: 10 },
+        { type: 'open_rate', count: 0, target: 25 },
+        { type: 'campaign_completed', count: 0, target: 1 }
+      ]
+    });
+  }
+
+  res.json(profile);
+});
+
+const updateGamification = asyncHandler(async (req, res) => {
+  const { action, value } = req.body;
+  const userId = req.user._id;
+
+  let profile = await Gamification.findOne({ user: userId });
+
+  if (!profile) {
+    profile = await Gamification.create({ user: userId });
+  }
+
+  // Update points and achievements based on action
+  switch (action) {
+    case 'email_sent':
+      profile.points += 10;
+      profile.achievements.find(a => a.type === 'emails_sent').count += 1;
+      break;
+    case 'campaign_completed':
+      profile.points += 50;
+      profile.achievements.find(a => a.type === 'campaign_completed').count += 1;
+      break;
+    case 'high_open_rate':
+      profile.points += 25;
+      break;
+  }
+
+  // Check for level up
+  profile.level = Math.floor(profile.points / 100) + 1;
+
+  await profile.save();
+  res.json(profile);
+});
+
+// Voice-to-Email Controllers
+const createVoiceEmail = asyncHandler(async (req, res) => {
+  const { audioFile } = req.body;
+  const userId = req.user._id;
+
+  const voiceEmail = await VoiceEmail.create({
+    user: userId,
+    audioUrl: audioFile,
+    status: 'processing'
+  });
+
+  // Start async processing
+  processVoiceEmail(voiceEmail._id);
+
+  res.status(201).json(voiceEmail);
+});
+
+const getVoiceEmails = asyncHandler(async (req, res) => {
+  const userId = req.user._id;
+
+  const voiceEmails = await VoiceEmail.find({ user: userId }).sort({ createdAt: -1 });
+  res.json(voiceEmails);
+});
+
+const processVoiceEmail = async (voiceEmailId) => {
+  try {
+    const voiceEmail = await VoiceEmail.findById(voiceEmailId);
+    if (!voiceEmail) return;
+
+    // Simulate voice processing (would integrate with speech-to-text API)
+    await new Promise(resolve => setTimeout(resolve, 3000));
+
+    voiceEmail.transcription = "This is a sample transcription of the voice message.";
+    voiceEmail.status = 'transcribed';
+
+    // Generate email content
+    await new Promise(resolve => setTimeout(resolve, 2000));
+
+    voiceEmail.emailContent = {
+      subject: "Voice Message: Important Update",
+      body: "Dear recipient,\n\n" + voiceEmail.transcription + "\n\nBest regards,\nYour AI Assistant",
+      html: `<p>Dear recipient,</p><p>${voiceEmail.transcription}</p><p>Best regards,<br>Your AI Assistant</p>`
+    };
+
+    voiceEmail.status = 'generated';
+    voiceEmail.confidence = 0.92;
+
+    await voiceEmail.save();
+
+  } catch (error) {
+    console.error('Voice processing failed:', error);
+    voiceEmail.status = 'failed';
+    await voiceEmail.save();
+  }
+};
+
+// Template Marketplace Controllers
+const getTemplates = asyncHandler(async (req, res) => {
+  const { category, search } = req.query;
+
+  let query = { isActive: true };
+
+  if (category) query.category = category;
+  if (search) {
+    query.$or = [
+      { name: { $regex: search, $options: 'i' } },
+      { description: { $regex: search, $options: 'i' } },
+      { tags: { $in: [new RegExp(search, 'i')] } }
+    ];
+  }
+
+  const templates = await TemplateMarketplace.find(query)
+    .populate('creator', 'name')
+    .sort({ downloads: -1, rating: -1 });
+
+  res.json(templates);
+});
+
+const createTemplate = asyncHandler(async (req, res) => {
+  const { name, description, category, html, css, variables, price, tags } = req.body;
+  const userId = req.user._id;
+
+  const template = await TemplateMarketplace.create({
+    creator: userId,
+    name,
+    description,
+    category,
+    html,
+    css,
+    variables,
+    price,
+    tags
+  });
+
+  res.status(201).json(template);
+});
+
+const purchaseTemplate = asyncHandler(async (req, res) => {
+  const templateId = req.params.id;
+  const userId = req.user._id;
+
+  const template = await TemplateMarketplace.findById(templateId);
+
+  if (!template) {
+    res.status(404);
+    throw new Error('Template not found');
+  }
+
+  // In production, handle payment processing
+  template.downloads += 1;
+  await template.save();
+
+  res.json({
+    template,
+    message: 'Template purchased successfully'
+  });
+});
+
+// AI Coach Controllers
+const getAICoachInsights = asyncHandler(async (req, res) => {
+  const userId = req.user._id;
+
+  let coach = await AICoach.findOne({ user: userId });
+
+  if (!coach || !coach.lastAnalyzed || new Date() - coach.lastAnalyzed > 24 * 60 * 60 * 1000) {
+    // Generate new insights
+    coach = await generateInsights(userId);
+  }
+
+  res.json(coach);
+});
+
+const implementInsight = asyncHandler(async (req, res) => {
+  const { insightId } = req.body;
+  const userId = req.user._id;
+
+  const coach = await AICoach.findOne({ user: userId });
+
+  if (coach) {
+    const insight = coach.insights.id(insightId);
+    if (insight) {
+      insight.implemented = true;
+    }
+    await coach.save();
+  }
+
+  res.json({ message: 'Insight marked as implemented' });
+});
+
+// Blockchain Verification Controllers
+const createBlockchainVerification = asyncHandler(async (req, res) => {
+  const { emailId } = req.body;
+  const userId = req.user._id;
+
+  const email = await Email.findById(emailId);
+
+  if (!email) {
+    res.status(404);
+    throw new Error('Email not found');
+  }
+
+  // Create hash of email content
+  const crypto = await import('crypto');
+  const hash = crypto.default.createHash('sha256')
+    .update(JSON.stringify({
+      from: email.from,
+      to: email.to,
+      subject: email.subject,
+      content: email.html || email.text,
+      timestamp: email.createdAt
+    }))
+    .digest('hex');
+
+  const verification = await BlockchainVerification.create({
+    email: emailId,
+    user: userId,
+    hash,
+    status: 'pending'
+  });
+
+  // Simulate blockchain recording
+  recordOnBlockchain(verification._id);
+
+  res.status(201).json(verification);
+});
+
+const getBlockchainVerifications = asyncHandler(async (req, res) => {
+  const userId = req.user._id;
+
+  const verifications = await BlockchainVerification.find({ user: userId })
+    .populate('email')
+    .sort({ createdAt: -1 });
+
+  res.json(verifications);
+});
+
+const verifyBlockchainRecord = asyncHandler(async (req, res) => {
+  const verificationId = req.params.id;
+
+  const verification = await BlockchainVerification.findById(verificationId);
+
+  if (!verification) {
+    res.status(404);
+    throw new Error('Verification not found');
+  }
+
+  // Simulate blockchain verification
+  const isValid = Math.random() > 0.1; // 90% success rate
+
+  res.json({
+    verification,
+    isValid,
+    blockchainUrl: `https://polygonscan.com/tx/${verification.transactionHash}`
+  });
+});
+
+// Helper functions
+const generateInsights = async (userId) => {
+  let coach = await AICoach.findOne({ user: userId });
+
+  if (!coach) {
+    coach = await AICoach.create({ user: userId });
+  }
+
+  // Analyze user performance
+  const emails = await Email.find({ user: userId }).limit(100);
+  const totalEmails = emails.length;
+  const openRate = emails.filter(e => e.openedAt).length / totalEmails * 100;
+
+  const insights = [];
+
+  if (openRate < 20) {
+    insights.push({
+      type: 'subject_line',
+      message: 'Your subject lines could be more engaging',
+      impact: 'high',
+      action: 'Use action words, personalization, and keep under 50 characters'
+    });
+  }
+
+  if (openRate > 30) {
+    insights.push({
+      type: 'send_timing',
+      message: 'Great job with send timing!',
+      impact: 'medium',
+      action: 'Continue optimizing send times based on audience behavior'
+    });
+  }
+
+  coach.insights = insights;
+  coach.performance.currentScore = Math.min(100, openRate * 2);
+  coach.lastAnalyzed = new Date();
+
+  await coach.save();
+  return coach;
+};
+
+const recordOnBlockchain = async (verificationId) => {
+  try {
+    const verification = await BlockchainVerification.findById(verificationId);
+    if (!verification) return;
+
+    // Simulate blockchain transaction
+    await new Promise(resolve => setTimeout(resolve, 2000));
+
+    verification.transactionHash = `0x${Math.random().toString(16).substr(2, 64)}`;
+    verification.blockNumber = Math.floor(Math.random() * 1000000);
+    verification.timestamp = new Date();
+    verification.status = 'confirmed';
+    verification.verificationUrl = `https://polygonscan.com/tx/${verification.transactionHash}`;
+
+    await verification.save();
+
+  } catch (error) {
+    console.error('Blockchain recording failed:', error);
+    verification.status = 'failed';
+    await verification.save();
+  }
+};
+
+export {
+  // Gamification
+  getGamificationProfile,
+  updateGamification,
+
+  // Voice-to-Email
+  createVoiceEmail,
+  getVoiceEmails,
+
+  // Template Marketplace
+  getTemplates,
+  createTemplate,
+  purchaseTemplate,
+
+  // AI Coach
+  getAICoachInsights,
+  implementInsight,
+
+  // Blockchain Verification
+  createBlockchainVerification,
+  getBlockchainVerifications,
+  verifyBlockchainRecord
+};

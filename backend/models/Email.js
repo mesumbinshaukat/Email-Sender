@@ -13,6 +13,15 @@ const emailSchema = new mongoose.Schema(
       ref: 'Campaign',
       index: true,
     },
+    sequenceId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Sequence',
+      index: true,
+    },
+    stepNumber: {
+      type: Number,
+      default: 0,
+    },
     trackingId: {
       type: String,
       required: true,

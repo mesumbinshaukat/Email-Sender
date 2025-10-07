@@ -29,6 +29,17 @@ const userSchema = new mongoose.Schema(
       user: { type: String, default: '' },
       password: { type: String, default: '', select: false },
     },
+    warmupSettings: {
+      isActive: { type: Boolean, default: false },
+      currentVolume: { type: Number, default: 0 }, // Current daily send limit
+      targetVolume: { type: Number, default: 100 }, // Target daily send limit
+      dailyIncrease: { type: Number, default: 10 }, // Increase per day
+      currentDay: { type: Number, default: 0 }, // Days into warmup
+      startDate: { type: Date },
+      lastIncrease: { type: Date },
+      reputationScore: { type: Number, default: 50 }, // 0-100 reputation score
+      alertsEnabled: { type: Boolean, default: true },
+    },
     isActive: {
       type: Boolean,
       default: true,
