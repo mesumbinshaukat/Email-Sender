@@ -2,6 +2,7 @@ import Sequence from '../models/Sequence.js';
 import Email from '../models/Email.js';
 import User from '../models/User.js';
 import { sendTrackedEmail } from '../utils/emailService.js';
+import crypto from 'crypto';
 
 // @desc    Create new sequence
 // @route   POST /api/sequences
@@ -438,5 +439,5 @@ const scheduleSequenceEmail = async (sequence, step, recipientEmail, delayMinute
 
 // Helper function to generate tracking ID
 const generateTrackingId = () => {
-  return require('crypto').randomBytes(16).toString('hex');
+  return crypto.randomBytes(16).toString('hex');
 };

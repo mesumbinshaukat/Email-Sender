@@ -1,5 +1,6 @@
 import EmailHygiene from '../models/EmailHygiene.js';
 import Contact from '../models/Contact.js';
+import Email from '../models/Email.js';
 
 // @desc    Validate email list
 // @route   POST /api/hygiene/validate-list
@@ -415,7 +416,7 @@ const performEmailValidation = async (email) => {
 const gatherEngagementData = async (email, userId) => {
   try {
     // Find emails sent to this address
-    const sentEmails = await require('../models/Email.js').default.find({
+    const sentEmails = await Email.find({
       userId,
       to: { $regex: new RegExp(email, 'i') },
     });
