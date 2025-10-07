@@ -1,4 +1,4 @@
-import asyncHandler from 'express-async-handler';
+// express-async-handler removed - using native async/await
 import ABTest from '../models/ABTest.js';
 
 // @desc    Create A/B test

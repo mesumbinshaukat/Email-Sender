@@ -1,4 +1,4 @@
-import asyncHandler from 'express-async-handler';
+// express-async-handler removed - using native async/await
 import AITraining from '../models/AITraining.js';
 import Email from '../models/Email.js';
 import Contact from '../models/Contact.js';

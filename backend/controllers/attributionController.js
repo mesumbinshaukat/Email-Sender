@@ -1,4 +1,4 @@
-import asyncHandler from 'express-async-handler';
+// express-async-handler removed - using native async/await
 import Attribution from '../models/Attribution.js';
 
 // @desc    Track touchpoint

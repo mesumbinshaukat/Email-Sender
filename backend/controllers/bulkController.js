@@ -1,4 +1,4 @@
-import asyncHandler from 'express-async-handler';
+// express-async-handler removed - using native async/await
 import csv from 'csv-parser';
 import { Readable } from 'stream';
 import BulkJob from '../models/BulkJob.js';

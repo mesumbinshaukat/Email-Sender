@@ -1,4 +1,4 @@
-import asyncHandler from 'express-async-handler';
+// express-async-handler removed - using native async/await
 import Newsletter from '../models/Newsletter.js'; // Would need to create this model
 
 // @desc    Create newsletter

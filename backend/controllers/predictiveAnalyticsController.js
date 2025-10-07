@@ -1,4 +1,4 @@
-import asyncHandler from 'express-async-handler';
+// express-async-handler removed - using native async/await
 import Email from '../models/Email.js';
 import User from '../models/User.js';
 

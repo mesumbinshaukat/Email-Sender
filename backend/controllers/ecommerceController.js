@@ -1,4 +1,4 @@
-import asyncHandler from 'express-async-handler';
+// express-async-handler removed - using native async/await
 import EcommerceIntegration from '../models/EcommerceIntegration.js';
 
 // @desc    Connect e-commerce platform

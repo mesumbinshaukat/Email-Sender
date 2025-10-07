@@ -1,4 +1,4 @@
-import asyncHandler from 'express-async-handler';
+// express-async-handler removed - using native async/await
 import crypto from 'crypto';
 import Webhook from '../models/Webhook.js';
 import { getEnvVar } from '../utils/envManager.js';

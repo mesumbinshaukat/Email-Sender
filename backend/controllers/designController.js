@@ -1,4 +1,4 @@
-import asyncHandler from 'express-async-handler';
+// express-async-handler removed - using native async/await
 import OpenAI from 'openai';
 import EmailTemplate from '../models/EmailTemplate.js';
 import BrandKit from '../models/BrandKit.js';

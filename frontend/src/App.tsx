@@ -68,7 +68,7 @@ import CrossChannelAdapter from './pages/CrossChannelAdapter';
 import ZeroPartyEnricher from './pages/ZeroPartyEnricher';
 
 function App() {
-  const { checkAuth } = useAuthStore();
+  const { checkAuth, isAuthenticated } = useAuthStore();
 
   useEffect(() => {
     checkAuth();
@@ -104,9 +104,15 @@ function App() {
       <Chatbot />
       
       <Routes>
-        <Route path="/" element={<Navigate to="/dashboard" replace />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
+        <Route path="/" element={
+          isAuthenticated ? <Navigate to="/dashboard" replace /> : <Navigate to="/login" replace />
+        } />
+        <Route path="/login" element={
+          isAuthenticated ? <Navigate to="/dashboard" replace /> : <Login />
+        } />
+        <Route path="/register" element={
+          isAuthenticated ? <Navigate to="/dashboard" replace /> : <Register />
+        } />
         
         <Route
           path="/dashboard"

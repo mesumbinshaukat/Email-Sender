@@ -1,4 +1,4 @@
-import asyncHandler from 'express-async-handler';
+// express-async-handler removed - using native async/await
 import { Gamification, VoiceEmail, TemplateMarketplace, AICoach, BlockchainVerification } from '../models/gamificationSchemas.js';
 import Email from '../models/Email.js';
 import { getEnvVar } from '../utils/envManager.js';

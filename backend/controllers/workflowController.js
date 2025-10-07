@@ -1,4 +1,4 @@
-import asyncHandler from 'express-async-handler';
+// express-async-handler removed - using native async/await
 import Workflow from '../models/Workflow.js';
 import Trigger from '../models/Trigger.js';
 

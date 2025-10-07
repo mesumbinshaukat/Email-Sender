@@ -1,4 +1,4 @@
-import asyncHandler from 'express-async-handler';
+// express-async-handler removed - using native async/await
 import CalendarIntegration from '../models/CalendarIntegration.js';
 import { google } from 'googleapis';
 

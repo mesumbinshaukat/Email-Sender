@@ -1,4 +1,4 @@
-import asyncHandler from 'express-async-handler';
+// express-async-handler removed - using native async/await
 
 // @desc    Verify email address
 // @route   POST /api/verification/verify

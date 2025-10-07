@@ -1,4 +1,4 @@
-import asyncHandler from 'express-async-handler';
+// express-async-handler removed - using native async/await
 import DataPrivacy from '../models/DataPrivacy.js';
 import Contact from '../models/Contact.js';
 import Email from '../models/Email.js';

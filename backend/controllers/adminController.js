@@ -1,4 +1,4 @@
-import asyncHandler from 'express-async-handler';
+// express-async-handler removed - using native async/await
 import EnvironmentVariable from '../models/EnvironmentVariable.js';
 import { setEnvVar, getAllEnvVars } from '../utils/envManager.js';
 

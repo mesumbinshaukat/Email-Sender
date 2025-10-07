@@ -1,4 +1,4 @@
-import asyncHandler from 'express-async-handler';
+// express-async-handler removed - using native async/await
 import CustomReport from '../models/CustomReport.js';
 import Email from '../models/Email.js';
 import Campaign from '../models/Campaign.js';

@@ -1,4 +1,4 @@
-import asyncHandler from 'express-async-handler';
+// express-async-handler removed - using native async/await
 import WhiteLabel from '../models/WhiteLabel.js';
 
 // @desc    Get white label settings

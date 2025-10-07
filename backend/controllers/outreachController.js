@@ -1,4 +1,4 @@
-import asyncHandler from 'express-async-handler';
+// express-async-handler removed - using native async/await
 import Outreach from '../models/Outreach.js'; // Would need to create this model
 
 // @desc    Create outreach campaign
