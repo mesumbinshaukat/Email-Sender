@@ -2,6 +2,7 @@ import Bull from 'bull';
 import nodemailer from 'nodemailer';
 import Email from '../models/Email.js';
 import User from '../models/User.js';
+import { injectTrackingPixel, injectReadTimeTracker, wrapLinksWithTracking } from '../utils/emailService.js';
 
 // Redis configuration
 const REDIS_URL = process.env.REDIS_URL || 'redis://127.0.0.1:6379';
@@ -54,13 +55,16 @@ emailQueue.process(async (job) => {
       },
     });
 
-    // Build tracking pixel URL
-    const trackingPixelUrl = `${process.env.BACKEND_URL || 'http://localhost:5000'}/api/track/open/${email.trackingId}`;
+    // Build tracking URLs
+    const backendUrl = process.env.BACKEND_URL || 'http://localhost:5000';
     
-    // Inject tracking pixel into HTML body
+    // Inject tracking into HTML body
     let htmlBody = email.body.html || '';
     if (htmlBody) {
-      htmlBody += `<img src="${trackingPixelUrl}" width="1" height="1" style="display:none;" alt="" />`;
+      htmlBody = injectTrackingPixel(htmlBody, email.trackingId, backendUrl);
+      htmlBody = injectReadTimeTracker(htmlBody, email.trackingId, backendUrl);
+      htmlBody = wrapLinksWithTracking(htmlBody, email.trackingId, backendUrl);
+      console.log('✅ Tracking pixel, read time tracker, and link tracking injected for scheduled email');
     }
 
     // Prepare email options

@@ -40,6 +40,84 @@ export const injectTrackingPixel = (html, trackingId, backendUrl) => {
 };
 
 /**
+ * Inject read time tracking script into HTML email
+ */
+export const injectReadTimeTracker = (html, trackingId, backendUrl) => {
+  const trackingScript = `
+    <script>
+      (function() {
+        var startTime = new Date().toISOString();
+        var trackingId = '${trackingId}';
+        var backendUrl = '${backendUrl}';
+        var hasSent = false;
+        
+        function sendReadTime() {
+          if (hasSent) return;
+          hasSent = true;
+          
+          var endTime = new Date().toISOString();
+          var duration = Math.round((new Date(endTime) - new Date(startTime)) / 1000); // seconds
+          
+          // Only send if user spent at least 1 second
+          if (duration < 1) return;
+          
+          var data = {
+            startTime: startTime,
+            endTime: endTime,
+            duration: duration
+          };
+          
+          // Use sendBeacon if available (works even when page is closing)
+          if (navigator.sendBeacon) {
+            var blob = new Blob([JSON.stringify(data)], { type: 'application/json' });
+            navigator.sendBeacon(backendUrl + '/api/track/readtime/' + trackingId, blob);
+          } else {
+            // Fallback to fetch
+            fetch(backendUrl + '/api/track/readtime/' + trackingId, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(data),
+              keepalive: true
+            }).catch(function() {});
+          }
+        }
+        
+        // Track when user leaves the email
+        window.addEventListener('beforeunload', sendReadTime);
+        window.addEventListener('pagehide', sendReadTime);
+        
+        // Also track after 30 seconds of viewing (for long reads)
+        setTimeout(function() {
+          if (!hasSent) {
+            sendReadTime();
+            hasSent = false; // Allow another send on close
+          }
+        }, 30000);
+        
+        // Track visibility changes (when user switches tabs)
+        var visibilityChangeTime = startTime;
+        document.addEventListener('visibilitychange', function() {
+          if (document.hidden) {
+            // User switched away - send current read time
+            sendReadTime();
+          } else {
+            // User came back - reset start time
+            hasSent = false;
+            startTime = new Date().toISOString();
+          }
+        });
+      })();
+    </script>
+  `;
+  
+  // Inject before closing body tag, or at the end
+  if (html.includes('</body>')) {
+    return html.replace('</body>', `${trackingScript}</body>`);
+  }
+  return html + trackingScript;
+};
+
+/**
  * Wrap links in HTML with tracking redirects
  */
 export const wrapLinksWithTracking = (html, trackingId, backendUrl) => {
@@ -112,14 +190,16 @@ export const sendTrackedEmail = async (transporter, emailData, trackingId, backe
     console.log('🔄 Converted text to HTML with link tracking');
   }
   
-  // Inject tracking pixel
+  // Inject tracking pixel and read time tracker
   if (htmlBody) {
     // Also wrap any plain URLs in HTML that aren't already in anchor tags
     htmlBody = wrapPlainUrlsInHtml(htmlBody, trackingId, backendUrl);
     
     htmlBody = injectTrackingPixel(htmlBody, trackingId, backendUrl);
+    htmlBody = injectReadTimeTracker(htmlBody, trackingId, backendUrl);
     htmlBody = wrapLinksWithTracking(htmlBody, trackingId, backendUrl);
     console.log('✅ Tracking pixel injected');
+    console.log('✅ Read time tracker injected');
     console.log('🔗 Tracking pixel URL:', `${backendUrl}/api/track/open/${trackingId}`);
   } else {
     console.log('⚠️ No HTML body - tracking pixel NOT injected');
