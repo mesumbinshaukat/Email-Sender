@@ -73,6 +73,7 @@ import staggeredSendRoutes from './routes/staggeredSendRoutes.js';
 import liquidRoutes from './routes/liquidRoutes.js';
 import crossChannelRoutes from './routes/crossChannelRoutes.js';
 import zeroPartyRoutes from './routes/zeroPartyRoutes.js';
+import healthRoutes from './routes/healthRoutes.js';
 
 // Load environment variables
 dotenv.config();
@@ -140,13 +141,8 @@ app.get('/', (req, res) => {
   });
 });
 
-app.get('/api/health', (req, res) => {
-  res.json({
-    success: true,
-    message: 'Server is healthy',
-    timestamp: new Date().toISOString(),
-  });
-});
+// Health and testing routes
+app.use('/api/health', healthRoutes);
 
 // API Routes
 app.use('/api/auth', authRoutes);
