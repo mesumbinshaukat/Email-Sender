@@ -44,6 +44,11 @@ export const injectTrackingPixel = (html, trackingId, backendUrl) => {
     <img src="${backendUrl}/api/track/readtime/${trackingId}?t=30" width="1" height="1" style="display:none;" alt="" loading="lazy" />
     <img src="${backendUrl}/api/track/readtime/${trackingId}?t=45" width="1" height="1" style="display:none;" alt="" loading="lazy" />
     <img src="${backendUrl}/api/track/readtime/${trackingId}?t=60" width="1" height="1" style="display:none;" alt="" loading="lazy" />
+    <img src="${backendUrl}/api/track/readtime/${trackingId}?t=90" width="1" height="1" style="display:none;" alt="" loading="lazy" />
+    <img src="${backendUrl}/api/track/readtime/${trackingId}?t=120" width="1" height="1" style="display:none;" alt="" loading="lazy" />
+    <img src="${backendUrl}/api/track/readtime/${trackingId}?t=180" width="1" height="1" style="display:none;" alt="" loading="lazy" />
+    <img src="${backendUrl}/api/track/readtime/${trackingId}?t=240" width="1" height="1" style="display:none;" alt="" loading="lazy" />
+    <img src="${backendUrl}/api/track/readtime/${trackingId}?t=300" width="1" height="1" style="display:none;" alt="" loading="lazy" />
   `;
   
   const allPixels = trackingPixel + delayedPixels;
@@ -253,10 +258,10 @@ export const sendTrackedEmail = async (transporter, emailData, trackingId, backe
     htmlBody = injectReadTimeTracker(htmlBody, trackingId, backendUrl);
     htmlBody = wrapLinksWithTracking(htmlBody, trackingId, backendUrl);
     
-    console.log('✅ Tracking pixel injected (with 7 read-time pixels)');
+    console.log('✅ Tracking pixel injected (with 12 read-time pixels)');
     console.log('✅ Read time tracker JavaScript injected (fallback)');
     console.log('🔗 Tracking pixel URL:', `${backendUrl}/api/track/open/${trackingId}`);
-    console.log('🔗 Read time pixels:', `${backendUrl}/api/track/readtime/${trackingId}?t=[5,10,15,20,30,45,60]`);
+    console.log('🔗 Read time pixels:', `${backendUrl}/api/track/readtime/${trackingId}?t=[5,10,15,20,30,45,60,90,120,180,240,300]`);
     console.log('📏 Final HTML length:', htmlBody.length);
     
     // Verify tracking was injected

@@ -170,25 +170,58 @@ export const trackReadTime = async (req, res) => {
       return res.json({ success: false, message: 'Email not found' });
     }
 
-    const readSession = {
-      startTime: new Date(startTime),
-      endTime: new Date(endTime),
-      duration: duration || 0,
-    };
+    // For pixel-based tracking, only update if this is a higher time marker
+    if (req.method === 'GET') {
+      const currentMaxTime = email.tracking.totalReadTime || 0;
+      
+      // Only update if this pixel represents more time than we've recorded
+      if (duration > currentMaxTime) {
+        const readSession = {
+          startTime: new Date(startTime),
+          endTime: new Date(endTime),
+          duration: duration || 0,
+        };
 
-    email.tracking.readSessions.push(readSession);
-    email.tracking.totalReadTime = Math.max(email.tracking.totalReadTime, duration || 0);
+        email.tracking.readSessions.push(readSession);
+        email.tracking.totalReadTime = duration;
 
-    await email.save();
+        await email.save();
 
-    console.log('✅ READ TIME SAVED:', {
-      emailId: email._id,
-      subject: email.subject,
-      sessionDuration: `${duration} seconds`,
-      totalReadTime: `${email.tracking.totalReadTime} seconds`,
-      totalSessions: email.tracking.readSessions.length,
-      method: req.method === 'GET' ? 'PIXEL' : 'BEACON'
-    });
+        console.log('✅ READ TIME UPDATED (PIXEL):', {
+          emailId: email._id,
+          subject: email.subject,
+          previousTime: `${currentMaxTime} seconds`,
+          newTime: `${duration} seconds`,
+          totalSessions: email.tracking.readSessions.length
+        });
+      } else {
+        console.log('⏭️  READ TIME PIXEL IGNORED (already have higher time):', {
+          trackingId,
+          pixelTime: `${duration}s`,
+          currentMax: `${currentMaxTime}s`
+        });
+      }
+    } else {
+      // JavaScript beacon tracking - always add
+      const readSession = {
+        startTime: new Date(startTime),
+        endTime: new Date(endTime),
+        duration: duration || 0,
+      };
+
+      email.tracking.readSessions.push(readSession);
+      email.tracking.totalReadTime = Math.max(email.tracking.totalReadTime, duration || 0);
+
+      await email.save();
+
+      console.log('✅ READ TIME SAVED (BEACON):', {
+        emailId: email._id,
+        subject: email.subject,
+        sessionDuration: `${duration} seconds`,
+        totalReadTime: `${email.tracking.totalReadTime} seconds`,
+        totalSessions: email.tracking.readSessions.length
+      });
+    }
 
     // For pixel requests, return a 1x1 transparent GIF
     if (req.method === 'GET') {
