@@ -27,16 +27,32 @@ export const generateTrackingId = () => {
 };
 
 /**
- * Inject tracking pixel into HTML email
+ * Inject tracking pixel into HTML email with read time estimation
+ * Uses multiple delayed pixel requests to estimate how long email is kept open
  */
 export const injectTrackingPixel = (html, trackingId, backendUrl) => {
+  // Main tracking pixel (fires immediately on open)
   const trackingPixel = `<img src="${backendUrl}/api/track/open/${trackingId}" width="1" height="1" style="display:none;" alt="" />`;
+  
+  // Additional delayed pixels to estimate read time (fire after delays)
+  // These will only load if the email stays open
+  const delayedPixels = `
+    <img src="${backendUrl}/api/track/readtime/${trackingId}?t=5" width="1" height="1" style="display:none;" alt="" loading="lazy" />
+    <img src="${backendUrl}/api/track/readtime/${trackingId}?t=10" width="1" height="1" style="display:none;" alt="" loading="lazy" />
+    <img src="${backendUrl}/api/track/readtime/${trackingId}?t=15" width="1" height="1" style="display:none;" alt="" loading="lazy" />
+    <img src="${backendUrl}/api/track/readtime/${trackingId}?t=20" width="1" height="1" style="display:none;" alt="" loading="lazy" />
+    <img src="${backendUrl}/api/track/readtime/${trackingId}?t=30" width="1" height="1" style="display:none;" alt="" loading="lazy" />
+    <img src="${backendUrl}/api/track/readtime/${trackingId}?t=45" width="1" height="1" style="display:none;" alt="" loading="lazy" />
+    <img src="${backendUrl}/api/track/readtime/${trackingId}?t=60" width="1" height="1" style="display:none;" alt="" loading="lazy" />
+  `;
+  
+  const allPixels = trackingPixel + delayedPixels;
   
   // Try to inject before closing body tag, otherwise append
   if (html.includes('</body>')) {
-    return html.replace('</body>', `${trackingPixel}</body>`);
+    return html.replace('</body>', `${allPixels}</body>`);
   }
-  return html + trackingPixel;
+  return html + allPixels;
 };
 
 /**
@@ -237,20 +253,20 @@ export const sendTrackedEmail = async (transporter, emailData, trackingId, backe
     htmlBody = injectReadTimeTracker(htmlBody, trackingId, backendUrl);
     htmlBody = wrapLinksWithTracking(htmlBody, trackingId, backendUrl);
     
-    console.log('✅ Tracking pixel injected');
-    console.log('✅ Read time tracker injected');
+    console.log('✅ Tracking pixel injected (with 7 read-time pixels)');
+    console.log('✅ Read time tracker JavaScript injected (fallback)');
     console.log('🔗 Tracking pixel URL:', `${backendUrl}/api/track/open/${trackingId}`);
-    console.log('🔗 Read time endpoint:', `${backendUrl}/api/track/readtime/${trackingId}`);
+    console.log('🔗 Read time pixels:', `${backendUrl}/api/track/readtime/${trackingId}?t=[5,10,15,20,30,45,60]`);
     console.log('📏 Final HTML length:', htmlBody.length);
     
-    // Verify tracking script was injected
-    if (htmlBody.includes('Email Read Time Tracker Initialized')) {
-      console.log('✅ VERIFIED: Read time tracker script is in HTML');
+    // Verify tracking was injected
+    if (htmlBody.includes('/api/track/readtime/')) {
+      console.log('✅ VERIFIED: Read time tracking pixels are in HTML');
     } else {
-      console.log('❌ WARNING: Read time tracker script NOT found in HTML!');
+      console.log('❌ WARNING: Read time tracking pixels NOT found in HTML!');
     }
   } else {
-    console.log('⚠️ No HTML body - tracking pixel NOT injected');
+    console.log('⚠️ No HTML body - tracking NOT injected');
   }
 
   const mailOptions = {

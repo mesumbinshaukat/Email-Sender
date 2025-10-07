@@ -112,7 +112,7 @@ export const Analytics: React.FC = () => {
           <Card>
             <CardContent className="pt-6">
               <div className="text-center">
-                <p className="text-sm text-gray-600 font-medium">Total Clicks</p>
+                <p className="text-sm text-gray-600 font-medium">Total Clicks (CTA)</p>
                 <p className="text-4xl font-bold text-orange-600 mt-2">
                   {stats?.totalClicks || 0}
                 </p>

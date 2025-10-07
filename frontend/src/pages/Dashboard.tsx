@@ -74,7 +74,7 @@ export const Dashboard: React.FC = () => {
       bgColor: 'bg-green-100',
     },
     {
-      title: 'Total Clicks',
+      title: 'Total Clicks (CTA)',
       value: stats?.totalClicks || 0,
       icon: MousePointer,
       color: 'text-purple-600',

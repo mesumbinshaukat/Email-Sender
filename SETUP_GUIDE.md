@@ -5,36 +5,6 @@
 This project includes:
 - ✅ **Backend API** - Full REST API with Express.js
 - ✅ **Frontend Dashboard** - React + TypeScript + Vite
-- ✅ **Nodemailer Integration** - Cloned in `nodemailer-lib/`
-- ✅ **Email Tracking** - Opens, clicks, read time
-- ✅ **Authentication** - JWT-based auth system
-- ✅ **Analytics** - Charts and statistics
-- ✅ **SMTP Configuration** - User-managed SMTP settings
-
-## 🎯 Quick Start (3 Steps)
-
-### Step 1: Install Dependencies
-
-```bash
-# Backend
-cd backend
-npm install
-
-# Frontend (in new terminal)
-cd frontend
-npm install
-```
-
-### Step 2: Start MongoDB
-
-```bash
-# Option 1: Command line
-mongod
-
-# Option 2: MongoDB Compass
-# Connect to: mongodb://localhost:27017/email-sender-tracker
-```
-
 ### Step 3: Run the Application
 
 ```bash

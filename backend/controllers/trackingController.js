@@ -109,27 +109,64 @@ export const trackEmailClick = async (req, res) => {
 };
 
 /**
- * @desc    Track email read time (called from frontend via beacon)
+ * @desc    Track email read time (called from frontend via beacon OR via pixel)
  * @route   POST /api/track/readtime/:trackingId
+ * @route   GET /api/track/readtime/:trackingId (for pixel-based tracking)
  * @access  Public
  */
 export const trackReadTime = async (req, res) => {
   try {
     const { trackingId } = req.params;
-    const { startTime, endTime, duration } = req.body;
-
-    console.log('⏱️  READ TIME TRACKED:', {
-      trackingId,
-      startTime,
-      endTime,
-      duration: `${duration} seconds`,
-      timestamp: new Date().toISOString()
-    });
+    
+    // Handle both POST (JavaScript beacon) and GET (pixel) requests
+    let startTime, endTime, duration;
+    
+    if (req.method === 'GET') {
+      // Pixel-based tracking - use query parameter for time marker
+      const timeMarker = parseInt(req.query.t) || 0;
+      duration = timeMarker;
+      startTime = new Date(Date.now() - (duration * 1000)).toISOString();
+      endTime = new Date().toISOString();
+      
+      console.log('⏱️  READ TIME PIXEL LOADED:', {
+        trackingId,
+        timeMarker: `${timeMarker}s`,
+        method: 'PIXEL',
+        timestamp: new Date().toISOString()
+      });
+    } else {
+      // JavaScript beacon tracking
+      ({ startTime, endTime, duration } = req.body);
+      
+      console.log('⏱️  READ TIME TRACKED:', {
+        trackingId,
+        startTime,
+        endTime,
+        duration: `${duration} seconds`,
+        method: 'BEACON',
+        timestamp: new Date().toISOString()
+      });
+    }
 
     const email = await Email.findOne({ trackingId });
 
     if (!email) {
       console.log('❌ Email not found for read time tracking:', trackingId);
+      
+      // For pixel requests, return a 1x1 transparent GIF
+      if (req.method === 'GET') {
+        const pixel = Buffer.from(
+          'R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7',
+          'base64'
+        );
+        res.writeHead(200, {
+          'Content-Type': 'image/gif',
+          'Content-Length': pixel.length,
+          'Cache-Control': 'no-store, no-cache, must-revalidate, private',
+        });
+        return res.end(pixel);
+      }
+      
       return res.json({ success: false, message: 'Email not found' });
     }
 
@@ -140,7 +177,7 @@ export const trackReadTime = async (req, res) => {
     };
 
     email.tracking.readSessions.push(readSession);
-    email.tracking.totalReadTime += duration || 0;
+    email.tracking.totalReadTime = Math.max(email.tracking.totalReadTime, duration || 0);
 
     await email.save();
 
@@ -149,12 +186,41 @@ export const trackReadTime = async (req, res) => {
       subject: email.subject,
       sessionDuration: `${duration} seconds`,
       totalReadTime: `${email.tracking.totalReadTime} seconds`,
-      totalSessions: email.tracking.readSessions.length
+      totalSessions: email.tracking.readSessions.length,
+      method: req.method === 'GET' ? 'PIXEL' : 'BEACON'
     });
+
+    // For pixel requests, return a 1x1 transparent GIF
+    if (req.method === 'GET') {
+      const pixel = Buffer.from(
+        'R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7',
+        'base64'
+      );
+      res.writeHead(200, {
+        'Content-Type': 'image/gif',
+        'Content-Length': pixel.length,
+        'Cache-Control': 'no-store, no-cache, must-revalidate, private',
+      });
+      return res.end(pixel);
+    }
 
     res.json({ success: true });
   } catch (error) {
     console.error('❌ Track read time error:', error);
+    
+    // For pixel requests, still return a pixel even on error
+    if (req.method === 'GET') {
+      const pixel = Buffer.from(
+        'R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7',
+        'base64'
+      );
+      res.writeHead(200, {
+        'Content-Type': 'image/gif',
+        'Content-Length': pixel.length,
+      });
+      return res.end(pixel);
+    }
+    
     res.status(500).json({ success: false, error: error.message });
   }
 };

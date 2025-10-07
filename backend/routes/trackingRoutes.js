@@ -12,7 +12,8 @@ const router = express.Router();
 // Public routes (no auth required for tracking)
 router.get('/open/:trackingId', trackEmailOpen);
 router.get('/click/:trackingId', trackEmailClick);
-router.post('/readtime/:trackingId', trackReadTime);
+router.get('/readtime/:trackingId', trackReadTime); // Pixel-based read time tracking
+router.post('/readtime/:trackingId', trackReadTime); // JavaScript beacon read time tracking
 
 // Private route (requires auth)
 router.get('/data/:trackingId', protect, getTrackingData);

@@ -246,7 +246,7 @@ export const Emails: React.FC = () => {
                   </p>
                 </div>
                 <div className="bg-purple-50 p-4 rounded-lg">
-                  <p className="text-sm text-gray-600">Total Clicks</p>
+                  <p className="text-sm text-gray-600">Total Clicks (CTA)</p>
                   <p className="text-2xl font-bold text-purple-600">
                     {selectedEmail.tracking.totalClicks}
                   </p>
