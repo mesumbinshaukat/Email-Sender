@@ -6,29 +6,33 @@ import Email from '../models/Email.js';
 // @desc    Initialize data privacy center
 // @route   POST /api/privacy/init
 // @access  Private
-const initializePrivacy = async (req, res) => { try {
-  const userId = req.user._id;
+const initializePrivacy = async (req, res) => {
+  try {
+    const userId = req.user._id;
 
-  let privacy = await DataPrivacy.findOne({ user: userId });
+    let privacy = await DataPrivacy.findOne({ user: userId });
 
-  if (!privacy) {
-    privacy = await DataPrivacy.create({
-      user: userId,
-      gdprCompliance: {
-        dataProcessingAgreement: false,
-        privacyPolicy: '',
-        consentMechanism: 'explicit'
-      },
-      settings: {
-        autoDeleteInactiveData: false,
-        anonymizeAfterRetention: true,
-        requireConsentForMarketing: true
-      }
-    });
+    if (!privacy) {
+      privacy = await DataPrivacy.create({
+        user: userId,
+        gdprCompliance: {
+          dataProcessingAgreement: false,
+          privacyPolicy: '',
+          consentMechanism: 'explicit'
+        },
+        settings: {
+          autoDeleteInactiveData: false,
+          anonymizeAfterRetention: true,
+          requireConsentForMarketing: true
+        }
+      });
+    }
+
+    res.json(privacy);
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
   }
-
-  res.json(privacy);
-}  } catch (error) { res.status(500).json({ message: 'Server error', error: error.message }); } };
+};
 
 // @desc    Update GDPR compliance settings
 // @route   PUT /api/privacy/gdpr
