@@ -5,15 +5,15 @@ import { setEnvVar, getAllEnvVars } from '../utils/envManager.js';
 // @desc    Get all environment variables
 // @route   GET /api/admin/env-vars
 // @access  Private (Admin only)
-const getEnvVars = asyncHandler(async (req, res) => {
+const getEnvVars = async (req, res) => { try {
   const envVars = await EnvironmentVariable.find({}).select('-__v');
   res.json(envVars);
-});
+}  } catch (error) { res.status(500).json({ message: 'Server error', error: error.message }); } };
 
 // @desc    Set environment variable
 // @route   POST /api/admin/env-vars
 // @access  Private (Admin only)
-const setEnvVarHandler = asyncHandler(async (req, res) => {
+const setEnvVarHandler = async (req, res) => { try {
   const { key, value, description, category } = req.body;
 
   if (!key || !value) {
@@ -28,12 +28,12 @@ const setEnvVarHandler = asyncHandler(async (req, res) => {
     res.status(500);
     throw new Error('Failed to set environment variable');
   }
-});
+}  } catch (error) { res.status(500).json({ message: 'Server error', error: error.message }); } };
 
 // @desc    Update environment variable
 // @route   PUT /api/admin/env-vars/:key
 // @access  Private (Admin only)
-const updateEnvVar = asyncHandler(async (req, res) => {
+const updateEnvVar = async (req, res) => { try {
   const { value, description, category } = req.body;
   const key = req.params.key;
 
@@ -49,12 +49,12 @@ const updateEnvVar = asyncHandler(async (req, res) => {
     res.status(404);
     throw new Error('Environment variable not found');
   }
-});
+}  } catch (error) { res.status(500).json({ message: 'Server error', error: error.message }); } };
 
 // @desc    Delete environment variable
 // @route   DELETE /api/admin/env-vars/:key
 // @access  Private (Admin only)
-const deleteEnvVar = asyncHandler(async (req, res) => {
+const deleteEnvVar = async (req, res) => { try {
   const key = req.params.key;
 
   const deleted = await EnvironmentVariable.findOneAndDelete({ key });
@@ -64,16 +64,16 @@ const deleteEnvVar = asyncHandler(async (req, res) => {
     res.status(404);
     throw new Error('Environment variable not found');
   }
-});
+}  } catch (error) { res.status(500).json({ message: 'Server error', error: error.message }); } };
 
 // @desc    Get environment variables by category
 // @route   GET /api/admin/env-vars/category/:category
 // @access  Private (Admin only)
-const getEnvVarsByCategory = asyncHandler(async (req, res) => {
+const getEnvVarsByCategory = async (req, res) => { try {
   const category = req.params.category;
   const envVars = await EnvironmentVariable.find({ category }).select('-__v');
   res.json(envVars);
-});
+}  } catch (error) { res.status(500).json({ message: 'Server error', error: error.message }); } };
 
 export {
   getEnvVars,

@@ -3,19 +3,19 @@
 // @desc    Verify email address
 // @route   POST /api/verification/verify
 // @access  Private
-const verifyEmail = asyncHandler(async (req, res) => {
+const verifyEmail = async (req, res) => { try {
   const { email } = req.body;
 
   // Perform real-time email verification
   const result = await performEmailVerification(email);
 
   res.json(result);
-});
+}  } catch (error) { res.status(500).json({ message: 'Server error', error: error.message }); } };
 
 // @desc    Bulk verify emails
 // @route   POST /api/verification/bulk-verify
 // @access  Private
-const bulkVerifyEmails = asyncHandler(async (req, res) => {
+const bulkVerifyEmails = async (req, res) => { try {
   const { emails } = req.body;
 
   const results = [];
@@ -25,12 +25,12 @@ const bulkVerifyEmails = asyncHandler(async (req, res) => {
   }
 
   res.json({ results, total: results.length });
-});
+}  } catch (error) { res.status(500).json({ message: 'Server error', error: error.message }); } };
 
 // @desc    Get verification stats
 // @route   GET /api/verification/stats
 // @access  Private
-const getVerificationStats = asyncHandler(async (req, res) => {
+const getVerificationStats = async (req, res) => { try {
   const stats = {
     verifiedToday: 450,
     invalidEmails: 12,
@@ -40,7 +40,7 @@ const getVerificationStats = asyncHandler(async (req, res) => {
   };
 
   res.json(stats);
-});
+}  } catch (error) { res.status(500).json({ message: 'Server error', error: error.message }); } };
 
 // Helper function
 const performEmailVerification = async (email) => {

@@ -6,7 +6,7 @@ import Contact from '../models/Contact.js';
 // @desc    Start send time optimization analysis
 // @route   POST /api/send-time-optimization/start
 // @access  Private
-const startOptimization = asyncHandler(async (req, res) => {
+const startOptimization = async (req, res) => { try {
   const { campaignId, segmentId } = req.body;
   const userId = req.user._id;
 
@@ -30,12 +30,12 @@ const startOptimization = asyncHandler(async (req, res) => {
   analyzeHistoricalData(optimization._id);
 
   res.status(200).json(optimization);
-});
+}  } catch (error) { res.status(500).json({ message: 'Server error', error: error.message }); } };
 
 // @desc    Get optimization results
 // @route   GET /api/send-time-optimization/:id
 // @access  Private
-const getOptimization = asyncHandler(async (req, res) => {
+const getOptimization = async (req, res) => { try {
   const optimization = await SendTimeOptimization.findById(req.params.id)
     .populate('campaign segment');
 
@@ -45,24 +45,24 @@ const getOptimization = asyncHandler(async (req, res) => {
   }
 
   res.json(optimization);
-});
+}  } catch (error) { res.status(500).json({ message: 'Server error', error: error.message }); } };
 
 // @desc    Get user's optimizations
 // @route   GET /api/send-time-optimization
 // @access  Private
-const getOptimizations = asyncHandler(async (req, res) => {
+const getOptimizations = async (req, res) => { try {
   const userId = req.user._id;
   const optimizations = await SendTimeOptimization.find({ user: userId })
     .populate('campaign segment')
     .sort({ createdAt: -1 });
 
   res.json(optimizations);
-});
+}  } catch (error) { res.status(500).json({ message: 'Server error', error: error.message }); } };
 
 // @desc    Apply optimized schedule
 // @route   POST /api/send-time-optimization/:id/apply
 // @access  Private
-const applyOptimization = asyncHandler(async (req, res) => {
+const applyOptimization = async (req, res) => { try {
   const optimization = await SendTimeOptimization.findById(req.params.id);
 
   if (!optimization) {
@@ -84,12 +84,12 @@ const applyOptimization = asyncHandler(async (req, res) => {
     message: 'Optimized schedule applied successfully',
     optimization
   });
-});
+}  } catch (error) { res.status(500).json({ message: 'Server error', error: error.message }); } };
 
 // @desc    Get optimization insights
 // @route   GET /api/send-time-optimization/:id/insights
 // @access  Private
-const getOptimizationInsights = asyncHandler(async (req, res) => {
+const getOptimizationInsights = async (req, res) => { try {
   const optimization = await SendTimeOptimization.findById(req.params.id);
 
   if (!optimization) {
@@ -105,7 +105,7 @@ const getOptimizationInsights = asyncHandler(async (req, res) => {
   };
 
   res.json(insights);
-});
+}  } catch (error) { res.status(500).json({ message: 'Server error', error: error.message }); } };
 
 // Helper functions
 const analyzeHistoricalData = async (optimizationId) => {
@@ -190,7 +190,7 @@ const generateOptimizedSchedule = async (historicalData) => {
     dayHourPerformance[key].total++;
     if (data.openedAt) dayHourPerformance[key].opens++;
     if (data.clickedAt) dayHourPerformance[key].clicks++;
-  });
+  }  } catch (error) { res.status(500).json({ message: 'Server error', error: error.message }); } };
 
   // Generate optimized schedule for each day/hour combination
   for (let day = 0; day < 7; day++) {
@@ -271,7 +271,7 @@ const calculatePerformanceMetrics = (historicalData) => {
       bestHourScore = score;
       metrics.bestHour = index;
     }
-  });
+  }  } catch (error) { res.status(500).json({ message: 'Server error', error: error.message }); } };
 
   // Calculate potential improvement
   const bestDayRate = dayPerformance[metrics.bestDay].opens / dayPerformance[metrics.bestDay].total;

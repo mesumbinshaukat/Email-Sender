@@ -6,17 +6,17 @@ import sharp from 'sharp';
 // @desc    Get GIFs
 // @route   GET /api/media/gifs
 // @access  Private
-const getGifs = asyncHandler(async (req, res) => {
+const getGifs = async (req, res) => { try {
   const { category } = req.query;
   const query = category ? { category } : {};
   const gifs = await Gif.find(query).sort({ usage: -1 });
   res.json(gifs);
-});
+}  } catch (error) { res.status(500).json({ message: 'Server error', error: error.message }); } };
 
 // @desc    Upload video
 // @route   POST /api/media/upload-video
 // @access  Private
-const uploadVideo = asyncHandler(async (req, res) => {
+const uploadVideo = async (req, res) => { try {
   // Simplified: assume video URL from upload
   const { url, altText, tags } = req.body;
   const userId = req.user._id;
@@ -29,12 +29,12 @@ const uploadVideo = asyncHandler(async (req, res) => {
   });
 
   res.status(201).json(video);
-});
+}  } catch (error) { res.status(500).json({ message: 'Server error', error: error.message }); } };
 
 // @desc    Generate thumbnail
 // @route   POST /api/media/generate-thumbnail
 // @access  Private
-const generateThumbnail = asyncHandler(async (req, res) => {
+const generateThumbnail = async (req, res) => { try {
   const { videoId } = req.body;
 
   const video = await Video.findById(videoId);
@@ -50,12 +50,12 @@ const generateThumbnail = asyncHandler(async (req, res) => {
   await video.save();
 
   res.json({ thumbnailUrl });
-});
+}  } catch (error) { res.status(500).json({ message: 'Server error', error: error.message }); } };
 
 // @desc    Get video analytics
 // @route   GET /api/media/video-analytics/:videoId
 // @access  Private
-const getVideoAnalytics = asyncHandler(async (req, res) => {
+const getVideoAnalytics = async (req, res) => { try {
   const video = await Video.findById(req.params.videoId);
   if (!video) {
     res.status(404);
@@ -63,12 +63,12 @@ const getVideoAnalytics = asyncHandler(async (req, res) => {
   }
 
   res.json(video.engagement);
-});
+}  } catch (error) { res.status(500).json({ message: 'Server error', error: error.message }); } };
 
 // @desc    Generate fallback image
 // @route   POST /api/media/generate-fallback
 // @access  Private
-const generateFallback = asyncHandler(async (req, res) => {
+const generateFallback = async (req, res) => { try {
   const { videoId } = req.body;
 
   const video = await Video.findById(videoId);
@@ -83,7 +83,7 @@ const generateFallback = asyncHandler(async (req, res) => {
   await video.save();
 
   res.json({ fallbackUrl });
-});
+}  } catch (error) { res.status(500).json({ message: 'Server error', error: error.message }); } };
 
 export {
   getGifs,

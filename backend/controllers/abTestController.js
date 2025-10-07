@@ -4,7 +4,7 @@ import ABTest from '../models/ABTest.js';
 // @desc    Create A/B test
 // @route   POST /api/ab-test/create
 // @access  Private
-const createABTest = asyncHandler(async (req, res) => {
+const createABTest = async (req, res) => { try {
   const { name, description, testType, variants, settings } = req.body;
   const userId = req.user._id;
 
@@ -18,21 +18,21 @@ const createABTest = asyncHandler(async (req, res) => {
   });
 
   res.status(201).json(abTest);
-});
+}  } catch (error) { res.status(500).json({ message: 'Server error', error: error.message }); } };
 
 // @desc    Get user's A/B tests
 // @route   GET /api/ab-test
 // @access  Private
-const getABTests = asyncHandler(async (req, res) => {
+const getABTests = async (req, res) => { try {
   const userId = req.user._id;
   const abTests = await ABTest.find({ user: userId }).sort({ createdAt: -1 });
   res.json(abTests);
-});
+}  } catch (error) { res.status(500).json({ message: 'Server error', error: error.message }); } };
 
 // @desc    Start A/B test
 // @route   POST /api/ab-test/:id/start
 // @access  Private
-const startABTest = asyncHandler(async (req, res) => {
+const startABTest = async (req, res) => { try {
   const abTest = await ABTest.findById(req.params.id);
   if (!abTest) {
     res.status(404);
@@ -44,12 +44,12 @@ const startABTest = asyncHandler(async (req, res) => {
   await abTest.save();
 
   res.json(abTest);
-});
+}  } catch (error) { res.status(500).json({ message: 'Server error', error: error.message }); } };
 
 // @desc    Update test results
 // @route   PUT /api/ab-test/:id/results
 // @access  Private
-const updateTestResults = asyncHandler(async (req, res) => {
+const updateTestResults = async (req, res) => { try {
   const { variantIndex, metrics } = req.body;
   const abTest = await ABTest.findById(req.params.id);
 
@@ -73,12 +73,12 @@ const updateTestResults = asyncHandler(async (req, res) => {
 
   await abTest.save();
   res.json(abTest);
-});
+}  } catch (error) { res.status(500).json({ message: 'Server error', error: error.message }); } };
 
 // @desc    Analyze test results
 // @route   GET /api/ab-test/:id/analysis
 // @access  Private
-const analyzeTest = asyncHandler(async (req, res) => {
+const analyzeTest = async (req, res) => { try {
   const abTest = await ABTest.findById(req.params.id);
   if (!abTest) {
     res.status(404);
@@ -99,12 +99,12 @@ const analyzeTest = asyncHandler(async (req, res) => {
     abTest,
     analysis
   });
-});
+}  } catch (error) { res.status(500).json({ message: 'Server error', error: error.message }); } };
 
 // @desc    Declare winner manually
 // @route   POST /api/ab-test/:id/declare-winner
 // @access  Private
-const declareWinner = asyncHandler(async (req, res) => {
+const declareWinner = async (req, res) => { try {
   const { variantIndex } = req.body;
   const abTest = await ABTest.findById(req.params.id);
 
@@ -144,7 +144,7 @@ const declareWinner = asyncHandler(async (req, res) => {
 
   await abTest.save();
   res.json(abTest);
-});
+}  } catch (error) { res.status(500).json({ message: 'Server error', error: error.message }); } };
 
 // Helper functions
 const performStatisticalAnalysis = async (abTest) => {

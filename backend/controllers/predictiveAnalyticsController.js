@@ -5,7 +5,7 @@ import User from '../models/User.js';
 // @desc    Get forecast data
 // @route   GET /api/analytics/forecast
 // @access  Private
-const getForecast = asyncHandler(async (req, res) => {
+const getForecast = async (req, res) => { try {
   const userId = req.user._id;
 
   // Get historical data for the last 30 days
@@ -15,7 +15,7 @@ const getForecast = asyncHandler(async (req, res) => {
   const emails = await Email.find({
     user: userId,
     createdAt: { $gte: thirtyDaysAgo }
-  }).sort({ createdAt: 1 });
+  }).sort({ createdAt: 1 }  } catch (error) { res.status(500).json({ message: 'Server error', error: error.message }); } };
 
   // Simple forecasting algorithm (linear regression)
   const dataPoints = emails.length;
@@ -44,12 +44,12 @@ const getForecast = asyncHandler(async (req, res) => {
     },
     forecast
   });
-});
+}  } catch (error) { res.status(500).json({ message: 'Server error', error: error.message }); } };
 
 // @desc    Get trends analysis
 // @route   GET /api/analytics/trends
 // @access  Private
-const getTrends = asyncHandler(async (req, res) => {
+const getTrends = async (req, res) => { try {
   const userId = req.user._id;
 
   // Get data for last 90 days
@@ -59,7 +59,7 @@ const getTrends = asyncHandler(async (req, res) => {
   const emails = await Email.find({
     user: userId,
     createdAt: { $gte: ninetyDaysAgo }
-  });
+  }  } catch (error) { res.status(500).json({ message: 'Server error', error: error.message }); } };
 
   // Group by week
   const weeklyData = {};
@@ -97,12 +97,12 @@ const getTrends = asyncHandler(async (req, res) => {
   const trend = secondAvg > firstAvg ? 'upward' : secondAvg < firstAvg ? 'downward' : 'stable';
 
   res.json({ trends, overallTrend: trend });
-});
+}  } catch (error) { res.status(500).json({ message: 'Server error', error: error.message }); } };
 
 // @desc    Get anomaly detection
 // @route   GET /api/analytics/anomalies
 // @access  Private
-const getAnomalies = asyncHandler(async (req, res) => {
+const getAnomalies = async (req, res) => { try {
   const userId = req.user._id;
 
   // Simple anomaly detection based on standard deviation
@@ -149,12 +149,12 @@ const getAnomalies = asyncHandler(async (req, res) => {
       ? `${anomalies.length} anomalous days detected`
       : 'No significant anomalies detected'
   });
-});
+}  } catch (error) { res.status(500).json({ message: 'Server error', error: error.message }); } };
 
 // @desc    Get churn prediction
 // @route   GET /api/analytics/churn-prediction
 // @access  Private
-const getChurnPrediction = asyncHandler(async (req, res) => {
+const getChurnPrediction = async (req, res) => { try {
   const userId = req.user._id;
 
   // Simple churn prediction based on engagement patterns
@@ -189,12 +189,12 @@ const getChurnPrediction = asyncHandler(async (req, res) => {
       ? ['Monitor closely', 'Send targeted content']
       : ['Maintain current strategy']
   });
-});
+}  } catch (error) { res.status(500).json({ message: 'Server error', error: error.message }); } };
 
 // @desc    Get growth projection
 // @route   GET /api/analytics/growth-projection
 // @access  Private
-const getGrowthProjection = asyncHandler(async (req, res) => {
+const getGrowthProjection = async (req, res) => { try {
   const userId = req.user._id;
 
   // Simple growth projection based on current trends
@@ -237,7 +237,7 @@ const getGrowthProjection = asyncHandler(async (req, res) => {
     },
     projections
   });
-});
+}  } catch (error) { res.status(500).json({ message: 'Server error', error: error.message }); } };
 
 export {
   getForecast,

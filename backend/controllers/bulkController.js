@@ -15,7 +15,7 @@ const getOpenAIClient = async () => {
 // @desc    Upload CSV and create bulk job
 // @route   POST /api/bulk/upload-csv
 // @access  Private
-const uploadCSV = asyncHandler(async (req, res) => {
+const uploadCSV = async (req, res) => { try {
   const { csvContent, name } = req.body;
   const userId = req.user._id;
 
@@ -38,12 +38,12 @@ const uploadCSV = asyncHandler(async (req, res) => {
   });
 
   res.status(201).json(bulkJob);
-});
+}  } catch (error) { res.status(500).json({ message: 'Server error', error: error.message }); } };
 
 // @desc    Personalize content for bulk job
 // @route   POST /api/bulk/personalize
 // @access  Private
-const personalizeBulk = asyncHandler(async (req, res) => {
+const personalizeBulk = async (req, res) => { try {
   const { bulkJobId, templateId, personalizationRules } = req.body;
   const userId = req.user._id;
 
@@ -97,12 +97,12 @@ const personalizeBulk = asyncHandler(async (req, res) => {
   await bulkJob.save();
 
   res.json({ bulkJob, personalizedData });
-});
+}  } catch (error) { res.status(500).json({ message: 'Server error', error: error.message }); } };
 
 // @desc    Preview personalized email
 // @route   POST /api/bulk/preview/:contactId
 // @access  Private
-const previewPersonalized = asyncHandler(async (req, res) => {
+const previewPersonalized = async (req, res) => { try {
   const { bulkJobId, contactIndex } = req.body;
 
   const bulkJob = await BulkJob.findById(bulkJobId).populate('template');
@@ -117,7 +117,7 @@ const previewPersonalized = asyncHandler(async (req, res) => {
   // Apply personalization
   bulkJob.personalizationFields.forEach(field => {
     html = html.replace(new RegExp(`\\{\\{${field.field}\\}\\}`, 'g'), field.value);
-  });
+  }  } catch (error) { res.status(500).json({ message: 'Server error', error: error.message }); } };
 
   // Apply contact data
   Object.keys(contact).forEach(key => {
@@ -125,12 +125,12 @@ const previewPersonalized = asyncHandler(async (req, res) => {
   });
 
   res.json({ html, contact });
-});
+}  } catch (error) { res.status(500).json({ message: 'Server error', error: error.message }); } };
 
 // @desc    Send bulk emails
 // @route   POST /api/bulk/send
 // @access  Private
-const sendBulkEmails = asyncHandler(async (req, res) => {
+const sendBulkEmails = async (req, res) => { try {
   const { bulkJobId } = req.body;
 
   const bulkJob = await BulkJob.findById(bulkJobId);
@@ -154,12 +154,12 @@ const sendBulkEmails = asyncHandler(async (req, res) => {
   }, 1000);
 
   res.json({ message: 'Bulk send initiated', bulkJobId });
-});
+}  } catch (error) { res.status(500).json({ message: 'Server error', error: error.message }); } };
 
 // @desc    Get bulk job status
 // @route   GET /api/bulk/status/:batchId
 // @access  Private
-const getBulkStatus = asyncHandler(async (req, res) => {
+const getBulkStatus = async (req, res) => { try {
   const bulkJob = await BulkJob.findById(req.params.batchId);
   if (!bulkJob) {
     res.status(404);
@@ -167,16 +167,16 @@ const getBulkStatus = asyncHandler(async (req, res) => {
   }
 
   res.json(bulkJob);
-});
+}  } catch (error) { res.status(500).json({ message: 'Server error', error: error.message }); } };
 
 // @desc    Get user's bulk jobs
 // @route   GET /api/bulk/jobs
 // @access  Private
-const getBulkJobs = asyncHandler(async (req, res) => {
+const getBulkJobs = async (req, res) => { try {
   const userId = req.user._id;
   const bulkJobs = await BulkJob.find({ user: userId }).sort({ createdAt: -1 });
   res.json(bulkJobs);
-});
+}  } catch (error) { res.status(500).json({ message: 'Server error', error: error.message }); } };
 
 export {
   uploadCSV,

@@ -5,7 +5,7 @@ import { getEnvVar } from '../utils/envManager.js';
 // @desc    Connect CRM
 // @route   POST /api/crm/connect
 // @access  Private
-const connectCRM = asyncHandler(async (req, res) => {
+const connectCRM = async (req, res) => { try {
   const { provider, name, credentials, settings } = req.body;
   const userId = req.user._id;
 
@@ -26,21 +26,21 @@ const connectCRM = asyncHandler(async (req, res) => {
   });
 
   res.status(201).json(integration);
-});
+}  } catch (error) { res.status(500).json({ message: 'Server error', error: error.message }); } };
 
 // @desc    Get CRM integrations
 // @route   GET /api/crm/integrations
 // @access  Private
-const getCRMIntegrations = asyncHandler(async (req, res) => {
+const getCRMIntegrations = async (req, res) => { try {
   const userId = req.user._id;
   const integrations = await CRMIntegration.find({ user: userId });
   res.json(integrations);
-});
+}  } catch (error) { res.status(500).json({ message: 'Server error', error: error.message }); } };
 
 // @desc    Sync with CRM
 // @route   POST /api/crm/:id/sync
 // @access  Private
-const syncCRM = asyncHandler(async (req, res) => {
+const syncCRM = async (req, res) => { try {
   const integration = await CRMIntegration.findById(req.params.id);
   if (!integration) {
     res.status(404);
@@ -54,12 +54,12 @@ const syncCRM = asyncHandler(async (req, res) => {
   performCRMSync(integration);
 
   res.json({ message: 'Sync initiated', integration });
-});
+}  } catch (error) { res.status(500).json({ message: 'Server error', error: error.message }); } };
 
 // @desc    Get sync status
 // @route   GET /api/crm/:id/status
 // @access  Private
-const getSyncStatus = asyncHandler(async (req, res) => {
+const getSyncStatus = async (req, res) => { try {
   const integration = await CRMIntegration.findById(req.params.id);
   if (!integration) {
     res.status(404);
@@ -72,12 +72,12 @@ const getSyncStatus = asyncHandler(async (req, res) => {
     syncStats: integration.syncStats,
     errorMessage: integration.errorMessage
   });
-});
+}  } catch (error) { res.status(500).json({ message: 'Server error', error: error.message }); } };
 
 // @desc    Disconnect CRM
 // @route   DELETE /api/crm/:id
 // @access  Private
-const disconnectCRM = asyncHandler(async (req, res) => {
+const disconnectCRM = async (req, res) => { try {
   const integration = await CRMIntegration.findById(req.params.id);
   if (!integration) {
     res.status(404);
@@ -86,7 +86,7 @@ const disconnectCRM = asyncHandler(async (req, res) => {
 
   await integration.remove();
   res.json({ message: 'CRM integration disconnected' });
-});
+}  } catch (error) { res.status(500).json({ message: 'Server error', error: error.message }); } };
 
 // Helper functions
 const validateCredentials = async (provider, credentials) => {

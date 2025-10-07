@@ -11,7 +11,7 @@ const getOpenAIClient = async () => {
 // @desc    Get writing suggestions
 // @route   POST /api/copilot/suggest
 // @access  Private
-const getSuggestions = asyncHandler(async (req, res) => {
+const getSuggestions = async (req, res) => { try {
   const { text, context } = req.body;
 
   const openai = await getOpenAIClient();
@@ -25,12 +25,12 @@ const getSuggestions = asyncHandler(async (req, res) => {
 
   const suggestions = completion.choices[0].message.content.split('\n').filter(s => s.trim());
   res.json({ suggestions });
-});
+}  } catch (error) { res.status(500).json({ message: 'Server error', error: error.message }); } };
 
 // @desc    Check grammar
 // @route   POST /api/copilot/check-grammar
 // @access  Private
-const checkGrammar = asyncHandler(async (req, res) => {
+const checkGrammar = async (req, res) => { try {
   const { text } = req.body;
 
   const openai = await getOpenAIClient();
@@ -43,12 +43,12 @@ const checkGrammar = asyncHandler(async (req, res) => {
   });
 
   res.json({ feedback: completion.choices[0].message.content });
-});
+}  } catch (error) { res.status(500).json({ message: 'Server error', error: error.message }); } };
 
 // @desc    Analyze tone
 // @route   POST /api/copilot/analyze-tone
 // @access  Private
-const analyzeTone = asyncHandler(async (req, res) => {
+const analyzeTone = async (req, res) => { try {
   const { text } = req.body;
 
   const openai = await getOpenAIClient();
@@ -61,12 +61,12 @@ const analyzeTone = asyncHandler(async (req, res) => {
   });
 
   res.json({ analysis: completion.choices[0].message.content });
-});
+}  } catch (error) { res.status(500).json({ message: 'Server error', error: error.message }); } };
 
 // @desc    Get readability score
 // @route   GET /api/copilot/readability-score
 // @access  Private
-const getReadabilityScore = asyncHandler(async (req, res) => {
+const getReadabilityScore = async (req, res) => { try {
   const { text } = req.query;
 
   // Simple readability calculation (Flesch-Kincaid approximation)
@@ -80,12 +80,12 @@ const getReadabilityScore = asyncHandler(async (req, res) => {
   const level = score > 90 ? 'Very Easy' : score > 80 ? 'Easy' : score > 70 ? 'Fairly Easy' : 'Standard';
 
   res.json({ score: Math.round(score), level });
-});
+}  } catch (error) { res.status(500).json({ message: 'Server error', error: error.message }); } };
 
 // @desc    Improve sentence
 // @route   POST /api/copilot/improve-sentence
 // @access  Private
-const improveSentence = asyncHandler(async (req, res) => {
+const improveSentence = async (req, res) => { try {
   const { sentence } = req.body;
 
   const openai = await getOpenAIClient();
@@ -98,7 +98,7 @@ const improveSentence = asyncHandler(async (req, res) => {
   });
 
   res.json({ improved: completion.choices[0].message.content.trim() });
-});
+}  } catch (error) { res.status(500).json({ message: 'Server error', error: error.message }); } };
 
 export {
   getSuggestions,

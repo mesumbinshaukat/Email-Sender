@@ -7,7 +7,7 @@ import { getEnvVar } from '../utils/envManager.js';
 // @desc    Start AI model training
 // @route   POST /api/ai-training/train
 // @access  Private
-const startTraining = asyncHandler(async (req, res) => {
+const startTraining = async (req, res) => { try {
   const { modelType } = req.body;
   const userId = req.user._id;
 
@@ -34,22 +34,22 @@ const startTraining = asyncHandler(async (req, res) => {
     training,
     message: 'AI training started. This may take several minutes.'
   });
-});
+}  } catch (error) { res.status(500).json({ message: 'Server error', error: error.message }); } };
 
 // @desc    Get user's AI models
 // @route   GET /api/ai-training
 // @access  Private
-const getModels = asyncHandler(async (req, res) => {
+const getModels = async (req, res) => { try {
   const userId = req.user._id;
 
   const models = await AITraining.find({ user: userId }).sort({ updatedAt: -1 });
   res.json(models);
-});
+}  } catch (error) { res.status(500).json({ message: 'Server error', error: error.message }); } };
 
 // @desc    Get model details
 // @route   GET /api/ai-training/:id
 // @access  Private
-const getModel = asyncHandler(async (req, res) => {
+const getModel = async (req, res) => { try {
   const model = await AITraining.findById(req.params.id);
 
   if (!model) {
@@ -63,12 +63,12 @@ const getModel = asyncHandler(async (req, res) => {
   }
 
   res.json(model);
-});
+}  } catch (error) { res.status(500).json({ message: 'Server error', error: error.message }); } };
 
 // @desc    Use trained model for prediction
 // @route   POST /api/ai-training/:id/predict
 // @access  Private
-const useModel = asyncHandler(async (req, res) => {
+const useModel = async (req, res) => { try {
   const { input } = req.body;
   const model = await AITraining.findById(req.params.id);
 
@@ -89,7 +89,7 @@ const useModel = asyncHandler(async (req, res) => {
 
   const prediction = await runPrediction(model, input);
   res.json(prediction);
-});
+}  } catch (error) { res.status(500).json({ message: 'Server error', error: error.message }); } };
 
 // Helper functions
 const trainModel = async (trainingId) => {

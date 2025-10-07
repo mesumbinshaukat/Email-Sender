@@ -5,7 +5,7 @@ import { getEnvVar } from '../utils/envManager.js';
 // @desc    Create alert
 // @route   POST /api/alerts/create
 // @access  Private
-const createAlert = asyncHandler(async (req, res) => {
+const createAlert = async (req, res) => { try {
   const { type, title, message, severity, channels, triggers } = req.body;
   const userId = req.user._id;
 
@@ -18,7 +18,7 @@ const createAlert = asyncHandler(async (req, res) => {
     channels,
     triggers,
     status: 'active'
-  });
+  }  } catch (error) { res.status(500).json({ message: 'Server error', error: error.message }); } };
 
   // Send immediate notification if channels specified
   if (channels && channels.length > 0) {
@@ -26,12 +26,12 @@ const createAlert = asyncHandler(async (req, res) => {
   }
 
   res.status(201).json(alert);
-});
+}  } catch (error) { res.status(500).json({ message: 'Server error', error: error.message }); } };
 
 // @desc    Get alerts
 // @route   GET /api/alerts
 // @access  Private
-const getAlerts = asyncHandler(async (req, res) => {
+const getAlerts = async (req, res) => { try {
   const userId = req.user._id;
   const { status, type } = req.query;
 
@@ -41,12 +41,12 @@ const getAlerts = asyncHandler(async (req, res) => {
 
   const alerts = await Alert.find(query).sort({ createdAt: -1 });
   res.json(alerts);
-});
+}  } catch (error) { res.status(500).json({ message: 'Server error', error: error.message }); } };
 
 // @desc    Update alert status
 // @route   PUT /api/alerts/:id/status
 // @access  Private
-const updateAlertStatus = asyncHandler(async (req, res) => {
+const updateAlertStatus = async (req, res) => { try {
   const { status } = req.body;
   const alert = await Alert.findById(req.params.id);
 
@@ -58,12 +58,12 @@ const updateAlertStatus = asyncHandler(async (req, res) => {
   alert.status = status;
   await alert.save();
   res.json(alert);
-});
+}  } catch (error) { res.status(500).json({ message: 'Server error', error: error.message }); } };
 
 // @desc    Trigger alert (internal use)
 // @route   POST /api/alerts/trigger
 // @access  Private
-const triggerAlert = asyncHandler(async (req, res) => {
+const triggerAlert = async (req, res) => { try {
   const { type, data, userId } = req.body;
 
   // Find matching alert templates
@@ -94,12 +94,12 @@ const triggerAlert = asyncHandler(async (req, res) => {
   }
 
   res.json({ triggered: triggeredAlerts.length, alerts: triggeredAlerts });
-});
+}  } catch (error) { res.status(500).json({ message: 'Server error', error: error.message }); } };
 
 // @desc    Send test alert
 // @route   POST /api/alerts/test
 // @access  Private
-const sendTestAlert = asyncHandler(async (req, res) => {
+const sendTestAlert = async (req, res) => { try {
   const { channels } = req.body;
   const userId = req.user._id;
 
@@ -115,7 +115,7 @@ const sendTestAlert = asyncHandler(async (req, res) => {
 
   await sendAlertNotification(testAlert);
   res.json({ message: 'Test alert sent' });
-});
+}  } catch (error) { res.status(500).json({ message: 'Server error', error: error.message }); } };
 
 // Helper functions
 const checkAlertCondition = (template, data) => {

@@ -6,7 +6,7 @@ import Email from '../models/Email.js';
 // @desc    Initialize data privacy center
 // @route   POST /api/privacy/init
 // @access  Private
-const initializePrivacy = asyncHandler(async (req, res) => {
+const initializePrivacy = async (req, res) => { try {
   const userId = req.user._id;
 
   let privacy = await DataPrivacy.findOne({ user: userId });
@@ -28,12 +28,12 @@ const initializePrivacy = asyncHandler(async (req, res) => {
   }
 
   res.json(privacy);
-});
+}  } catch (error) { res.status(500).json({ message: 'Server error', error: error.message }); } };
 
 // @desc    Update GDPR compliance settings
 // @route   PUT /api/privacy/gdpr
 // @access  Private
-const updateGDPRCompliance = asyncHandler(async (req, res) => {
+const updateGDPRCompliance = async (req, res) => { try {
   const { gdprSettings } = req.body;
   const userId = req.user._id;
 
@@ -50,12 +50,12 @@ const updateGDPRCompliance = asyncHandler(async (req, res) => {
   await calculateComplianceScore(privacy);
 
   res.json(privacy);
-});
+}  } catch (error) { res.status(500).json({ message: 'Server error', error: error.message }); } };
 
 // @desc    Submit data request (GDPR)
 // @route   POST /api/privacy/request
 // @access  Public (for data subjects)
-const submitDataRequest = asyncHandler(async (req, res) => {
+const submitDataRequest = async (req, res) => { try {
   const { type, email, name, reason } = req.body;
 
   // Find user by email domain or contact
@@ -102,12 +102,12 @@ const submitDataRequest = asyncHandler(async (req, res) => {
     message: 'Data request submitted successfully. You will receive a response within 30 days.',
     estimatedResponseTime: '30 days'
   });
-});
+}  } catch (error) { res.status(500).json({ message: 'Server error', error: error.message }); } };
 
 // @desc    Process data request
 // @route   PUT /api/privacy/request/:requestId/process
 // @access  Private
-const processDataRequest = asyncHandler(async (req, res) => {
+const processDataRequest = async (req, res) => { try {
   const { requestId } = req.params;
   const { action, data } = req.body;
   const userId = req.user._id;
@@ -156,12 +156,12 @@ const processDataRequest = asyncHandler(async (req, res) => {
   await privacy.save();
 
   res.json(request);
-});
+}  } catch (error) { res.status(500).json({ message: 'Server error', error: error.message }); } };
 
 // @desc    Get data export for user
 // @route   GET /api/privacy/export
 // @access  Private
-const getDataExport = asyncHandler(async (req, res) => {
+const getDataExport = async (req, res) => { try {
   const userId = req.user._id;
 
   // Get all user data
@@ -190,12 +190,12 @@ const getDataExport = asyncHandler(async (req, res) => {
   };
 
   res.json(exportData);
-});
+}  } catch (error) { res.status(500).json({ message: 'Server error', error: error.message }); } };
 
 // @desc    Delete user data
 // @route   DELETE /api/privacy/data
 // @access  Private
-const deleteUserData = asyncHandler(async (req, res) => {
+const deleteUserData = async (req, res) => { try {
   const userId = req.user._id;
   const { reason } = req.body;
 
@@ -218,12 +218,12 @@ const deleteUserData = asyncHandler(async (req, res) => {
     message: 'Data deletion request processed. Data will be permanently deleted within 30 days.',
     estimatedCompletion: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000)
   });
-});
+}  } catch (error) { res.status(500).json({ message: 'Server error', error: error.message }); } };
 
 // @desc    Get privacy dashboard
 // @route   GET /api/privacy/dashboard
 // @access  Private
-const getPrivacyDashboard = asyncHandler(async (req, res) => {
+const getPrivacyDashboard = async (req, res) => { try {
   const userId = req.user._id;
 
   const privacy = await DataPrivacy.findOne({ user: userId });
@@ -251,7 +251,7 @@ const getPrivacyDashboard = asyncHandler(async (req, res) => {
   };
 
   res.json(dashboard);
-});
+}  } catch (error) { res.status(500).json({ message: 'Server error', error: error.message }); } };
 
 // Helper functions
 const processRequestByType = async (request, privacy) => {

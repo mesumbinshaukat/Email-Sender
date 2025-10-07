@@ -13,7 +13,7 @@ const getOpenAIClient = async () => {
 // @desc    Generate image
 // @route   POST /api/images/generate
 // @access  Private
-const generateImage = asyncHandler(async (req, res) => {
+const generateImage = async (req, res) => { try {
   const { prompt, size = '1024x1024' } = req.body;
   const userId = req.user._id;
 
@@ -33,12 +33,12 @@ const generateImage = asyncHandler(async (req, res) => {
   });
 
   res.status(201).json(image);
-});
+}  } catch (error) { res.status(500).json({ message: 'Server error', error: error.message }); } };
 
 // @desc    Optimize image
 // @route   POST /api/images/optimize
 // @access  Private
-const optimizeImage = asyncHandler(async (req, res) => {
+const optimizeImage = async (req, res) => { try {
   const { imageId } = req.body;
 
   const image = await Image.findById(imageId);
@@ -66,12 +66,12 @@ const optimizeImage = asyncHandler(async (req, res) => {
   await image.save();
 
   res.json({ optimizedUrl: image.optimizedUrl, size: image.size });
-});
+}  } catch (error) { res.status(500).json({ message: 'Server error', error: error.message }); } };
 
 // @desc    Generate alt text
 // @route   POST /api/images/generate-alt-text
 // @access  Private
-const generateAltText = asyncHandler(async (req, res) => {
+const generateAltText = async (req, res) => { try {
   const { imageId } = req.body;
 
   const image = await Image.findById(imageId);
@@ -95,12 +95,12 @@ const generateAltText = asyncHandler(async (req, res) => {
   await image.save();
 
   res.json({ altText });
-});
+}  } catch (error) { res.status(500).json({ message: 'Server error', error: error.message }); } };
 
 // @desc    A/B test images
 // @route   POST /api/images/ab-test
 // @access  Private
-const abTestImages = asyncHandler(async (req, res) => {
+const abTestImages = async (req, res) => { try {
   const { imageIds, testName } = req.body;
 
   // Simplified: just return test setup
@@ -109,16 +109,16 @@ const abTestImages = asyncHandler(async (req, res) => {
     images: imageIds,
     status: 'running'
   });
-});
+}  } catch (error) { res.status(500).json({ message: 'Server error', error: error.message }); } };
 
 // @desc    Get image library
 // @route   GET /api/images/library
 // @access  Private
-const getImageLibrary = asyncHandler(async (req, res) => {
+const getImageLibrary = async (req, res) => { try {
   const userId = req.user._id;
   const images = await Image.find({ user: userId }).sort({ createdAt: -1 });
   res.json(images);
-});
+}  } catch (error) { res.status(500).json({ message: 'Server error', error: error.message }); } };
 
 export {
   generateImage,

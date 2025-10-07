@@ -5,7 +5,7 @@ import Trigger from '../models/Trigger.js';
 // @desc    Create workflow
 // @route   POST /api/workflows/create
 // @access  Private
-const createWorkflow = asyncHandler(async (req, res) => {
+const createWorkflow = async (req, res) => { try {
   const { name, description, nodes, edges } = req.body;
   const userId = req.user._id;
 
@@ -18,21 +18,21 @@ const createWorkflow = asyncHandler(async (req, res) => {
   });
 
   res.status(201).json(workflow);
-});
+}  } catch (error) { res.status(500).json({ message: 'Server error', error: error.message }); } };
 
 // @desc    Get workflows
 // @route   GET /api/workflows
 // @access  Private
-const getWorkflows = asyncHandler(async (req, res) => {
+const getWorkflows = async (req, res) => { try {
   const userId = req.user._id;
   const workflows = await Workflow.find({ user: userId }).populate('triggers');
   res.json(workflows);
-});
+}  } catch (error) { res.status(500).json({ message: 'Server error', error: error.message }); } };
 
 // @desc    Update workflow
 // @route   PUT /api/workflows/:id
 // @access  Private
-const updateWorkflow = asyncHandler(async (req, res) => {
+const updateWorkflow = async (req, res) => { try {
   const workflow = await Workflow.findById(req.params.id);
   if (!workflow) {
     res.status(404);
@@ -42,12 +42,12 @@ const updateWorkflow = asyncHandler(async (req, res) => {
   Object.assign(workflow, req.body);
   await workflow.save();
   res.json(workflow);
-});
+}  } catch (error) { res.status(500).json({ message: 'Server error', error: error.message }); } };
 
 // @desc    Execute workflow
 // @route   POST /api/workflows/:id/execute
 // @access  Private
-const executeWorkflow = asyncHandler(async (req, res) => {
+const executeWorkflow = async (req, res) => { try {
   const workflow = await Workflow.findById(req.params.id);
   if (!workflow) {
     res.status(404);
@@ -56,24 +56,24 @@ const executeWorkflow = asyncHandler(async (req, res) => {
 
   // Simplified execution logic
   res.json({ status: 'executed', workflowId: workflow._id });
-});
+}  } catch (error) { res.status(500).json({ message: 'Server error', error: error.message }); } };
 
 // @desc    Get workflow analytics
 // @route   GET /api/workflows/:id/analytics
 // @access  Private
-const getWorkflowAnalytics = asyncHandler(async (req, res) => {
+const getWorkflowAnalytics = async (req, res) => { try {
   // Placeholder analytics
   res.json({
     executions: 150,
     successRate: 95,
     averageTime: '2.3s'
   });
-});
+}  } catch (error) { res.status(500).json({ message: 'Server error', error: error.message }); } };
 
 // @desc    Create trigger
 // @route   POST /api/triggers/create
 // @access  Private
-const createTrigger = asyncHandler(async (req, res) => {
+const createTrigger = async (req, res) => { try {
   const { name, type, conditions, actions, workflowId } = req.body;
   const userId = req.user._id;
 
@@ -95,37 +95,37 @@ const createTrigger = asyncHandler(async (req, res) => {
   }
 
   res.status(201).json(trigger);
-});
+}  } catch (error) { res.status(500).json({ message: 'Server error', error: error.message }); } };
 
 // @desc    Get triggers
 // @route   GET /api/triggers
 // @access  Private
-const getTriggers = asyncHandler(async (req, res) => {
+const getTriggers = async (req, res) => { try {
   const userId = req.user._id;
   const triggers = await Trigger.find({ user: userId }).populate('workflow');
   res.json(triggers);
-});
+}  } catch (error) { res.status(500).json({ message: 'Server error', error: error.message }); } };
 
 // @desc    Fire event
 // @route   POST /api/triggers/fire-event
 // @access  Private
-const fireEvent = asyncHandler(async (req, res) => {
+const fireEvent = async (req, res) => { try {
   const { eventType, data } = req.body;
 
   // Find matching triggers
   const triggers = await Trigger.find({
     type: eventType,
     isActive: true
-  });
+  }  } catch (error) { res.status(500).json({ message: 'Server error', error: error.message }); } };
 
   // Execute actions (simplified)
   res.json({ triggered: triggers.length, eventType });
-});
+}  } catch (error) { res.status(500).json({ message: 'Server error', error: error.message }); } };
 
 // @desc    Configure trigger
 // @route   PUT /api/triggers/:id/configure
 // @access  Private
-const configureTrigger = asyncHandler(async (req, res) => {
+const configureTrigger = async (req, res) => { try {
   const trigger = await Trigger.findById(req.params.id);
   if (!trigger) {
     res.status(404);
@@ -135,12 +135,12 @@ const configureTrigger = asyncHandler(async (req, res) => {
   Object.assign(trigger, req.body);
   await trigger.save();
   res.json(trigger);
-});
+}  } catch (error) { res.status(500).json({ message: 'Server error', error: error.message }); } };
 
 // @desc    Get trigger history
 // @route   GET /api/triggers/:id/history
 // @access  Private
-const getTriggerHistory = asyncHandler(async (req, res) => {
+const getTriggerHistory = async (req, res) => { try {
   // Placeholder history
   res.json({
     executions: [
@@ -148,7 +148,7 @@ const getTriggerHistory = asyncHandler(async (req, res) => {
       { timestamp: new Date(Date.now() - 86400000), success: true }
     ]
   });
-});
+}  } catch (error) { res.status(500).json({ message: 'Server error', error: error.message }); } };
 
 export {
   createWorkflow,

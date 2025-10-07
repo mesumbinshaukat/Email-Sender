@@ -4,7 +4,7 @@ import Newsletter from '../models/Newsletter.js'; // Would need to create this m
 // @desc    Create newsletter
 // @route   POST /api/newsletter/create
 // @access  Private
-const createNewsletter = asyncHandler(async (req, res) => {
+const createNewsletter = async (req, res) => { try {
   const { name, template, schedule, subscriberList } = req.body;
   const userId = req.user._id;
 
@@ -18,12 +18,12 @@ const createNewsletter = asyncHandler(async (req, res) => {
   });
 
   res.status(201).json(newsletter);
-});
+}  } catch (error) { res.status(500).json({ message: 'Server error', error: error.message }); } };
 
 // @desc    Send newsletter
 // @route   POST /api/newsletter/:id/send
 // @access  Private
-const sendNewsletter = asyncHandler(async (req, res) => {
+const sendNewsletter = async (req, res) => { try {
   const newsletter = await Newsletter.findById(req.params.id);
   if (!newsletter) {
     res.status(404);
@@ -34,12 +34,12 @@ const sendNewsletter = asyncHandler(async (req, res) => {
   await newsletter.save();
 
   res.json({ message: 'Newsletter queued for sending' });
-});
+}  } catch (error) { res.status(500).json({ message: 'Server error', error: error.message }); } };
 
 // @desc    Get subscriber stats
 // @route   GET /api/newsletter/subscribers
 // @access  Private
-const getSubscriberStats = asyncHandler(async (req, res) => {
+const getSubscriberStats = async (req, res) => { try {
   const userId = req.user._id;
   const newsletters = await Newsletter.find({ user: userId });
 
@@ -52,7 +52,7 @@ const getSubscriberStats = asyncHandler(async (req, res) => {
   };
 
   res.json(stats);
-});
+}  } catch (error) { res.status(500).json({ message: 'Server error', error: error.message }); } };
 
 export {
   createNewsletter,

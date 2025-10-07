@@ -14,7 +14,7 @@ const getOpenAIClient = async () => {
 // @desc    Generate email template from description
 // @route   POST /api/design/generate-template
 // @access  Private
-const generateTemplate = asyncHandler(async (req, res) => {
+const generateTemplate = async (req, res) => { try {
   const { description, brandKitId } = req.body;
   const userId = req.user._id;
 
@@ -59,21 +59,21 @@ Make it responsive, accessible, and mobile-friendly. Include proper HTML structu
   });
 
   res.status(201).json(template);
-});
+}  } catch (error) { res.status(500).json({ message: 'Server error', error: error.message }); } };
 
 // @desc    Get all templates for user
 // @route   GET /api/design/templates
 // @access  Private
-const getTemplates = asyncHandler(async (req, res) => {
+const getTemplates = async (req, res) => { try {
   const userId = req.user._id;
   const templates = await EmailTemplate.find({ user: userId }).populate('brandKit');
   res.json(templates);
-});
+}  } catch (error) { res.status(500).json({ message: 'Server error', error: error.message }); } };
 
 // @desc    Customize template
 // @route   POST /api/design/customize
 // @access  Private
-const customizeTemplate = asyncHandler(async (req, res) => {
+const customizeTemplate = async (req, res) => { try {
   const { templateId, customizations } = req.body;
 
   const template = await EmailTemplate.findById(templateId);
@@ -90,12 +90,12 @@ const customizeTemplate = asyncHandler(async (req, res) => {
   });
 
   res.json({ html });
-});
+}  } catch (error) { res.status(500).json({ message: 'Server error', error: error.message }); } };
 
 // @desc    Preview template
 // @route   GET /api/design/preview/:id
 // @access  Private
-const previewTemplate = asyncHandler(async (req, res) => {
+const previewTemplate = async (req, res) => { try {
   const template = await EmailTemplate.findById(req.params.id);
   if (!template) {
     res.status(404);
@@ -103,12 +103,12 @@ const previewTemplate = asyncHandler(async (req, res) => {
   }
 
   res.json({ html: template.html, css: template.css });
-});
+}  } catch (error) { res.status(500).json({ message: 'Server error', error: error.message }); } };
 
 // @desc    Save brand kit
 // @route   POST /api/design/save-brand-kit
 // @access  Private
-const saveBrandKit = asyncHandler(async (req, res) => {
+const saveBrandKit = async (req, res) => { try {
   const { name, logo, colors, fonts, brandGuidelines } = req.body;
   const userId = req.user._id;
 
@@ -122,16 +122,16 @@ const saveBrandKit = asyncHandler(async (req, res) => {
   });
 
   res.status(201).json(brandKit);
-});
+}  } catch (error) { res.status(500).json({ message: 'Server error', error: error.message }); } };
 
 // @desc    Get brand kits
 // @route   GET /api/design/brand-kits
 // @access  Private
-const getBrandKits = asyncHandler(async (req, res) => {
+const getBrandKits = async (req, res) => { try {
   const userId = req.user._id;
   const brandKits = await BrandKit.find({ user: userId });
   res.json(brandKits);
-});
+}  } catch (error) { res.status(500).json({ message: 'Server error', error: error.message }); } };
 
 export {
   generateTemplate,

@@ -6,7 +6,7 @@ import { getEnvVar } from '../utils/envManager.js';
 // @desc    Create webhook
 // @route   POST /api/webhooks
 // @access  Private
-const createWebhook = asyncHandler(async (req, res) => {
+const createWebhook = async (req, res) => { try {
   const { name, url, events, headers } = req.body;
   const userId = req.user._id;
 
@@ -26,22 +26,22 @@ const createWebhook = asyncHandler(async (req, res) => {
     webhook,
     secret // Only shown once for security
   });
-});
+}  } catch (error) { res.status(500).json({ message: 'Server error', error: error.message }); } };
 
 // @desc    Get user's webhooks
 // @route   GET /api/webhooks
 // @access  Private
-const getWebhooks = asyncHandler(async (req, res) => {
+const getWebhooks = async (req, res) => { try {
   const userId = req.user._id;
 
   const webhooks = await Webhook.find({ user: userId }).select('-secret');
   res.json(webhooks);
-});
+}  } catch (error) { res.status(500).json({ message: 'Server error', error: error.message }); } };
 
 // @desc    Update webhook
 // @route   PUT /api/webhooks/:id
 // @access  Private
-const updateWebhook = asyncHandler(async (req, res) => {
+const updateWebhook = async (req, res) => { try {
   const { name, url, events, headers, isActive } = req.body;
 
   const webhook = await Webhook.findById(req.params.id);
@@ -65,12 +65,12 @@ const updateWebhook = asyncHandler(async (req, res) => {
   await webhook.save();
 
   res.json(webhook);
-});
+}  } catch (error) { res.status(500).json({ message: 'Server error', error: error.message }); } };
 
 // @desc    Delete webhook
 // @route   DELETE /api/webhooks/:id
 // @access  Private
-const deleteWebhook = asyncHandler(async (req, res) => {
+const deleteWebhook = async (req, res) => { try {
   const webhook = await Webhook.findById(req.params.id);
 
   if (!webhook) {
@@ -85,12 +85,12 @@ const deleteWebhook = asyncHandler(async (req, res) => {
 
   await Webhook.findByIdAndDelete(req.params.id);
   res.json({ message: 'Webhook deleted' });
-});
+}  } catch (error) { res.status(500).json({ message: 'Server error', error: error.message }); } };
 
 // @desc    Test webhook
 // @route   POST /api/webhooks/:id/test
 // @access  Private
-const testWebhook = asyncHandler(async (req, res) => {
+const testWebhook = async (req, res) => { try {
   const webhook = await Webhook.findById(req.params.id);
 
   if (!webhook) {
@@ -119,12 +119,12 @@ const testWebhook = asyncHandler(async (req, res) => {
     statusCode: result.statusCode,
     response: result.response
   });
-});
+}  } catch (error) { res.status(500).json({ message: 'Server error', error: error.message }); } };
 
 // @desc    Trigger webhook (internal use)
 // @route   POST /api/webhooks/trigger
 // @access  Private/Internal
-const triggerWebhook = asyncHandler(async (req, res) => {
+const triggerWebhook = async (req, res) => { try {
   const { userId, event, data } = req.body;
 
   const webhooks = await Webhook.find({
@@ -149,12 +149,12 @@ const triggerWebhook = asyncHandler(async (req, res) => {
   }
 
   res.json(results);
-});
+}  } catch (error) { res.status(500).json({ message: 'Server error', error: error.message }); } };
 
 // @desc    Get API documentation
 // @route   GET /api/docs
 // @access  Private
-const getApiDocs = asyncHandler(async (req, res) => {
+const getApiDocs = async (req, res) => { try {
   const docs = {
     version: '1.0.0',
     baseUrl: process.env.API_BASE_URL || 'https://api.emailtracker.com',
@@ -195,7 +195,7 @@ const getApiDocs = asyncHandler(async (req, res) => {
   };
 
   res.json(docs);
-});
+}  } catch (error) { res.status(500).json({ message: 'Server error', error: error.message }); } };
 
 // Helper functions
 const sendWebhook = async (webhook, payload) => {
