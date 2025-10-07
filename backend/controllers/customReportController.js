@@ -7,7 +7,8 @@ import Contact from '../models/Contact.js';
 // @desc    Create custom report
 // @route   POST /api/reports
 // @access  Private
-const createReport = async (req, res) => { try {
+const createReport = async (req, res) => {
+  try {
   const { name, description, type, config, schedule } = req.body;
   const userId = req.user._id;
 
@@ -21,22 +22,30 @@ const createReport = async (req, res) => { try {
   });
 
   res.status(201).json(report);
-}  } catch (error) { res.status(500).json({ message: 'Server error', error: error.message }); } };
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
 
 // @desc    Get user's reports
 // @route   GET /api/reports
 // @access  Private
-const getReports = async (req, res) => { try {
+const getReports = async (req, res) => {
+  try {
   const userId = req.user._id;
 
   const reports = await CustomReport.find({ user: userId }).sort({ createdAt: -1 });
   res.json(reports);
-}  } catch (error) { res.status(500).json({ message: 'Server error', error: error.message }); } };
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
 
 // @desc    Generate report data
 // @route   POST /api/reports/:id/generate
 // @access  Private
-const generateReport = async (req, res) => { try {
+const generateReport = async (req, res) => {
+  try {
   const report = await CustomReport.findById(req.params.id);
 
   if (!report) {
@@ -55,12 +64,16 @@ const generateReport = async (req, res) => { try {
   await report.save();
 
   res.json({ report, data });
-}  } catch (error) { res.status(500).json({ message: 'Server error', error: error.message }); } };
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
 
 // @desc    Get report data
 // @route   GET /api/reports/:id/data
 // @access  Private
-const getReportData = async (req, res) => { try {
+const getReportData = async (req, res) => {
+  try {
   const report = await CustomReport.findById(req.params.id);
 
   if (!report) {
@@ -78,12 +91,16 @@ const getReportData = async (req, res) => { try {
     data: report.data,
     lastGenerated: report.lastGenerated
   });
-}  } catch (error) { res.status(500).json({ message: 'Server error', error: error.message }); } };
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
 
 // @desc    Update report
 // @route   PUT /api/reports/:id
 // @access  Private
-const updateReport = async (req, res) => { try {
+const updateReport = async (req, res) => {
+  try {
   const report = await CustomReport.findById(req.params.id);
 
   if (!report) {
@@ -101,12 +118,16 @@ const updateReport = async (req, res) => { try {
   await report.save();
 
   res.json(report);
-}  } catch (error) { res.status(500).json({ message: 'Server error', error: error.message }); } };
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
 
 // @desc    Delete report
 // @route   DELETE /api/reports/:id
 // @access  Private
-const deleteReport = async (req, res) => { try {
+const deleteReport = async (req, res) => {
+  try {
   const report = await CustomReport.findById(req.params.id);
 
   if (!report) {
@@ -121,12 +142,16 @@ const deleteReport = async (req, res) => { try {
 
   await CustomReport.findByIdAndDelete(req.params.id);
   res.json({ message: 'Report deleted' });
-}  } catch (error) { res.status(500).json({ message: 'Server error', error: error.message }); } };
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
 
 // @desc    Get dashboard metrics
 // @route   GET /api/reports/dashboard
 // @access  Private
-const getDashboardMetrics = async (req, res) => { try {
+const getDashboardMetrics = async (req, res) => {
+  try {
   const userId = req.user._id;
 
   // Get date range (default last 30 days)
@@ -170,7 +195,10 @@ const getDashboardMetrics = async (req, res) => { try {
   };
 
   res.json(metrics);
-}  } catch (error) { res.status(500).json({ message: 'Server error', error: error.message }); } };
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
 
 // Helper functions
 const generateReportData = async (report) => {

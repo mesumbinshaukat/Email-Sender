@@ -6,7 +6,8 @@ import crypto from 'crypto';
 // @desc    Setup email authentication for domain
 // @route   POST /api/email-auth/setup
 // @access  Private
-const setupAuthentication = async (req, res) => { try {
+const setupAuthentication = async (req, res) => {
+  try {
   const { domain } = req.body;
   const userId = req.user._id;
 
@@ -32,7 +33,10 @@ const setupAuthentication = async (req, res) => { try {
       type: 'pkcs8',
       format: 'pem'
     }
-  }  } catch (error) { res.status(500).json({ message: 'Server error', error: error.message }); } };
+    } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
 
   // Generate DKIM selector
   const selector = `selector_${Date.now()}`;
@@ -72,12 +76,16 @@ const setupAuthentication = async (req, res) => { try {
       dmarc: `Add this TXT record: _dmarc.${domain} IN TXT "${auth.dmarc.record}"`
     }
   });
-}  } catch (error) { res.status(500).json({ message: 'Server error', error: error.message }); } };
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
 
 // @desc    Verify authentication setup
 // @route   POST /api/email-auth/:id/verify
 // @access  Private
-const verifyAuthentication = async (req, res) => { try {
+const verifyAuthentication = async (req, res) => {
+  try {
   const auth = await EmailAuthentication.findById(req.params.id);
 
   if (!auth) {
@@ -125,21 +133,29 @@ const verifyAuthentication = async (req, res) => { try {
     score: auth.verificationResults.overallScore,
     status: auth.status
   });
-}  } catch (error) { res.status(500).json({ message: 'Server error', error: error.message }); } };
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
 
 // @desc    Get authentication setups
 // @route   GET /api/email-auth
 // @access  Private
-const getAuthentications = async (req, res) => { try {
+const getAuthentications = async (req, res) => {
+  try {
   const userId = req.user._id;
   const auths = await EmailAuthentication.find({ user: userId }).sort({ createdAt: -1 });
   res.json(auths);
-}  } catch (error) { res.status(500).json({ message: 'Server error', error: error.message }); } };
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
 
 // @desc    Get authentication details
 // @route   GET /api/email-auth/:id
 // @access  Private
-const getAuthentication = async (req, res) => { try {
+const getAuthentication = async (req, res) => {
+  try {
   const auth = await EmailAuthentication.findById(req.params.id);
 
   if (!auth) {
@@ -148,12 +164,16 @@ const getAuthentication = async (req, res) => { try {
   }
 
   res.json(auth);
-}  } catch (error) { res.status(500).json({ message: 'Server error', error: error.message }); } };
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
 
 // @desc    Update recommendation status
 // @route   PUT /api/email-auth/:id/recommendation
 // @access  Private
-const updateRecommendation = async (req, res) => { try {
+const updateRecommendation = async (req, res) => {
+  try {
   const { recommendationIndex, status } = req.body;
   const auth = await EmailAuthentication.findById(req.params.id);
 
@@ -168,7 +188,10 @@ const updateRecommendation = async (req, res) => { try {
 
   await auth.save();
   res.json(auth);
-}  } catch (error) { res.status(500).json({ message: 'Server error', error: error.message }); } };
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
 
 // Helper functions
 const performVerification = async (auth) => {

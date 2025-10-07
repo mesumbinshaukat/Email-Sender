@@ -4,7 +4,8 @@ import Newsletter from '../models/Newsletter.js'; // Would need to create this m
 // @desc    Create newsletter
 // @route   POST /api/newsletter/create
 // @access  Private
-const createNewsletter = async (req, res) => { try {
+const createNewsletter = async (req, res) => {
+  try {
   const { name, template, schedule, subscriberList } = req.body;
   const userId = req.user._id;
 
@@ -18,12 +19,16 @@ const createNewsletter = async (req, res) => { try {
   });
 
   res.status(201).json(newsletter);
-}  } catch (error) { res.status(500).json({ message: 'Server error', error: error.message }); } };
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
 
 // @desc    Send newsletter
 // @route   POST /api/newsletter/:id/send
 // @access  Private
-const sendNewsletter = async (req, res) => { try {
+const sendNewsletter = async (req, res) => {
+  try {
   const newsletter = await Newsletter.findById(req.params.id);
   if (!newsletter) {
     res.status(404);
@@ -34,12 +39,16 @@ const sendNewsletter = async (req, res) => { try {
   await newsletter.save();
 
   res.json({ message: 'Newsletter queued for sending' });
-}  } catch (error) { res.status(500).json({ message: 'Server error', error: error.message }); } };
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
 
 // @desc    Get subscriber stats
 // @route   GET /api/newsletter/subscribers
 // @access  Private
-const getSubscriberStats = async (req, res) => { try {
+const getSubscriberStats = async (req, res) => {
+  try {
   const userId = req.user._id;
   const newsletters = await Newsletter.find({ user: userId });
 
@@ -52,7 +61,10 @@ const getSubscriberStats = async (req, res) => { try {
   };
 
   res.json(stats);
-}  } catch (error) { res.status(500).json({ message: 'Server error', error: error.message }); } };
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
 
 export {
   createNewsletter,

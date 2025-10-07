@@ -4,7 +4,8 @@ import EcommerceIntegration from '../models/EcommerceIntegration.js';
 // @desc    Connect e-commerce platform
 // @route   POST /api/ecommerce/connect
 // @access  Private
-const connectEcommerce = async (req, res) => { try {
+const connectEcommerce = async (req, res) => {
+  try {
   const { platform, storeName, credentials, settings } = req.body;
   const userId = req.user._id;
 
@@ -15,27 +16,38 @@ const connectEcommerce = async (req, res) => { try {
     credentials,
     settings,
     status: 'connected'
-  }  } catch (error) { res.status(500).json({ message: 'Server error', error: error.message }); } };
+    } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
 
   // Setup webhooks
   await setupWebhooks(integration);
 
   res.status(201).json(integration);
-}  } catch (error) { res.status(500).json({ message: 'Server error', error: error.message }); } };
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
 
 // @desc    Get e-commerce integrations
 // @route   GET /api/ecommerce/integrations
 // @access  Private
-const getEcommerceIntegrations = async (req, res) => { try {
+const getEcommerceIntegrations = async (req, res) => {
+  try {
   const userId = req.user._id;
   const integrations = await EcommerceIntegration.find({ user: userId });
   res.json(integrations);
-}  } catch (error) { res.status(500).json({ message: 'Server error', error: error.message }); } };
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
 
 // @desc    Sync with e-commerce platform
 // @route   POST /api/ecommerce/:id/sync
 // @access  Private
-const syncEcommerce = async (req, res) => { try {
+const syncEcommerce = async (req, res) => {
+  try {
   const integration = await EcommerceIntegration.findById(req.params.id);
   if (!integration) {
     res.status(404);
@@ -53,12 +65,16 @@ const syncEcommerce = async (req, res) => { try {
   await integration.save();
 
   res.json(integration);
-}  } catch (error) { res.status(500).json({ message: 'Server error', error: error.message }); } };
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
 
 // @desc    Handle webhook events
 // @route   POST /api/ecommerce/webhook/:platform
 // @access  Public (webhook)
-const handleWebhook = async (req, res) => { try {
+const handleWebhook = async (req, res) => {
+  try {
   const { platform } = req.params;
   const eventData = req.body;
 
@@ -77,7 +93,10 @@ const handleWebhook = async (req, res) => { try {
   await processWebhookEvent(integration, eventData);
 
   res.json({ received: true });
-}  } catch (error) { res.status(500).json({ message: 'Server error', error: error.message }); } };
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
 
 // Helper functions
 const setupWebhooks = async (integration) => {

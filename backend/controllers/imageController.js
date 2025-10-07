@@ -13,7 +13,8 @@ const getOpenAIClient = async () => {
 // @desc    Generate image
 // @route   POST /api/images/generate
 // @access  Private
-const generateImage = async (req, res) => { try {
+const generateImage = async (req, res) => {
+  try {
   const { prompt, size = '1024x1024' } = req.body;
   const userId = req.user._id;
 
@@ -33,12 +34,16 @@ const generateImage = async (req, res) => { try {
   });
 
   res.status(201).json(image);
-}  } catch (error) { res.status(500).json({ message: 'Server error', error: error.message }); } };
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
 
 // @desc    Optimize image
 // @route   POST /api/images/optimize
 // @access  Private
-const optimizeImage = async (req, res) => { try {
+const optimizeImage = async (req, res) => {
+  try {
   const { imageId } = req.body;
 
   const image = await Image.findById(imageId);
@@ -66,12 +71,16 @@ const optimizeImage = async (req, res) => { try {
   await image.save();
 
   res.json({ optimizedUrl: image.optimizedUrl, size: image.size });
-}  } catch (error) { res.status(500).json({ message: 'Server error', error: error.message }); } };
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
 
 // @desc    Generate alt text
 // @route   POST /api/images/generate-alt-text
 // @access  Private
-const generateAltText = async (req, res) => { try {
+const generateAltText = async (req, res) => {
+  try {
   const { imageId } = req.body;
 
   const image = await Image.findById(imageId);
@@ -95,12 +104,16 @@ const generateAltText = async (req, res) => { try {
   await image.save();
 
   res.json({ altText });
-}  } catch (error) { res.status(500).json({ message: 'Server error', error: error.message }); } };
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
 
 // @desc    A/B test images
 // @route   POST /api/images/ab-test
 // @access  Private
-const abTestImages = async (req, res) => { try {
+const abTestImages = async (req, res) => {
+  try {
   const { imageIds, testName } = req.body;
 
   // Simplified: just return test setup
@@ -109,16 +122,23 @@ const abTestImages = async (req, res) => { try {
     images: imageIds,
     status: 'running'
   });
-}  } catch (error) { res.status(500).json({ message: 'Server error', error: error.message }); } };
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
 
 // @desc    Get image library
 // @route   GET /api/images/library
 // @access  Private
-const getImageLibrary = async (req, res) => { try {
+const getImageLibrary = async (req, res) => {
+  try {
   const userId = req.user._id;
   const images = await Image.find({ user: userId }).sort({ createdAt: -1 });
   res.json(images);
-}  } catch (error) { res.status(500).json({ message: 'Server error', error: error.message }); } };
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
 
 export {
   generateImage,

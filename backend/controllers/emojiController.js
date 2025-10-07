@@ -11,7 +11,8 @@ const getOpenAIClient = async () => {
 // @desc    Suggest emojis
 // @route   POST /api/emoji/suggest
 // @access  Private
-const suggestEmojis = async (req, res) => { try {
+const suggestEmojis = async (req, res) => {
+  try {
   const { subject, content } = req.body;
 
   const prompt = `Suggest 5-7 relevant emojis for this email subject and content. Consider the tone, topic, and cultural appropriateness.
@@ -30,12 +31,16 @@ Return only emojis separated by spaces, no explanation.`;
 
   const emojis = completion.choices[0].message.content.trim().split(' ');
   res.json({ emojis });
-}  } catch (error) { res.status(500).json({ message: 'Server error', error: error.message }); } };
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
 
 // @desc    Check appropriateness
 // @route   POST /api/emoji/check-appropriateness
 // @access  Private
-const checkAppropriateness = async (req, res) => { try {
+const checkAppropriateness = async (req, res) => {
+  try {
   const { emojis, context } = req.body;
 
   const prompt = `Check if these emojis are culturally appropriate for this context: "${context}". Emojis: ${emojis.join(' ')}
@@ -51,21 +56,29 @@ Return JSON: {"appropriate": true/false, "reason": "explanation"}`;
 
   const result = JSON.parse(completion.choices[0].message.content);
   res.json(result);
-}  } catch (error) { res.status(500).json({ message: 'Server error', error: error.message }); } };
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
 
 // @desc    Get trending emojis
 // @route   GET /api/emoji/trending
 // @access  Private
-const getTrendingEmojis = async (req, res) => { try {
+const getTrendingEmojis = async (req, res) => {
+  try {
   // Simplified: return static trending emojis
   const trending = ['🚀', '📈', '🎯', '💡', '🔥', '⭐', '🎉', '💪', '🌟', '📊'];
   res.json({ trending });
-}  } catch (error) { res.status(500).json({ message: 'Server error', error: error.message }); } };
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
 
 // @desc    Get emoji performance analytics
 // @route   GET /api/emoji/performance-analytics
 // @access  Private
-const getEmojiPerformance = async (req, res) => { try {
+const getEmojiPerformance = async (req, res) => {
+  try {
   // Placeholder analytics
   res.json({
     topPerforming: ['🚀', '💡', '🎯'],
@@ -75,12 +88,16 @@ const getEmojiPerformance = async (req, res) => { try {
       '🎯': { opens: 82, clicks: 10 }
     }
   });
-}  } catch (error) { res.status(500).json({ message: 'Server error', error: error.message }); } };
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
 
 // @desc    A/B test emojis
 // @route   POST /api/emoji/ab-test
 // @access  Private
-const abTestEmojis = async (req, res) => { try {
+const abTestEmojis = async (req, res) => {
+  try {
   const { subject, emojiSets } = req.body;
 
   // Simplified: return test setup
@@ -92,7 +109,10 @@ const abTestEmojis = async (req, res) => { try {
       subject: `${subject} ${set.join('')}`
     }))
   });
-}  } catch (error) { res.status(500).json({ message: 'Server error', error: error.message }); } };
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
 
 export {
   suggestEmojis,

@@ -5,7 +5,8 @@ import User from '../models/User.js';
 // @desc    Create team
 // @route   POST /api/teams
 // @access  Private
-const createTeam = async (req, res) => { try {
+const createTeam = async (req, res) => {
+  try {
   const { name } = req.body;
   const userId = req.user._id;
 
@@ -27,12 +28,16 @@ const createTeam = async (req, res) => { try {
   });
 
   res.status(201).json(team);
-}  } catch (error) { res.status(500).json({ message: 'Server error', error: error.message }); } };
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
 
 // @desc    Get user's teams
 // @route   GET /api/teams
 // @access  Private
-const getTeams = async (req, res) => { try {
+const getTeams = async (req, res) => {
+  try {
   const userId = req.user._id;
 
   const teams = await Team.find({
@@ -43,12 +48,16 @@ const getTeams = async (req, res) => { try {
   }).populate('members.user', 'name email').populate('owner', 'name email');
 
   res.json(teams);
-}  } catch (error) { res.status(500).json({ message: 'Server error', error: error.message }); } };
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
 
 // @desc    Get team details
 // @route   GET /api/teams/:id
 // @access  Private
-const getTeam = async (req, res) => { try {
+const getTeam = async (req, res) => {
+  try {
   const team = await Team.findById(req.params.id)
     .populate('members.user', 'name email')
     .populate('owner', 'name email');
@@ -68,12 +77,16 @@ const getTeam = async (req, res) => { try {
   }
 
   res.json(team);
-}  } catch (error) { res.status(500).json({ message: 'Server error', error: error.message }); } };
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
 
 // @desc    Invite member to team
 // @route   POST /api/teams/:id/invite
 // @access  Private
-const inviteMember = async (req, res) => { try {
+const inviteMember = async (req, res) => {
+  try {
   const { email, role } = req.body;
   const teamId = req.params.id;
 
@@ -117,12 +130,16 @@ const inviteMember = async (req, res) => { try {
   await team.save();
 
   res.json(team);
-}  } catch (error) { res.status(500).json({ message: 'Server error', error: error.message }); } };
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
 
 // @desc    Update member role
 // @route   PUT /api/teams/:id/members/:memberId
 // @access  Private
-const updateMemberRole = async (req, res) => { try {
+const updateMemberRole = async (req, res) => {
+  try {
   const { role, permissions } = req.body;
   const teamId = req.params.id;
   const memberId = req.params.memberId;
@@ -158,12 +175,16 @@ const updateMemberRole = async (req, res) => { try {
 
   await team.save();
   res.json(team);
-}  } catch (error) { res.status(500).json({ message: 'Server error', error: error.message }); } };
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
 
 // @desc    Remove member from team
 // @route   DELETE /api/teams/:id/members/:memberId
 // @access  Private
-const removeMember = async (req, res) => { try {
+const removeMember = async (req, res) => {
+  try {
   const teamId = req.params.id;
   const memberId = req.params.memberId;
 
@@ -187,7 +208,10 @@ const removeMember = async (req, res) => { try {
   await team.save();
 
   res.json(team);
-}  } catch (error) { res.status(500).json({ message: 'Server error', error: error.message }); } };
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
 
 // Helper functions
 const getDefaultPermissions = (role) => {

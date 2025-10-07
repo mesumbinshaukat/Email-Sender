@@ -4,7 +4,8 @@ import Email from '../models/Email.js';
 import { getEnvVar } from '../utils/envManager.js';
 
 // Gamification Controllers
-const getGamificationProfile = async (req, res) => { try {
+const getGamificationProfile = async (req, res) => {
+  try {
   const userId = req.user._id;
 
   let profile = await Gamification.findOne({ user: userId });
@@ -23,7 +24,8 @@ const getGamificationProfile = async (req, res) => { try {
   res.json(profile);
 });
 
-const updateGamification = async (req, res) => { try {
+const updateGamification = async (req, res) => {
+  try {
   const { action, value } = req.body;
   const userId = req.user._id;
 
@@ -53,10 +55,14 @@ const updateGamification = async (req, res) => { try {
 
   await profile.save();
   res.json(profile);
-}  } catch (error) { res.status(500).json({ message: 'Server error', error: error.message }); } };
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
 
 // Voice-to-Email Controllers
-const createVoiceEmail = async (req, res) => { try {
+const createVoiceEmail = async (req, res) => {
+  try {
   const { audioFile } = req.body;
   const userId = req.user._id;
 
@@ -64,7 +70,10 @@ const createVoiceEmail = async (req, res) => { try {
     user: userId,
     audioUrl: audioFile,
     status: 'processing'
-  }  } catch (error) { res.status(500).json({ message: 'Server error', error: error.message }); } };
+    } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
 
   // Start async processing
   processVoiceEmail(voiceEmail._id);
@@ -72,7 +81,8 @@ const createVoiceEmail = async (req, res) => { try {
   res.status(201).json(voiceEmail);
 });
 
-const getVoiceEmails = async (req, res) => { try {
+const getVoiceEmails = async (req, res) => {
+  try {
   const userId = req.user._id;
 
   const voiceEmails = await VoiceEmail.find({ user: userId }).sort({ createdAt: -1 });
@@ -112,7 +122,8 @@ const processVoiceEmail = async (voiceEmailId) => {
 };
 
 // Template Marketplace Controllers
-const getTemplates = async (req, res) => { try {
+const getTemplates = async (req, res) => {
+  try {
   const { category, search } = req.query;
 
   let query = { isActive: true };
@@ -133,7 +144,8 @@ const getTemplates = async (req, res) => { try {
   res.json(templates);
 });
 
-const createTemplate = async (req, res) => { try {
+const createTemplate = async (req, res) => {
+  try {
   const { name, description, category, html, css, variables, price, tags } = req.body;
   const userId = req.user._id;
 
@@ -152,7 +164,8 @@ const createTemplate = async (req, res) => { try {
   res.status(201).json(template);
 });
 
-const purchaseTemplate = async (req, res) => { try {
+const purchaseTemplate = async (req, res) => {
+  try {
   const templateId = req.params.id;
   const userId = req.user._id;
 
@@ -171,10 +184,14 @@ const purchaseTemplate = async (req, res) => { try {
     template,
     message: 'Template purchased successfully'
   });
-}  } catch (error) { res.status(500).json({ message: 'Server error', error: error.message }); } };
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
 
 // AI Coach Controllers
-const getAICoachInsights = async (req, res) => { try {
+const getAICoachInsights = async (req, res) => {
+  try {
   const userId = req.user._id;
 
   let coach = await AICoach.findOne({ user: userId });
@@ -187,7 +204,8 @@ const getAICoachInsights = async (req, res) => { try {
   res.json(coach);
 });
 
-const implementInsight = async (req, res) => { try {
+const implementInsight = async (req, res) => {
+  try {
   const { insightId } = req.body;
   const userId = req.user._id;
 
@@ -202,10 +220,14 @@ const implementInsight = async (req, res) => { try {
   }
 
   res.json({ message: 'Insight marked as implemented' });
-}  } catch (error) { res.status(500).json({ message: 'Server error', error: error.message }); } };
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
 
 // Blockchain Verification Controllers
-const createBlockchainVerification = async (req, res) => { try {
+const createBlockchainVerification = async (req, res) => {
+  try {
   const { emailId } = req.body;
   const userId = req.user._id;
 
@@ -233,7 +255,10 @@ const createBlockchainVerification = async (req, res) => { try {
     user: userId,
     hash,
     status: 'pending'
-  }  } catch (error) { res.status(500).json({ message: 'Server error', error: error.message }); } };
+    } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
 
   // Simulate blockchain recording
   recordOnBlockchain(verification._id);
@@ -241,7 +266,8 @@ const createBlockchainVerification = async (req, res) => { try {
   res.status(201).json(verification);
 });
 
-const getBlockchainVerifications = async (req, res) => { try {
+const getBlockchainVerifications = async (req, res) => {
+  try {
   const userId = req.user._id;
 
   const verifications = await BlockchainVerification.find({ user: userId })
@@ -251,7 +277,8 @@ const getBlockchainVerifications = async (req, res) => { try {
   res.json(verifications);
 });
 
-const verifyBlockchainRecord = async (req, res) => { try {
+const verifyBlockchainRecord = async (req, res) => {
+  try {
   const verificationId = req.params.id;
 
   const verification = await BlockchainVerification.findById(verificationId);
@@ -269,7 +296,10 @@ const verifyBlockchainRecord = async (req, res) => { try {
     isValid,
     blockchainUrl: `https://polygonscan.com/tx/${verification.transactionHash}`
   });
-}  } catch (error) { res.status(500).json({ message: 'Server error', error: error.message }); } };
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
 
 // Helper functions
 const generateInsights = async (userId) => {

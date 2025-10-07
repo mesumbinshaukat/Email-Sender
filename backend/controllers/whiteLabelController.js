@@ -4,7 +4,8 @@ import WhiteLabel from '../models/WhiteLabel.js';
 // @desc    Get white label settings
 // @route   GET /api/white-label
 // @access  Private
-const getWhiteLabelSettings = async (req, res) => { try {
+const getWhiteLabelSettings = async (req, res) => {
+  try {
   const userId = req.user._id;
 
   let whiteLabel = await WhiteLabel.findOne({ user: userId });
@@ -19,12 +20,16 @@ const getWhiteLabelSettings = async (req, res) => { try {
   }
 
   res.json(whiteLabel);
-}  } catch (error) { res.status(500).json({ message: 'Server error', error: error.message }); } };
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
 
 // @desc    Update white label branding
 // @route   PUT /api/white-label/branding
 // @access  Private
-const updateBranding = async (req, res) => { try {
+const updateBranding = async (req, res) => {
+  try {
   const { branding } = req.body;
   const userId = req.user._id;
 
@@ -38,12 +43,16 @@ const updateBranding = async (req, res) => { try {
   await whiteLabel.save();
 
   res.json(whiteLabel);
-}  } catch (error) { res.status(500).json({ message: 'Server error', error: error.message }); } };
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
 
 // @desc    Update domain settings
 // @route   PUT /api/white-label/domain
 // @access  Private
-const updateDomain = async (req, res) => { try {
+const updateDomain = async (req, res) => {
+  try {
   const { domain } = req.body;
   const userId = req.user._id;
 
@@ -57,12 +66,16 @@ const updateDomain = async (req, res) => { try {
   await whiteLabel.save();
 
   res.json(whiteLabel);
-}  } catch (error) { res.status(500).json({ message: 'Server error', error: error.message }); } };
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
 
 // @desc    Update email settings
 // @route   PUT /api/white-label/email
 // @access  Private
-const updateEmailSettings = async (req, res) => { try {
+const updateEmailSettings = async (req, res) => {
+  try {
   const { emailSettings } = req.body;
   const userId = req.user._id;
 
@@ -76,12 +89,16 @@ const updateEmailSettings = async (req, res) => { try {
   await whiteLabel.save();
 
   res.json(whiteLabel);
-}  } catch (error) { res.status(500).json({ message: 'Server error', error: error.message }); } };
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
 
 // @desc    Update subscription plan
 // @route   PUT /api/white-label/subscription
 // @access  Private
-const updateSubscription = async (req, res) => { try {
+const updateSubscription = async (req, res) => {
+  try {
   const { subscription } = req.body;
   const userId = req.user._id;
 
@@ -95,12 +112,16 @@ const updateSubscription = async (req, res) => { try {
   await whiteLabel.save();
 
   res.json(whiteLabel);
-}  } catch (error) { res.status(500).json({ message: 'Server error', error: error.message }); } };
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
 
 // @desc    Verify custom domain
 // @route   POST /api/white-label/verify-domain
 // @access  Private
-const verifyDomain = async (req, res) => { try {
+const verifyDomain = async (req, res) => {
+  try {
   const userId = req.user._id;
 
   const whiteLabel = await WhiteLabel.findOne({ user: userId });
@@ -125,12 +146,16 @@ const verifyDomain = async (req, res) => { try {
     verified: isVerified,
     message: isVerified ? 'Domain verified successfully!' : 'Domain verification failed. Please check your DNS records.'
   });
-}  } catch (error) { res.status(500).json({ message: 'Server error', error: error.message }); } };
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
 
 // @desc    Generate custom CSS
 // @route   GET /api/white-label/css
 // @access  Public (for white-labeled domains)
-const getCustomCSS = async (req, res) => { try {
+const getCustomCSS = async (req, res) => {
+  try {
   const domain = req.query.domain;
 
   if (!domain) {
@@ -151,7 +176,10 @@ const getCustomCSS = async (req, res) => { try {
   const css = generateCustomCSS(whiteLabel);
   res.set('Content-Type', 'text/css');
   res.send(css);
-}  } catch (error) { res.status(500).json({ message: 'Server error', error: error.message }); } };
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
 
 // Helper functions
 const generateCustomCSS = (whiteLabel) => {

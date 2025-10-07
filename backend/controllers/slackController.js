@@ -4,7 +4,8 @@ import { getEnvVar } from '../utils/envManager.js';
 // @desc    Send Slack notification
 // @route   POST /api/slack/notify
 // @access  Private
-const sendSlackNotification = async (req, res) => { try {
+const sendSlackNotification = async (req, res) => {
+  try {
   const { channel, message, type } = req.body;
   const userId = req.user._id;
 
@@ -20,12 +21,16 @@ const sendSlackNotification = async (req, res) => { try {
   console.log(`Sending Slack notification to ${slackChannel}:`, message);
 
   res.json({ sent: true, channel: slackChannel });
-}  } catch (error) { res.status(500).json({ message: 'Server error', error: error.message }); } };
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
 
 // @desc    Setup Slack commands
 // @route   POST /api/slack/commands
 // @access  Public (Slack webhook)
-const handleSlackCommand = async (req, res) => { try {
+const handleSlackCommand = async (req, res) => {
+  try {
   const { command, text, user_id } = req.body;
 
   // Process commands like /send-email, /analytics, etc.
@@ -43,12 +48,16 @@ const handleSlackCommand = async (req, res) => { try {
   }
 
   res.json(response);
-}  } catch (error) { res.status(500).json({ message: 'Server error', error: error.message }); } };
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
 
 // @desc    Send daily digest
 // @route   POST /api/slack/daily-digest
 // @access  Private
-const sendDailyDigest = async (req, res) => { try {
+const sendDailyDigest = async (req, res) => {
+  try {
   const userId = req.user._id;
 
   // Generate daily stats
@@ -63,10 +72,16 @@ const sendDailyDigest = async (req, res) => { try {
 
   await sendSlackNotification({
     body: { message, type: 'digest' }
-  }, { json: () => {} }  } catch (error) { res.status(500).json({ message: 'Server error', error: error.message }); } }; // Mock response
+  }, { json: () => {}   } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+}; // Mock response
 
   res.json({ sent: true });
-}  } catch (error) { res.status(500).json({ message: 'Server error', error: error.message }); } };
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
 
 // Helper functions
 const getEmailStatsForSlack = async () => {

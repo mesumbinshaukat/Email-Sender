@@ -3,7 +3,8 @@
 // @desc    Send transactional email
 // @route   POST /api/transactional/send
 // @access  Private
-const sendTransactionalEmail = async (req, res) => { try {
+const sendTransactionalEmail = async (req, res) => {
+  try {
   const { to, template, data, priority } = req.body;
   const userId = req.user._id;
 
@@ -17,12 +18,16 @@ const sendTransactionalEmail = async (req, res) => { try {
     messageId: `txn_${Date.now()}`,
     priority: priority || 'high'
   });
-}  } catch (error) { res.status(500).json({ message: 'Server error', error: error.message }); } };
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
 
 // @desc    Get delivery stats
 // @route   GET /api/transactional/stats
 // @access  Private
-const getTransactionalStats = async (req, res) => { try {
+const getTransactionalStats = async (req, res) => {
+  try {
   const stats = {
     sentToday: 1250,
     delivered: 1220,
@@ -32,19 +37,26 @@ const getTransactionalStats = async (req, res) => { try {
   };
 
   res.json(stats);
-}  } catch (error) { res.status(500).json({ message: 'Server error', error: error.message }); } };
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
 
 // @desc    Configure SMTP settings
 // @route   POST /api/transactional/smtp-config
 // @access  Private
-const configureSMTP = async (req, res) => { try {
+const configureSMTP = async (req, res) => {
+  try {
   const { host, port, username, password, useTLS } = req.body;
 
   // Save SMTP configuration securely
   console.log('SMTP configuration updated');
 
   res.json({ configured: true });
-}  } catch (error) { res.status(500).json({ message: 'Server error', error: error.message }); } };
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
 
 export {
   sendTransactionalEmail,

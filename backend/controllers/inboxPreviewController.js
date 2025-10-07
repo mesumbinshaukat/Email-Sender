@@ -5,7 +5,8 @@ import { getEnvVar } from '../utils/envManager.js';
 // @desc    Generate inbox preview
 // @route   POST /api/inbox-preview/generate
 // @access  Private
-const generatePreview = async (req, res) => { try {
+const generatePreview = async (req, res) => {
+  try {
   const { emailId } = req.body;
   const userId = req.user._id;
 
@@ -17,19 +18,26 @@ const generatePreview = async (req, res) => { try {
       user: userId,
       email: emailId,
       status: 'processing'
-    }  } catch (error) { res.status(500).json({ message: 'Server error', error: error.message }); } };
+      } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
 
     // Start async preview generation
     generateInboxPreviews(preview);
   }
 
   res.status(200).json(preview);
-}  } catch (error) { res.status(500).json({ message: 'Server error', error: error.message }); } };
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
 
 // @desc    Get preview results
 // @route   GET /api/inbox-preview/:emailId
 // @access  Private
-const getPreview = async (req, res) => { try {
+const getPreview = async (req, res) => {
+  try {
   const { emailId } = req.params;
   const userId = req.user._id;
 
@@ -42,12 +50,16 @@ const getPreview = async (req, res) => { try {
   }
 
   res.json(preview);
-}  } catch (error) { res.status(500).json({ message: 'Server error', error: error.message }); } };
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
 
 // @desc    Get preview by ID
 // @route   GET /api/inbox-preview/preview/:id
 // @access  Private
-const getPreviewById = async (req, res) => { try {
+const getPreviewById = async (req, res) => {
+  try {
   const preview = await InboxPreview.findById(req.params.id).populate('email');
 
   if (!preview) {
@@ -56,24 +68,32 @@ const getPreviewById = async (req, res) => { try {
   }
 
   res.json(preview);
-}  } catch (error) { res.status(500).json({ message: 'Server error', error: error.message }); } };
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
 
 // @desc    Get user's previews
 // @route   GET /api/inbox-preview
 // @access  Private
-const getPreviews = async (req, res) => { try {
+const getPreviews = async (req, res) => {
+  try {
   const userId = req.user._id;
   const previews = await InboxPreview.find({ user: userId })
     .populate('email')
     .sort({ createdAt: -1 });
 
   res.json(previews);
-}  } catch (error) { res.status(500).json({ message: 'Server error', error: error.message }); } };
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
 
 // @desc    Regenerate preview
 // @route   POST /api/inbox-preview/:id/regenerate
 // @access  Private
-const regeneratePreview = async (req, res) => { try {
+const regeneratePreview = async (req, res) => {
+  try {
   const preview = await InboxPreview.findById(req.params.id);
 
   if (!preview) {
@@ -89,7 +109,10 @@ const regeneratePreview = async (req, res) => { try {
   generateInboxPreviews(preview);
 
   res.json(preview);
-}  } catch (error) { res.status(500).json({ message: 'Server error', error: error.message }); } };
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
 
 // Helper functions
 const generateInboxPreviews = async (preview) => {
@@ -207,7 +230,10 @@ const generateRecommendations = (previews) => {
     preview.issues.forEach(issue => {
       issueCount[issue.type] = (issueCount[issue.type] || 0) + 1;
     });
-  }  } catch (error) { res.status(500).json({ message: 'Server error', error: error.message }); } };
+    } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
 
   // Generate recommendations based on issue frequency
   Object.entries(issueCount).forEach(([type, count]) => {

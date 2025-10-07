@@ -4,7 +4,8 @@ import Outreach from '../models/Outreach.js'; // Would need to create this model
 // @desc    Create outreach campaign
 // @route   POST /api/outreach/create
 // @access  Private
-const createOutreachCampaign = async (req, res) => { try {
+const createOutreachCampaign = async (req, res) => {
+  try {
   const { name, targetList, sequence, settings } = req.body;
   const userId = req.user._id;
 
@@ -18,12 +19,16 @@ const createOutreachCampaign = async (req, res) => { try {
   });
 
   res.status(201).json(campaign);
-}  } catch (error) { res.status(500).json({ message: 'Server error', error: error.message }); } };
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
 
 // @desc    Start outreach campaign
 // @route   POST /api/outreach/:id/start
 // @access  Private
-const startOutreachCampaign = async (req, res) => { try {
+const startOutreachCampaign = async (req, res) => {
+  try {
   const campaign = await Outreach.findById(req.params.id);
   if (!campaign) {
     res.status(404);
@@ -34,12 +39,16 @@ const startOutreachCampaign = async (req, res) => { try {
   await campaign.save();
 
   res.json(campaign);
-}  } catch (error) { res.status(500).json({ message: 'Server error', error: error.message }); } };
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
 
 // @desc    Get outreach analytics
 // @route   GET /api/outreach/analytics
 // @access  Private
-const getOutreachAnalytics = async (req, res) => { try {
+const getOutreachAnalytics = async (req, res) => {
+  try {
   const userId = req.user._id;
   const campaigns = await Outreach.find({ user: userId });
 
@@ -52,7 +61,10 @@ const getOutreachAnalytics = async (req, res) => { try {
   };
 
   res.json(analytics);
-}  } catch (error) { res.status(500).json({ message: 'Server error', error: error.message }); } };
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
 
 export {
   createOutreachCampaign,

@@ -5,7 +5,8 @@ import User from '../models/User.js';
 // @desc    Get forecast data
 // @route   GET /api/analytics/forecast
 // @access  Private
-const getForecast = async (req, res) => { try {
+const getForecast = async (req, res) => {
+  try {
   const userId = req.user._id;
 
   // Get historical data for the last 30 days
@@ -15,7 +16,10 @@ const getForecast = async (req, res) => { try {
   const emails = await Email.find({
     user: userId,
     createdAt: { $gte: thirtyDaysAgo }
-  }).sort({ createdAt: 1 }  } catch (error) { res.status(500).json({ message: 'Server error', error: error.message }); } };
+  }).sort({ createdAt: 1   } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
 
   // Simple forecasting algorithm (linear regression)
   const dataPoints = emails.length;
@@ -44,12 +48,16 @@ const getForecast = async (req, res) => { try {
     },
     forecast
   });
-}  } catch (error) { res.status(500).json({ message: 'Server error', error: error.message }); } };
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
 
 // @desc    Get trends analysis
 // @route   GET /api/analytics/trends
 // @access  Private
-const getTrends = async (req, res) => { try {
+const getTrends = async (req, res) => {
+  try {
   const userId = req.user._id;
 
   // Get data for last 90 days
@@ -59,7 +67,10 @@ const getTrends = async (req, res) => { try {
   const emails = await Email.find({
     user: userId,
     createdAt: { $gte: ninetyDaysAgo }
-  }  } catch (error) { res.status(500).json({ message: 'Server error', error: error.message }); } };
+    } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
 
   // Group by week
   const weeklyData = {};
@@ -97,12 +108,16 @@ const getTrends = async (req, res) => { try {
   const trend = secondAvg > firstAvg ? 'upward' : secondAvg < firstAvg ? 'downward' : 'stable';
 
   res.json({ trends, overallTrend: trend });
-}  } catch (error) { res.status(500).json({ message: 'Server error', error: error.message }); } };
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
 
 // @desc    Get anomaly detection
 // @route   GET /api/analytics/anomalies
 // @access  Private
-const getAnomalies = async (req, res) => { try {
+const getAnomalies = async (req, res) => {
+  try {
   const userId = req.user._id;
 
   // Simple anomaly detection based on standard deviation
@@ -149,12 +164,16 @@ const getAnomalies = async (req, res) => { try {
       ? `${anomalies.length} anomalous days detected`
       : 'No significant anomalies detected'
   });
-}  } catch (error) { res.status(500).json({ message: 'Server error', error: error.message }); } };
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
 
 // @desc    Get churn prediction
 // @route   GET /api/analytics/churn-prediction
 // @access  Private
-const getChurnPrediction = async (req, res) => { try {
+const getChurnPrediction = async (req, res) => {
+  try {
   const userId = req.user._id;
 
   // Simple churn prediction based on engagement patterns
@@ -189,12 +208,16 @@ const getChurnPrediction = async (req, res) => { try {
       ? ['Monitor closely', 'Send targeted content']
       : ['Maintain current strategy']
   });
-}  } catch (error) { res.status(500).json({ message: 'Server error', error: error.message }); } };
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
 
 // @desc    Get growth projection
 // @route   GET /api/analytics/growth-projection
 // @access  Private
-const getGrowthProjection = async (req, res) => { try {
+const getGrowthProjection = async (req, res) => {
+  try {
   const userId = req.user._id;
 
   // Simple growth projection based on current trends
@@ -237,7 +260,10 @@ const getGrowthProjection = async (req, res) => { try {
     },
     projections
   });
-}  } catch (error) { res.status(500).json({ message: 'Server error', error: error.message }); } };
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
 
 export {
   getForecast,

@@ -5,7 +5,8 @@ import Email from '../models/Email.js';
 // @desc    Create cohort
 // @route   POST /api/cohort/create
 // @access  Private
-const createCohort = async (req, res) => { try {
+const createCohort = async (req, res) => {
+  try {
   const { name, signupDate, segmentType } = req.body;
   const userId = req.user._id;
 
@@ -17,21 +18,29 @@ const createCohort = async (req, res) => { try {
   });
 
   res.status(201).json(cohort);
-}  } catch (error) { res.status(500).json({ message: 'Server error', error: error.message }); } };
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
 
 // @desc    Get cohorts
 // @route   GET /api/cohort
 // @access  Private
-const getCohorts = async (req, res) => { try {
+const getCohorts = async (req, res) => {
+  try {
   const userId = req.user._id;
   const cohorts = await Cohort.find({ user: userId }).sort({ createdAt: -1 });
   res.json(cohorts);
-}  } catch (error) { res.status(500).json({ message: 'Server error', error: error.message }); } };
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
 
 // @desc    Analyze cohort retention
 // @route   GET /api/cohort/:id/analysis
 // @access  Private
-const analyzeCohort = async (req, res) => { try {
+const analyzeCohort = async (req, res) => {
+  try {
   const cohort = await Cohort.findById(req.params.id).populate('members.contact');
   if (!cohort) {
     res.status(404);
@@ -71,12 +80,16 @@ const analyzeCohort = async (req, res) => { try {
       bestPeriod: retentionRates.reduce((best, current) => current.retentionRate > best.retentionRate ? current : best)
     }
   });
-}  } catch (error) { res.status(500).json({ message: 'Server error', error: error.message }); } };
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
 
 // @desc    Update cohort metrics
 // @route   PUT /api/cohort/:id/metrics
 // @access  Private
-const updateCohortMetrics = async (req, res) => { try {
+const updateCohortMetrics = async (req, res) => {
+  try {
   const { contactId, metrics } = req.body;
   const cohort = await Cohort.findById(req.params.id);
 
@@ -100,7 +113,10 @@ const updateCohortMetrics = async (req, res) => { try {
 
   await cohort.save();
   res.json(cohort);
-}  } catch (error) { res.status(500).json({ message: 'Server error', error: error.message }); } };
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
 
 export {
   createCohort,

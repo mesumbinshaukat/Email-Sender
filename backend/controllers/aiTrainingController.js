@@ -7,7 +7,8 @@ import { getEnvVar } from '../utils/envManager.js';
 // @desc    Start AI model training
 // @route   POST /api/ai-training/train
 // @access  Private
-const startTraining = async (req, res) => { try {
+const startTraining = async (req, res) => {
+  try {
   const { modelType } = req.body;
   const userId = req.user._id;
 
@@ -34,22 +35,30 @@ const startTraining = async (req, res) => { try {
     training,
     message: 'AI training started. This may take several minutes.'
   });
-}  } catch (error) { res.status(500).json({ message: 'Server error', error: error.message }); } };
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
 
 // @desc    Get user's AI models
 // @route   GET /api/ai-training
 // @access  Private
-const getModels = async (req, res) => { try {
+const getModels = async (req, res) => {
+  try {
   const userId = req.user._id;
 
   const models = await AITraining.find({ user: userId }).sort({ updatedAt: -1 });
   res.json(models);
-}  } catch (error) { res.status(500).json({ message: 'Server error', error: error.message }); } };
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
 
 // @desc    Get model details
 // @route   GET /api/ai-training/:id
 // @access  Private
-const getModel = async (req, res) => { try {
+const getModel = async (req, res) => {
+  try {
   const model = await AITraining.findById(req.params.id);
 
   if (!model) {
@@ -63,12 +72,16 @@ const getModel = async (req, res) => { try {
   }
 
   res.json(model);
-}  } catch (error) { res.status(500).json({ message: 'Server error', error: error.message }); } };
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
 
 // @desc    Use trained model for prediction
 // @route   POST /api/ai-training/:id/predict
 // @access  Private
-const useModel = async (req, res) => { try {
+const useModel = async (req, res) => {
+  try {
   const { input } = req.body;
   const model = await AITraining.findById(req.params.id);
 
@@ -89,7 +102,10 @@ const useModel = async (req, res) => { try {
 
   const prediction = await runPrediction(model, input);
   res.json(prediction);
-}  } catch (error) { res.status(500).json({ message: 'Server error', error: error.message }); } };
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
 
 // Helper functions
 const trainModel = async (trainingId) => {

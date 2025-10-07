@@ -4,7 +4,8 @@ import Attribution from '../models/Attribution.js';
 // @desc    Track touchpoint
 // @route   POST /api/attribution/track
 // @access  Private
-const trackTouchpoint = async (req, res) => { try {
+const trackTouchpoint = async (req, res) => {
+  try {
   const { contactId, type, emailId, value, source } = req.body;
   const userId = req.user._id;
 
@@ -33,12 +34,16 @@ const trackTouchpoint = async (req, res) => { try {
 
   await attribution.save();
   res.json(attribution);
-}  } catch (error) { res.status(500).json({ message: 'Server error', error: error.message }); } };
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
 
 // @desc    Record conversion
 // @route   POST /api/attribution/conversion
 // @access  Private
-const recordConversion = async (req, res) => { try {
+const recordConversion = async (req, res) => {
+  try {
   const { contactId, value, type } = req.body;
   const userId = req.user._id;
 
@@ -59,12 +64,16 @@ const recordConversion = async (req, res) => { try {
   await applyAttributionModel(attribution);
 
   res.json(attribution);
-}  } catch (error) { res.status(500).json({ message: 'Server error', error: error.message }); } };
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
 
 // @desc    Get attribution report
 // @route   GET /api/attribution/report
 // @access  Private
-const getAttributionReport = async (req, res) => { try {
+const getAttributionReport = async (req, res) => {
+  try {
   const userId = req.user._id;
   const { startDate, endDate, model } = req.query;
 
@@ -100,12 +109,16 @@ const getAttributionReport = async (req, res) => { try {
   });
 
   res.json(report);
-}  } catch (error) { res.status(500).json({ message: 'Server error', error: error.message }); } };
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
 
 // @desc    Get customer journey
 // @route   GET /api/attribution/journey/:contactId
 // @access  Private
-const getCustomerJourney = async (req, res) => { try {
+const getCustomerJourney = async (req, res) => {
+  try {
   const { contactId } = req.params;
   const userId = req.user._id;
 
@@ -118,7 +131,10 @@ const getCustomerJourney = async (req, res) => { try {
   }
 
   res.json(attribution);
-}  } catch (error) { res.status(500).json({ message: 'Server error', error: error.message }); } };
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
 
 // Helper functions
 const getJourneyStage = (type) => {
