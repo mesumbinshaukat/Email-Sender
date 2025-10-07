@@ -1,4 +1,5 @@
 import mongoose from 'mongoose';
+import os from 'os';
 
 // @desc    Health check endpoint
 // @route   GET /api/health
@@ -88,10 +89,10 @@ export const getSystemInfo = async (req, res) => {
       node: process.version,
       platform: process.platform,
       arch: process.arch,
-      cpus: require('os').cpus().length,
-      totalMemory: Math.round(require('os').totalmem() / 1024 / 1024) + ' MB',
-      freeMemory: Math.round(require('os').freemem() / 1024 / 1024) + ' MB',
-      loadAverage: require('os').loadavg()
+      cpus: os.cpus().length,
+      totalMemory: Math.round(os.totalmem() / 1024 / 1024) + ' MB',
+      freeMemory: Math.round(os.freemem() / 1024 / 1024) + ' MB',
+      loadAverage: os.loadavg()
     };
     
     res.status(200).json(info);
