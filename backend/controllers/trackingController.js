@@ -118,23 +118,43 @@ export const trackReadTime = async (req, res) => {
     const { trackingId } = req.params;
     const { startTime, endTime, duration } = req.body;
 
+    console.log('⏱️  READ TIME TRACKED:', {
+      trackingId,
+      startTime,
+      endTime,
+      duration: `${duration} seconds`,
+      timestamp: new Date().toISOString()
+    });
+
     const email = await Email.findOne({ trackingId });
 
-    if (email) {
-      email.tracking.readSessions.push({
-        startTime: new Date(startTime),
-        endTime: new Date(endTime),
-        duration: duration || 0,
-      });
-
-      email.tracking.totalReadTime += duration || 0;
-
-      await email.save();
+    if (!email) {
+      console.log('❌ Email not found for read time tracking:', trackingId);
+      return res.json({ success: false, message: 'Email not found' });
     }
+
+    const readSession = {
+      startTime: new Date(startTime),
+      endTime: new Date(endTime),
+      duration: duration || 0,
+    };
+
+    email.tracking.readSessions.push(readSession);
+    email.tracking.totalReadTime += duration || 0;
+
+    await email.save();
+
+    console.log('✅ READ TIME SAVED:', {
+      emailId: email._id,
+      subject: email.subject,
+      sessionDuration: `${duration} seconds`,
+      totalReadTime: `${email.tracking.totalReadTime} seconds`,
+      totalSessions: email.tracking.readSessions.length
+    });
 
     res.json({ success: true });
   } catch (error) {
-    console.error('Track read time error:', error);
+    console.error('❌ Track read time error:', error);
     res.status(500).json({ success: false, error: error.message });
   }
 };

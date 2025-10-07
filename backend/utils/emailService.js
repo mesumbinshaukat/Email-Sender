@@ -46,20 +46,36 @@ export const injectReadTimeTracker = (html, trackingId, backendUrl) => {
   const trackingScript = `
     <script>
       (function() {
+        console.log('📧 Email Read Time Tracker Initialized');
+        console.log('🔗 Backend URL:', '${backendUrl}');
+        console.log('🆔 Tracking ID:', '${trackingId}');
+        
         var startTime = new Date().toISOString();
         var trackingId = '${trackingId}';
         var backendUrl = '${backendUrl}';
         var hasSent = false;
         
         function sendReadTime() {
-          if (hasSent) return;
+          if (hasSent) {
+            console.log('⏭️  Already sent read time, skipping');
+            return;
+          }
           hasSent = true;
           
           var endTime = new Date().toISOString();
-          var duration = Math.round((new Date(endTime) - new Date(startTime)) / 1000); // seconds
+          var duration = Math.round((new Date(endTime) - new Date(startTime)) / 1000);
+          
+          console.log('⏱️  Sending read time:', {
+            startTime: startTime,
+            endTime: endTime,
+            duration: duration + ' seconds'
+          });
           
           // Only send if user spent at least 1 second
-          if (duration < 1) return;
+          if (duration < 1) {
+            console.log('⏭️  Duration too short (<1s), skipping');
+            return;
+          }
           
           var data = {
             startTime: startTime,
@@ -67,45 +83,67 @@ export const injectReadTimeTracker = (html, trackingId, backendUrl) => {
             duration: duration
           };
           
+          var url = backendUrl + '/api/track/readtime/' + trackingId;
+          console.log('📤 Sending to:', url);
+          
           // Use sendBeacon if available (works even when page is closing)
           if (navigator.sendBeacon) {
+            console.log('✅ Using sendBeacon API');
             var blob = new Blob([JSON.stringify(data)], { type: 'application/json' });
-            navigator.sendBeacon(backendUrl + '/api/track/readtime/' + trackingId, blob);
+            var sent = navigator.sendBeacon(url, blob);
+            console.log('📡 sendBeacon result:', sent ? 'SUCCESS' : 'FAILED');
           } else {
+            console.log('⚠️  sendBeacon not available, using fetch');
             // Fallback to fetch
-            fetch(backendUrl + '/api/track/readtime/' + trackingId, {
+            fetch(url, {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify(data),
               keepalive: true
-            }).catch(function() {});
+            }).then(function(response) {
+              console.log('✅ Fetch response:', response.status);
+              return response.json();
+            }).then(function(result) {
+              console.log('✅ Server response:', result);
+            }).catch(function(error) {
+              console.error('❌ Fetch error:', error);
+            });
           }
         }
         
         // Track when user leaves the email
-        window.addEventListener('beforeunload', sendReadTime);
-        window.addEventListener('pagehide', sendReadTime);
+        window.addEventListener('beforeunload', function() {
+          console.log('👋 beforeunload event - sending read time');
+          sendReadTime();
+        });
+        
+        window.addEventListener('pagehide', function() {
+          console.log('👋 pagehide event - sending read time');
+          sendReadTime();
+        });
         
         // Also track after 30 seconds of viewing (for long reads)
         setTimeout(function() {
           if (!hasSent) {
+            console.log('⏰ 30 seconds elapsed - sending read time');
             sendReadTime();
             hasSent = false; // Allow another send on close
           }
         }, 30000);
         
         // Track visibility changes (when user switches tabs)
-        var visibilityChangeTime = startTime;
         document.addEventListener('visibilitychange', function() {
           if (document.hidden) {
-            // User switched away - send current read time
+            console.log('👁️  Tab hidden - sending read time');
             sendReadTime();
           } else {
-            // User came back - reset start time
+            console.log('👁️  Tab visible - resetting timer');
             hasSent = false;
             startTime = new Date().toISOString();
           }
         });
+        
+        console.log('✅ Read time tracker setup complete');
       })();
     </script>
   `;
@@ -198,9 +236,19 @@ export const sendTrackedEmail = async (transporter, emailData, trackingId, backe
     htmlBody = injectTrackingPixel(htmlBody, trackingId, backendUrl);
     htmlBody = injectReadTimeTracker(htmlBody, trackingId, backendUrl);
     htmlBody = wrapLinksWithTracking(htmlBody, trackingId, backendUrl);
+    
     console.log('✅ Tracking pixel injected');
     console.log('✅ Read time tracker injected');
     console.log('🔗 Tracking pixel URL:', `${backendUrl}/api/track/open/${trackingId}`);
+    console.log('🔗 Read time endpoint:', `${backendUrl}/api/track/readtime/${trackingId}`);
+    console.log('📏 Final HTML length:', htmlBody.length);
+    
+    // Verify tracking script was injected
+    if (htmlBody.includes('Email Read Time Tracker Initialized')) {
+      console.log('✅ VERIFIED: Read time tracker script is in HTML');
+    } else {
+      console.log('❌ WARNING: Read time tracker script NOT found in HTML!');
+    }
   } else {
     console.log('⚠️ No HTML body - tracking pixel NOT injected');
   }
