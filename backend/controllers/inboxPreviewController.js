@@ -1,4 +1,3 @@
-// express-async-handler removed - using native async/await
 import InboxPreview from '../models/InboxPreview.js';
 import { getEnvVar } from '../utils/envManager.js';
 
@@ -7,23 +6,20 @@ import { getEnvVar } from '../utils/envManager.js';
 // @access  Private
 const generatePreview = async (req, res) => {
   try {
-    const { emailId } = req.body;
-    const userId = req.user._id;
+  const { emailId } = req.body;
+  const userId = req.user._id;
 
-    // Check if preview already exists
-    let preview = await InboxPreview.findOne({ email: emailId, user: userId });
+  // Check if preview already exists
+  let preview = await InboxPreview.findOne({ email: emailId, user: userId });
 
-    if (!preview) {
+  if (!preview) {
     preview = await InboxPreview.create({
       user: userId,
       email: emailId,
       status: 'processing'
-  } catch (error) {
-    res.status(500).json({ message: 'Server error', error: error.message });
-  }
-};
+    });
 
-      // Start async preview generation
+    // Start async preview generation
     generateInboxPreviews(preview);
   }
 
@@ -38,17 +34,17 @@ const generatePreview = async (req, res) => {
 // @access  Private
 const getPreview = async (req, res) => {
   try {
-    const { emailId } = req.params;
-    const userId = req.user._id;
+  const { emailId } = req.params;
+  const userId = req.user._id;
 
-    const preview = await InboxPreview.findOne({ email: emailId, user: userId })
+  const preview = await InboxPreview.findOne({ email: emailId, user: userId })
     .populate('email');
 
-    if (!preview) {
-      return res.status(404).json({ message: 'Preview not found' });
-    }
+  if (!preview) {
+    return res.status(404).json({ message: 'Preview not found' });
+  }
 
-    res.json(preview);
+  res.json(preview);
   } catch (error) {
     res.status(500).json({ message: 'Server error', error: error.message });
   }
@@ -59,13 +55,13 @@ const getPreview = async (req, res) => {
 // @access  Private
 const getPreviewById = async (req, res) => {
   try {
-    const preview = await InboxPreview.findById(req.params.id).populate('email');
+  const preview = await InboxPreview.findById(req.params.id).populate('email');
 
-    if (!preview) {
-      return res.status(404).json({ message: 'Preview not found' });
-    }
+  if (!preview) {
+    return res.status(404).json({ message: 'Preview not found' });
+  }
 
-    res.json(preview);
+  res.json(preview);
   } catch (error) {
     res.status(500).json({ message: 'Server error', error: error.message });
   }
@@ -76,12 +72,12 @@ const getPreviewById = async (req, res) => {
 // @access  Private
 const getPreviews = async (req, res) => {
   try {
-    const userId = req.user._id;
-    const previews = await InboxPreview.find({ user: userId })
+  const userId = req.user._id;
+  const previews = await InboxPreview.find({ user: userId })
     .populate('email')
     .sort({ createdAt: -1 });
 
-    res.json(previews);
+  res.json(previews);
   } catch (error) {
     res.status(500).json({ message: 'Server error', error: error.message });
   }
@@ -92,24 +88,21 @@ const getPreviews = async (req, res) => {
 // @access  Private
 const regeneratePreview = async (req, res) => {
   try {
-    const preview = await InboxPreview.findById(req.params.id);
+  const preview = await InboxPreview.findById(req.params.id);
 
-    if (!preview) {
-      return res.status(404).json({ message: 'Preview not found' });
-    }
-
-    preview.status = 'processing';
-    preview.previews = [];
-    await preview.save();
-
-    // Regenerate previews
-    generateInboxPreviews(preview);
-
-    res.json(preview);
-  } catch (error) {
-    res.status(500).json({ message: 'Server error', error: error.message });
+  if (!preview) {
+    return res.status(404).json({ message: 'Preview not found' });
   }
-};
+
+  preview.status = 'processing';
+  preview.previews = [];
+  await preview.save();
+
+  // Regenerate previews
+  generateInboxPreviews(preview);
+
+  res.json(preview);
+});
 
 // Helper functions
 const generateInboxPreviews = async (preview) => {
@@ -222,17 +215,14 @@ const generateRecommendations = (previews) => {
   const recommendations = [];
   const issueCount = {};
 
-    // Count issues across all clients
+  // Count issues across all clients
   previews.forEach(preview => {
     preview.issues.forEach(issue => {
       issueCount[issue.type] = (issueCount[issue.type] || 0) + 1;
     });
-  } catch (error) {
-    res.status(500).json({ message: 'Server error', error: error.message });
-  }
-};
+  });
 
-    // Generate recommendations based on issue frequency
+  // Generate recommendations based on issue frequency
   Object.entries(issueCount).forEach(([type, count]) => {
     if (count >= 3) { // Issue appears in 3+ clients
       let recommendation = {

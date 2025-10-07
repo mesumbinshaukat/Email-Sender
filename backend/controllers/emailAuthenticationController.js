@@ -1,4 +1,3 @@
-// express-async-handler removed - using native async/await
 import EmailAuthentication from '../models/EmailAuthentication.js';
 import dns from 'dns';
 import crypto from 'crypto';
@@ -96,11 +95,11 @@ const verifyAuthentication = async (req, res) => {
     const results = await performVerification(auth);
 
     auth.verificationResults = {
-    spfCheck: results.spf.verified,
-    dkimCheck: results.dkim.verified,
-    dmarcCheck: results.dmarc.verified,
-    overallScore: calculateOverallScore(results),
-    lastChecked: new Date()
+      spfCheck: results.spf.verified,
+      dkimCheck: results.dkim.verified,
+      dmarcCheck: results.dmarc.verified,
+      overallScore: calculateOverallScore(results),
+      lastChecked: new Date()
     };
 
     auth.status = results.overallScore >= 80 ? 'verified' : 'failed';
@@ -115,19 +114,19 @@ const verifyAuthentication = async (req, res) => {
 
     // Log verification
     auth.verificationHistory.push({
-    timestamp: new Date(),
-    type: 'full_verification',
-    result: auth.status === 'verified',
-    details: `Score: ${auth.verificationResults.overallScore}%`
+      timestamp: new Date(),
+      type: 'full_verification',
+      result: auth.status === 'verified',
+      details: `Score: ${auth.verificationResults.overallScore}%`
     });
 
     await auth.save();
 
     res.json({
-    auth,
-    results,
-    score: auth.verificationResults.overallScore,
-    status: auth.status
+      auth,
+      results,
+      score: auth.verificationResults.overallScore,
+      status: auth.status
     });
   } catch (error) {
     res.status(500).json({ message: 'Server error', error: error.message });
@@ -177,7 +176,7 @@ const updateRecommendation = async (req, res) => {
     }
 
     if (auth.recommendations[recommendationIndex]) {
-    auth.recommendations[recommendationIndex].status = status;
+      auth.recommendations[recommendationIndex].status = status;
     }
 
     await auth.save();
@@ -218,7 +217,9 @@ const performVerification = async (auth) => {
     results.dmarc.verified = hasDMARC;
     if (!hasDMARC) {
       results.dmarc.errors.push('DMARC record not found');
-      } catch (error) {
+    }
+
+  } catch (error) {
     console.error('DNS verification error:', error);
     results.spf.errors.push('DNS lookup failed');
     results.dkim.errors.push('DNS lookup failed');

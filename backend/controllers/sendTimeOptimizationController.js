@@ -6,122 +6,106 @@ import Contact from '../models/Contact.js';
 // @desc    Start send time optimization analysis
 // @route   POST /api/send-time-optimization/start
 // @access  Private
-const startOptimization = async (req, res) => {
-  try {
-    const { campaignId, segmentId } = req.body;
-    const userId = req.user._id;
+const startOptimization = asyncHandler(async (req, res) => {
+  const { campaignId, segmentId } = req.body;
+  const userId = req.user._id;
 
-    // Check if optimization already exists
-    let optimization = await SendTimeOptimization.findOne({
+  // Check if optimization already exists
+  let optimization = await SendTimeOptimization.findOne({
     user: userId,
     campaign: campaignId,
     segment: segmentId
-    });
+  });
 
-    if (!optimization) {
+  if (!optimization) {
     optimization = await SendTimeOptimization.create({
       user: userId,
       campaign: campaignId,
       segment: segmentId,
       status: 'analyzing'
     });
-
-    // Start analysis asynchronously
-    analyzeHistoricalData(optimization._id);
-
-    res.status(200).json(optimization);
-  } catch (error) {
-    res.status(500).json({ message: 'Server error', error: error.message });
   }
-};
+
+  // Start analysis asynchronously
+  analyzeHistoricalData(optimization._id);
+
+  res.status(200).json(optimization);
+});
 
 // @desc    Get optimization results
 // @route   GET /api/send-time-optimization/:id
 // @access  Private
-const getOptimization = async (req, res) => {
-  try {
-    const optimization = await SendTimeOptimization.findById(req.params.id)
+const getOptimization = asyncHandler(async (req, res) => {
+  const optimization = await SendTimeOptimization.findById(req.params.id)
     .populate('campaign segment');
 
-    if (!optimization) {
-      return res.status(404).json({ message: 'Optimization not found' });
-    }
-
-    res.json(optimization);
-  } catch (error) {
-    res.status(500).json({ message: 'Server error', error: error.message });
+  if (!optimization) {
+    res.status(404);
+    throw new Error('Optimization not found');
   }
-};
+
+  res.json(optimization);
+});
 
 // @desc    Get user's optimizations
 // @route   GET /api/send-time-optimization
 // @access  Private
-const getOptimizations = async (req, res) => {
-  try {
-    const userId = req.user._id;
-    const optimizations = await SendTimeOptimization.find({ user: userId })
+const getOptimizations = asyncHandler(async (req, res) => {
+  const userId = req.user._id;
+  const optimizations = await SendTimeOptimization.find({ user: userId })
     .populate('campaign segment')
     .sort({ createdAt: -1 });
 
-    res.json(optimizations);
-  } catch (error) {
-    res.status(500).json({ message: 'Server error', error: error.message });
-  }
-};
+  res.json(optimizations);
+});
 
 // @desc    Apply optimized schedule
 // @route   POST /api/send-time-optimization/:id/apply
 // @access  Private
-const applyOptimization = async (req, res) => {
-  try {
-    const optimization = await SendTimeOptimization.findById(req.params.id);
+const applyOptimization = asyncHandler(async (req, res) => {
+  const optimization = await SendTimeOptimization.findById(req.params.id);
 
-    if (!optimization) {
-      return res.status(404).json({ message: 'Optimization not found' });
-    }
+  if (!optimization) {
+    res.status(404);
+    throw new Error('Optimization not found');
+  }
 
-    if (optimization.status !== 'ready') {
+  if (optimization.status !== 'ready') {
     res.status(400);
     throw new Error('Optimization is not ready to be applied');
-    }
+  }
 
-    // Here you would integrate with the campaign scheduler
-    // For now, just mark as completed
-    optimization.status = 'completed';
-    await optimization.save();
+  // Here you would integrate with the campaign scheduler
+  // For now, just mark as completed
+  optimization.status = 'completed';
+  await optimization.save();
 
-    res.json({
+  res.json({
     message: 'Optimized schedule applied successfully',
     optimization
-    });
-  } catch (error) {
-    res.status(500).json({ message: 'Server error', error: error.message });
-  }
-};
+  });
+});
 
 // @desc    Get optimization insights
 // @route   GET /api/send-time-optimization/:id/insights
 // @access  Private
-const getOptimizationInsights = async (req, res) => {
-  try {
-    const optimization = await SendTimeOptimization.findById(req.params.id);
+const getOptimizationInsights = asyncHandler(async (req, res) => {
+  const optimization = await SendTimeOptimization.findById(req.params.id);
 
-    if (!optimization) {
-      return res.status(404).json({ message: 'Optimization not found' });
-    }
+  if (!optimization) {
+    res.status(404);
+    throw new Error('Optimization not found');
+  }
 
-    const insights = {
+  const insights = {
     bestPerformingDays: getBestPerformingDays(optimization),
     bestPerformingHours: getBestPerformingHours(optimization),
     timezonePerformance: getTimezonePerformance(optimization),
     recommendations: generateRecommendations(optimization)
-    };
+  };
 
-    res.json(insights);
-  } catch (error) {
-    res.status(500).json({ message: 'Server error', error: error.message });
-  }
-};
+  res.json(insights);
+});
 
 // Helper functions
 const analyzeHistoricalData = async (optimizationId) => {
@@ -193,7 +177,7 @@ const generateOptimizedSchedule = async (historicalData) => {
   const schedule = [];
   const dayHourPerformance = {};
 
-    // Calculate performance by day and hour
+  // Calculate performance by day and hour
   historicalData.forEach(data => {
     const day = data.sentTime.getDay();
     const hour = data.sentTime.getHours();
@@ -206,12 +190,9 @@ const generateOptimizedSchedule = async (historicalData) => {
     dayHourPerformance[key].total++;
     if (data.openedAt) dayHourPerformance[key].opens++;
     if (data.clickedAt) dayHourPerformance[key].clicks++;
-  } catch (error) {
-    res.status(500).json({ message: 'Server error', error: error.message });
-  }
-};
+  });
 
-    // Generate optimized schedule for each day/hour combination
+  // Generate optimized schedule for each day/hour combination
   for (let day = 0; day < 7; day++) {
     for (let hour = 8; hour <= 18; hour++) { // Business hours
       const key = `${day}-${hour}`;
@@ -289,12 +270,10 @@ const calculatePerformanceMetrics = (historicalData) => {
     if (score > bestHourScore) {
       bestHourScore = score;
       metrics.bestHour = index;
-      } catch (error) {
-    res.status(500).json({ message: 'Server error', error: error.message });
-  }
-};
+    }
+  });
 
-    // Calculate potential improvement
+  // Calculate potential improvement
   const bestDayRate = dayPerformance[metrics.bestDay].opens / dayPerformance[metrics.bestDay].total;
   const bestHourRate = hourPerformance[metrics.bestHour].opens / hourPerformance[metrics.bestHour].total;
   const optimizedRate = (bestDayRate + bestHourRate) / 2;

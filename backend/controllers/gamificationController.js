@@ -1,4 +1,3 @@
-// express-async-handler removed - using native async/await
 import { Gamification, VoiceEmail, TemplateMarketplace, AICoach, BlockchainVerification } from '../models/gamificationSchemas.js';
 import Email from '../models/Email.js';
 import { getEnvVar } from '../utils/envManager.js';
@@ -6,11 +5,11 @@ import { getEnvVar } from '../utils/envManager.js';
 // Gamification Controllers
 const getGamificationProfile = async (req, res) => {
   try {
-    const userId = req.user._id;
+  const userId = req.user._id;
 
-    let profile = await Gamification.findOne({ user: userId });
+  let profile = await Gamification.findOne({ user: userId });
 
-    if (!profile) {
+  if (!profile) {
     profile = await Gamification.create({
       user: userId,
       achievements: [
@@ -19,24 +18,27 @@ const getGamificationProfile = async (req, res) => {
         { type: 'campaign_completed', count: 0, target: 1 }
       ]
     });
-    }
+  }
 
-    res.json(profile);
-  });
+  res.json(profile);
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
 
-  const updateGamification = async (req, res) => {
-    try {
-    const { action, value } = req.body;
-    const userId = req.user._id;
+const updateGamification = async (req, res) => {
+  try {
+  const { action, value } = req.body;
+  const userId = req.user._id;
 
-    let profile = await Gamification.findOne({ user: userId });
+  let profile = await Gamification.findOne({ user: userId });
 
-    if (!profile) {
+  if (!profile) {
     profile = await Gamification.create({ user: userId });
-    }
+  }
 
-    // Update points and achievements based on action
-    switch (action) {
+  // Update points and achievements based on action
+  switch (action) {
     case 'email_sent':
       profile.points += 10;
       profile.achievements.find(a => a.type === 'emails_sent').count += 1;
@@ -48,13 +50,13 @@ const getGamificationProfile = async (req, res) => {
     case 'high_open_rate':
       profile.points += 25;
       break;
-    }
+  }
 
-    // Check for level up
-    profile.level = Math.floor(profile.points / 100) + 1;
+  // Check for level up
+  profile.level = Math.floor(profile.points / 100) + 1;
 
-    await profile.save();
-    res.json(profile);
+  await profile.save();
+  res.json(profile);
   } catch (error) {
     res.status(500).json({ message: 'Server error', error: error.message });
   }
@@ -63,34 +65,37 @@ const getGamificationProfile = async (req, res) => {
 // Voice-to-Email Controllers
 const createVoiceEmail = async (req, res) => {
   try {
-    const { audioFile } = req.body;
-    const userId = req.user._id;
+  const { audioFile } = req.body;
+  const userId = req.user._id;
 
-    const voiceEmail = await VoiceEmail.create({
+  const voiceEmail = await VoiceEmail.create({
     user: userId,
     audioUrl: audioFile,
     status: 'processing'
+  });
+
+  // Start async processing
+  processVoiceEmail(voiceEmail._id);
+
+  res.status(201).json(voiceEmail);
   } catch (error) {
     res.status(500).json({ message: 'Server error', error: error.message });
   }
 };
 
-    // Start async processing
-  processVoiceEmail(voiceEmail._id);
-
-  res.status(201).json(voiceEmail);
-});
-
 const getVoiceEmails = async (req, res) => {
   try {
-    const userId = req.user._id;
+  const userId = req.user._id;
 
-    const voiceEmails = await VoiceEmail.find({ user: userId }).sort({ createdAt: -1 });
-    res.json(voiceEmails);
-  });
+  const voiceEmails = await VoiceEmail.find({ user: userId }).sort({ createdAt: -1 });
+  res.json(voiceEmails);
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
 
-  const processVoiceEmail = async (voiceEmailId) => {
-    try {
+const processVoiceEmail = async (voiceEmailId) => {
+  try {
     const voiceEmail = await VoiceEmail.findById(voiceEmailId);
     if (!voiceEmail) return;
 
@@ -124,32 +129,35 @@ const getVoiceEmails = async (req, res) => {
 // Template Marketplace Controllers
 const getTemplates = async (req, res) => {
   try {
-    const { category, search } = req.query;
+  const { category, search } = req.query;
 
-    let query = { isActive: true };
+  let query = { isActive: true };
 
-    if (category) query.category = category;
-    if (search) {
+  if (category) query.category = category;
+  if (search) {
     query.$or = [
       { name: { $regex: search, $options: 'i' } },
       { description: { $regex: search, $options: 'i' } },
       { tags: { $in: [new RegExp(search, 'i')] } }
     ];
-    }
+  }
 
-    const templates = await TemplateMarketplace.find(query)
+  const templates = await TemplateMarketplace.find(query)
     .populate('creator', 'name')
     .sort({ downloads: -1, rating: -1 });
 
-    res.json(templates);
-  });
+  res.json(templates);
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
 
-  const createTemplate = async (req, res) => {
-    try {
-    const { name, description, category, html, css, variables, price, tags } = req.body;
-    const userId = req.user._id;
+const createTemplate = async (req, res) => {
+  try {
+  const { name, description, category, html, css, variables, price, tags } = req.body;
+  const userId = req.user._id;
 
-    const template = await TemplateMarketplace.create({
+  const template = await TemplateMarketplace.create({
     creator: userId,
     name,
     description,
@@ -159,66 +167,69 @@ const getTemplates = async (req, res) => {
     variables,
     price,
     tags
-    });
-
-    res.status(201).json(template);
   });
 
-  const purchaseTemplate = async (req, res) => {
-    try {
-    const templateId = req.params.id;
-    const userId = req.user._id;
-
-    const template = await TemplateMarketplace.findById(templateId);
-
-    if (!template) {
-      return res.status(404).json({ message: 'Template not found' });
-    }
-
-    // In production, handle payment processing
-    template.downloads += 1;
-    await template.save();
-
-    res.json({
-    template,
-    message: 'Template purchased successfully'
-    });
+  res.status(201).json(template);
   } catch (error) {
     res.status(500).json({ message: 'Server error', error: error.message });
   }
 };
 
+const purchaseTemplate = async (req, res) => {
+  try {
+  const templateId = req.params.id;
+  const userId = req.user._id;
+
+  const template = await TemplateMarketplace.findById(templateId);
+
+  if (!template) {
+    return res.status(404).json({ message: 'Template not found' });
+  }
+
+  // In production, handle payment processing
+  template.downloads += 1;
+  await template.save();
+
+  res.json({
+    template,
+    message: 'Template purchased successfully'
+  });
+});
+
 // AI Coach Controllers
 const getAICoachInsights = async (req, res) => {
   try {
-    const userId = req.user._id;
+  const userId = req.user._id;
 
-    let coach = await AICoach.findOne({ user: userId });
+  let coach = await AICoach.findOne({ user: userId });
 
-    if (!coach || !coach.lastAnalyzed || new Date() - coach.lastAnalyzed > 24 * 60 * 60 * 1000) {
+  if (!coach || !coach.lastAnalyzed || new Date() - coach.lastAnalyzed > 24 * 60 * 60 * 1000) {
     // Generate new insights
     coach = await generateInsights(userId);
-    }
+  }
 
-    res.json(coach);
-  });
+  res.json(coach);
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
 
-  const implementInsight = async (req, res) => {
-    try {
-    const { insightId } = req.body;
-    const userId = req.user._id;
+const implementInsight = async (req, res) => {
+  try {
+  const { insightId } = req.body;
+  const userId = req.user._id;
 
-    const coach = await AICoach.findOne({ user: userId });
+  const coach = await AICoach.findOne({ user: userId });
 
-    if (coach) {
+  if (coach) {
     const insight = coach.insights.id(insightId);
     if (insight) {
       insight.implemented = true;
     }
     await coach.save();
-    }
+  }
 
-    res.json({ message: 'Insight marked as implemented' });
+  res.json({ message: 'Insight marked as implemented' });
   } catch (error) {
     res.status(500).json({ message: 'Server error', error: error.message });
   }
@@ -227,18 +238,18 @@ const getAICoachInsights = async (req, res) => {
 // Blockchain Verification Controllers
 const createBlockchainVerification = async (req, res) => {
   try {
-    const { emailId } = req.body;
-    const userId = req.user._id;
+  const { emailId } = req.body;
+  const userId = req.user._id;
 
-    const email = await Email.findById(emailId);
+  const email = await Email.findById(emailId);
 
-    if (!email) {
-      return res.status(404).json({ message: 'Email not found' });
-    }
+  if (!email) {
+    return res.status(404).json({ message: 'Email not found' });
+  }
 
-    // Create hash of email content
-    const crypto = await import('crypto');
-    const hash = crypto.default.createHash('sha256')
+  // Create hash of email content
+  const crypto = await import('crypto');
+  const hash = crypto.default.createHash('sha256')
     .update(JSON.stringify({
       from: email.from,
       to: email.to,
@@ -248,35 +259,39 @@ const createBlockchainVerification = async (req, res) => {
     }))
     .digest('hex');
 
-    const verification = await BlockchainVerification.create({
-    email: emailId,
+  const verification = await BlockchainVerification.create({
     user: userId,
+    email: emailId,
+    blockchain: 'polygon',
     hash,
     status: 'pending'
+  });
+
+  // Simulate blockchain recording
+  recordOnBlockchain(verification._id);
+
+  res.status(201).json(verification);
   } catch (error) {
     res.status(500).json({ message: 'Server error', error: error.message });
   }
 };
-
-    // Simulate blockchain recording
-  recordOnBlockchain(verification._id);
-
-  res.status(201).json(verification);
-});
 
 const getBlockchainVerifications = async (req, res) => {
   try {
     const userId = req.user._id;
 
     const verifications = await BlockchainVerification.find({ user: userId })
-    .populate('email')
-    .sort({ createdAt: -1 });
+      .populate('email')
+      .sort({ createdAt: -1 });
 
     res.json(verifications);
-  });
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
 
-  const verifyBlockchainRecord = async (req, res) => {
-    try {
+const verifyBlockchainRecord = async (req, res) => {
+  try {
     const verificationId = req.params.id;
 
     const verification = await BlockchainVerification.findById(verificationId);
@@ -289,9 +304,9 @@ const getBlockchainVerifications = async (req, res) => {
     const isValid = Math.random() > 0.1; // 90% success rate
 
     res.json({
-    verification,
-    isValid,
-    blockchainUrl: `https://polygonscan.com/tx/${verification.transactionHash}`
+      verification,
+      isValid,
+      blockchainUrl: `https://polygonscan.com/tx/${verification.transactionHash}`
     });
   } catch (error) {
     res.status(500).json({ message: 'Server error', error: error.message });

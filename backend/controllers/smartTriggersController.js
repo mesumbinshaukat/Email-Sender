@@ -5,93 +5,75 @@ import User from '../models/User.js';
 // @desc    Get all triggers for user
 // @route   GET /api/triggers
 // @access  Private
-const getTriggers = async (req, res) => {
-  try {
-    const userId = req.user._id;
-    const triggers = await Trigger.find({ user: userId }).populate('workflow');
-    res.json(triggers);
-  } catch (error) {
-    res.status(500).json({ message: 'Server error', error: error.message });
-  }
-};
+const getTriggers = asyncHandler(async (req, res) => {
+  const userId = req.user._id;
+  const triggers = await Trigger.find({ user: userId }).populate('workflow');
+  res.json(triggers);
+});
 
 // @desc    Create smart trigger
 // @route   POST /api/triggers/smart
 // @access  Private
-const createSmartTrigger = async (req, res) => {
-  try {
-    const { name, type, conditions, actions, workflowId } = req.body;
-    const userId = req.user._id;
+const createSmartTrigger = asyncHandler(async (req, res) => {
+  const { name, type, conditions, actions, workflowId } = req.body;
+  const userId = req.user._id;
 
-    const trigger = await Trigger.create({
+  const trigger = await Trigger.create({
     user: userId,
     name,
     type,
     conditions,
     actions,
     workflow: workflowId
-    });
+  });
 
-    res.status(201).json(trigger);
-  } catch (error) {
-    res.status(500).json({ message: 'Server error', error: error.message });
-  }
-};
+  res.status(201).json(trigger);
+});
 
 // @desc    Update trigger
 // @route   PUT /api/triggers/:id
 // @access  Private
-const updateTrigger = async (req, res) => {
-  try {
-    const trigger = await Trigger.findById(req.params.id);
-    if (!trigger) {
-      return res.status(404).json({ message: 'Trigger not found' });
-    }
-
-    Object.assign(trigger, req.body);
-    await trigger.save();
-    res.json(trigger);
-  } catch (error) {
-    res.status(500).json({ message: 'Server error', error: error.message });
+const updateTrigger = asyncHandler(async (req, res) => {
+  const trigger = await Trigger.findById(req.params.id);
+  if (!trigger) {
+    res.status(404);
+    throw new Error('Trigger not found');
   }
-};
+
+  Object.assign(trigger, req.body);
+  await trigger.save();
+  res.json(trigger);
+});
 
 // @desc    Delete trigger
 // @route   DELETE /api/triggers/:id
 // @access  Private
-const deleteTrigger = async (req, res) => {
-  try {
-    const trigger = await Trigger.findById(req.params.id);
-    if (!trigger) {
-      return res.status(404).json({ message: 'Trigger not found' });
-    }
-
-    await trigger.remove();
-    res.json({ message: 'Trigger deleted' });
-  } catch (error) {
-    res.status(500).json({ message: 'Server error', error: error.message });
+const deleteTrigger = asyncHandler(async (req, res) => {
+  const trigger = await Trigger.findById(req.params.id);
+  if (!trigger) {
+    res.status(404);
+    throw new Error('Trigger not found');
   }
-};
+
+  await trigger.remove();
+  res.json({ message: 'Trigger deleted' });
+});
 
 // @desc    Fire event (simulate event triggering)
 // @route   POST /api/triggers/fire-event
 // @access  Private
-const fireEvent = async (req, res) => {
-  try {
-    const { eventType, data } = req.body;
-    const userId = req.user._id;
+const fireEvent = asyncHandler(async (req, res) => {
+  const { eventType, data } = req.body;
+  const userId = req.user._id;
 
-    // Find matching triggers
-    const triggers = await Trigger.find({
+  // Find matching triggers
+  const triggers = await Trigger.find({
     user: userId,
     type: eventType,
     isActive: true
-  } catch (error) {
-    res.status(500).json({ message: 'Server error', error: error.message });
-  }
-};
+  });
 
-    // Simulate executing actions
+  // Simulate executing actions
   const results = triggers.map(trigger => ({
     triggerId: trigger._id,
     name: trigger.name,
@@ -103,16 +85,12 @@ const fireEvent = async (req, res) => {
     eventType,
     results
   });
-  } catch (error) {
-    res.status(500).json({ message: 'Server error', error: error.message });
-  }
-};
+});
 
 // @desc    Get trigger analytics
 // @route   GET /api/triggers/:id/analytics
 // @access  Private
-const getTriggerAnalytics = async (req, res) => {
-  try {
+const getTriggerAnalytics = asyncHandler(async (req, res) => {
   // Placeholder analytics
   res.json({
     executions: 45,
@@ -120,36 +98,30 @@ const getTriggerAnalytics = async (req, res) => {
     lastExecuted: new Date(),
     topEvents: ['email_open', 'website_visit', 'form_submit']
   });
-  } catch (error) {
-    res.status(500).json({ message: 'Server error', error: error.message });
-  }
-};
+});
 
 // @desc    Test trigger
 // @route   POST /api/triggers/:id/test
 // @access  Private
-const testTrigger = async (req, res) => {
-  try {
-    const { testData } = req.body;
-    const trigger = await Trigger.findById(req.params.id);
+const testTrigger = asyncHandler(async (req, res) => {
+  const { testData } = req.body;
+  const trigger = await Trigger.findById(req.params.id);
 
-    if (!trigger) {
-      return res.status(404).json({ message: 'Trigger not found' });
-    }
+  if (!trigger) {
+    res.status(404);
+    throw new Error('Trigger not found');
+  }
 
-    // Simulate condition evaluation
-    const conditionsMet = true; // In real implementation, evaluate conditions
+  // Simulate condition evaluation
+  const conditionsMet = true; // In real implementation, evaluate conditions
 
-    res.json({
+  res.json({
     triggerId: trigger._id,
     conditionsMet,
     wouldExecute: conditionsMet,
     testData
-    });
-  } catch (error) {
-    res.status(500).json({ message: 'Server error', error: error.message });
-  }
-};
+  });
+});
 
 export {
   getTriggers,
