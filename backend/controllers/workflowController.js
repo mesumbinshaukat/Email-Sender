@@ -5,7 +5,7 @@ import Trigger from '../models/Trigger.js';
 // @desc    Create workflow
 // @route   POST /api/workflows/create
 // @access  Private
-const createWorkflow = asyncHandler(async (req, res) => {
+const createWorkflow = async (req, res) => {
   const { name, description, nodes, edges } = req.body;
   const userId = req.user._id;
 
@@ -23,7 +23,7 @@ const createWorkflow = asyncHandler(async (req, res) => {
 // @desc    Get workflows
 // @route   GET /api/workflows
 // @access  Private
-const getWorkflows = asyncHandler(async (req, res) => {
+const getWorkflows = async (req, res) => {
   const userId = req.user._id;
   const workflows = await Workflow.find({ user: userId }).populate('triggers');
   res.json(workflows);
@@ -32,7 +32,7 @@ const getWorkflows = asyncHandler(async (req, res) => {
 // @desc    Update workflow
 // @route   PUT /api/workflows/:id
 // @access  Private
-const updateWorkflow = asyncHandler(async (req, res) => {
+const updateWorkflow = async (req, res) => {
   const workflow = await Workflow.findById(req.params.id);
   if (!workflow) {
     res.status(404);
@@ -47,7 +47,7 @@ const updateWorkflow = asyncHandler(async (req, res) => {
 // @desc    Execute workflow
 // @route   POST /api/workflows/:id/execute
 // @access  Private
-const executeWorkflow = asyncHandler(async (req, res) => {
+const executeWorkflow = async (req, res) => {
   const workflow = await Workflow.findById(req.params.id);
   if (!workflow) {
     res.status(404);
@@ -61,7 +61,7 @@ const executeWorkflow = asyncHandler(async (req, res) => {
 // @desc    Get workflow analytics
 // @route   GET /api/workflows/:id/analytics
 // @access  Private
-const getWorkflowAnalytics = asyncHandler(async (req, res) => {
+const getWorkflowAnalytics = async (req, res) => {
   // Placeholder analytics
   res.json({
     executions: 150,
@@ -73,7 +73,7 @@ const getWorkflowAnalytics = asyncHandler(async (req, res) => {
 // @desc    Create trigger
 // @route   POST /api/triggers/create
 // @access  Private
-const createTrigger = asyncHandler(async (req, res) => {
+const createTrigger = async (req, res) => {
   const { name, type, conditions, actions, workflowId } = req.body;
   const userId = req.user._id;
 
@@ -100,7 +100,7 @@ const createTrigger = asyncHandler(async (req, res) => {
 // @desc    Get triggers
 // @route   GET /api/triggers
 // @access  Private
-const getTriggers = asyncHandler(async (req, res) => {
+const getTriggers = async (req, res) => {
   const userId = req.user._id;
   const triggers = await Trigger.find({ user: userId }).populate('workflow');
   res.json(triggers);
@@ -109,7 +109,7 @@ const getTriggers = asyncHandler(async (req, res) => {
 // @desc    Fire event
 // @route   POST /api/triggers/fire-event
 // @access  Private
-const fireEvent = asyncHandler(async (req, res) => {
+const fireEvent = async (req, res) => {
   const { eventType, data } = req.body;
 
   // Find matching triggers
@@ -125,7 +125,7 @@ const fireEvent = asyncHandler(async (req, res) => {
 // @desc    Configure trigger
 // @route   PUT /api/triggers/:id/configure
 // @access  Private
-const configureTrigger = asyncHandler(async (req, res) => {
+const configureTrigger = async (req, res) => {
   const trigger = await Trigger.findById(req.params.id);
   if (!trigger) {
     res.status(404);
@@ -140,7 +140,7 @@ const configureTrigger = asyncHandler(async (req, res) => {
 // @desc    Get trigger history
 // @route   GET /api/triggers/:id/history
 // @access  Private
-const getTriggerHistory = asyncHandler(async (req, res) => {
+const getTriggerHistory = async (req, res) => {
   // Placeholder history
   res.json({
     executions: [

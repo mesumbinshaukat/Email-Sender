@@ -6,7 +6,7 @@ import Contact from '../models/Contact.js';
 // @desc    Start send time optimization analysis
 // @route   POST /api/send-time-optimization/start
 // @access  Private
-const startOptimization = asyncHandler(async (req, res) => {
+const startOptimization = async (req, res) => {
   const { campaignId, segmentId } = req.body;
   const userId = req.user._id;
 
@@ -35,7 +35,7 @@ const startOptimization = asyncHandler(async (req, res) => {
 // @desc    Get optimization results
 // @route   GET /api/send-time-optimization/:id
 // @access  Private
-const getOptimization = asyncHandler(async (req, res) => {
+const getOptimization = async (req, res) => {
   const optimization = await SendTimeOptimization.findById(req.params.id)
     .populate('campaign segment');
 
@@ -50,7 +50,7 @@ const getOptimization = asyncHandler(async (req, res) => {
 // @desc    Get user's optimizations
 // @route   GET /api/send-time-optimization
 // @access  Private
-const getOptimizations = asyncHandler(async (req, res) => {
+const getOptimizations = async (req, res) => {
   const userId = req.user._id;
   const optimizations = await SendTimeOptimization.find({ user: userId })
     .populate('campaign segment')
@@ -62,7 +62,7 @@ const getOptimizations = asyncHandler(async (req, res) => {
 // @desc    Apply optimized schedule
 // @route   POST /api/send-time-optimization/:id/apply
 // @access  Private
-const applyOptimization = asyncHandler(async (req, res) => {
+const applyOptimization = async (req, res) => {
   const optimization = await SendTimeOptimization.findById(req.params.id);
 
   if (!optimization) {
@@ -89,7 +89,7 @@ const applyOptimization = asyncHandler(async (req, res) => {
 // @desc    Get optimization insights
 // @route   GET /api/send-time-optimization/:id/insights
 // @access  Private
-const getOptimizationInsights = asyncHandler(async (req, res) => {
+const getOptimizationInsights = async (req, res) => {
   const optimization = await SendTimeOptimization.findById(req.params.id);
 
   if (!optimization) {

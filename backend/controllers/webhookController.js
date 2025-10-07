@@ -8,25 +8,25 @@ import { getEnvVar } from '../utils/envManager.js';
 // @access  Private
 const createWebhook = async (req, res) => {
   try {
-  const { name, url, events, headers } = req.body;
-  const userId = req.user._id;
+    const { name, url, events, headers } = req.body;
+    const userId = req.user._id;
 
-  // Generate webhook secret
-  const secret = crypto.randomBytes(32).toString('hex');
+    // Generate webhook secret
+    const secret = crypto.randomBytes(32).toString('hex');
 
-  const webhook = await Webhook.create({
-    user: userId,
-    name,
-    url,
-    events,
-    secret,
-    headers: headers || {}
-  });
+    const webhook = await Webhook.create({
+      user: userId,
+      name,
+      url,
+      events,
+      secret,
+      headers: headers || {}
+    });
 
-  res.status(201).json({
-    webhook,
-    secret // Only shown once for security
-  });
+    res.status(201).json({
+      webhook,
+      secret // Only shown once for security
+    });
   } catch (error) {
     res.status(500).json({ message: 'Server error', error: error.message });
   }
@@ -37,10 +37,10 @@ const createWebhook = async (req, res) => {
 // @access  Private
 const getWebhooks = async (req, res) => {
   try {
-  const userId = req.user._id;
+    const userId = req.user._id;
 
-  const webhooks = await Webhook.find({ user: userId }).select('-secret');
-  res.json(webhooks);
+    const webhooks = await Webhook.find({ user: userId }).select('-secret');
+    res.json(webhooks);
   } catch (error) {
     res.status(500).json({ message: 'Server error', error: error.message });
   }
@@ -51,29 +51,29 @@ const getWebhooks = async (req, res) => {
 // @access  Private
 const updateWebhook = async (req, res) => {
   try {
-  const { name, url, events, headers, isActive } = req.body;
+    const { name, url, events, headers, isActive } = req.body;
 
-  const webhook = await Webhook.findById(req.params.id);
+    const webhook = await Webhook.findById(req.params.id);
 
-  if (!webhook) {
-    res.status(404);
-    throw new Error('Webhook not found');
-  }
+    if (!webhook) {
+      res.status(404);
+      throw new Error('Webhook not found');
+    }
 
-  if (webhook.user.toString() !== req.user._id.toString()) {
-    res.status(403);
-    throw new Error('Not authorized');
-  }
+    if (webhook.user.toString() !== req.user._id.toString()) {
+      res.status(403);
+      throw new Error('Not authorized');
+    }
 
-  webhook.name = name || webhook.name;
-  webhook.url = url || webhook.url;
-  webhook.events = events || webhook.events;
-  webhook.headers = headers || webhook.headers;
-  webhook.isActive = isActive !== undefined ? isActive : webhook.isActive;
+    webhook.name = name || webhook.name;
+    webhook.url = url || webhook.url;
+    webhook.events = events || webhook.events;
+    webhook.headers = headers || webhook.headers;
+    webhook.isActive = isActive !== undefined ? isActive : webhook.isActive;
 
-  await webhook.save();
+    await webhook.save();
 
-  res.json(webhook);
+    res.json(webhook);
   } catch (error) {
     res.status(500).json({ message: 'Server error', error: error.message });
   }
@@ -84,20 +84,20 @@ const updateWebhook = async (req, res) => {
 // @access  Private
 const deleteWebhook = async (req, res) => {
   try {
-  const webhook = await Webhook.findById(req.params.id);
+    const webhook = await Webhook.findById(req.params.id);
 
-  if (!webhook) {
-    res.status(404);
-    throw new Error('Webhook not found');
-  }
+    if (!webhook) {
+      res.status(404);
+      throw new Error('Webhook not found');
+    }
 
-  if (webhook.user.toString() !== req.user._id.toString()) {
-    res.status(403);
-    throw new Error('Not authorized');
-  }
+    if (webhook.user.toString() !== req.user._id.toString()) {
+      res.status(403);
+      throw new Error('Not authorized');
+    }
 
-  await Webhook.findByIdAndDelete(req.params.id);
-  res.json({ message: 'Webhook deleted' });
+    await Webhook.findByIdAndDelete(req.params.id);
+    res.json({ message: 'Webhook deleted' });
   } catch (error) {
     res.status(500).json({ message: 'Server error', error: error.message });
   }
@@ -108,34 +108,34 @@ const deleteWebhook = async (req, res) => {
 // @access  Private
 const testWebhook = async (req, res) => {
   try {
-  const webhook = await Webhook.findById(req.params.id);
+    const webhook = await Webhook.findById(req.params.id);
 
-  if (!webhook) {
-    res.status(404);
-    throw new Error('Webhook not found');
-  }
-
-  if (webhook.user.toString() !== req.user._id.toString()) {
-    res.status(403);
-    throw new Error('Not authorized');
-  }
-
-  const testPayload = {
-    event: 'test',
-    timestamp: new Date().toISOString(),
-    data: {
-      message: 'This is a test webhook',
-      user: req.user._id
+    if (!webhook) {
+      res.status(404);
+      throw new Error('Webhook not found');
     }
-  };
 
-  const result = await sendWebhook(webhook, testPayload);
+    if (webhook.user.toString() !== req.user._id.toString()) {
+      res.status(403);
+      throw new Error('Not authorized');
+    }
 
-  res.json({
-    success: result.success,
-    statusCode: result.statusCode,
-    response: result.response
-  });
+    const testPayload = {
+      event: 'test',
+      timestamp: new Date().toISOString(),
+      data: {
+        message: 'This is a test webhook',
+        user: req.user._id
+      }
+    };
+
+    const result = await sendWebhook(webhook, testPayload);
+
+    res.json({
+      success: result.success,
+      statusCode: result.statusCode,
+      response: result.response
+    });
   } catch (error) {
     res.status(500).json({ message: 'Server error', error: error.message });
   }
@@ -146,30 +146,30 @@ const testWebhook = async (req, res) => {
 // @access  Private/Internal
 const triggerWebhook = async (req, res) => {
   try {
-  const { userId, event, data } = req.body;
+    const { userId, event, data } = req.body;
 
-  const webhooks = await Webhook.find({
-    user: userId,
-    events: event,
-    isActive: true
-  });
-
-  const results = [];
-
-  for (const webhook of webhooks) {
-    const result = await sendWebhook(webhook, {
-      event,
-      timestamp: new Date().toISOString(),
-      data
+    const webhooks = await Webhook.find({
+      user: userId,
+      events: event,
+      isActive: true
     });
-    results.push({
-      webhookId: webhook._id,
-      success: result.success,
-      statusCode: result.statusCode
-    });
-  }
 
-  res.json(results);
+    const results = [];
+
+    for (const webhook of webhooks) {
+      const result = await sendWebhook(webhook, {
+        event,
+        timestamp: new Date().toISOString(),
+        data
+      });
+      results.push({
+        webhookId: webhook._id,
+        success: result.success,
+        statusCode: result.statusCode
+      });
+    }
+
+    res.json(results);
   } catch (error) {
     res.status(500).json({ message: 'Server error', error: error.message });
   }
@@ -180,46 +180,46 @@ const triggerWebhook = async (req, res) => {
 // @access  Private
 const getApiDocs = async (req, res) => {
   try {
-  const docs = {
-    version: '1.0.0',
-    baseUrl: process.env.API_BASE_URL || 'https://api.emailtracker.com',
-    endpoints: {
-      emails: {
-        send: 'POST /api/emails/send',
-        list: 'GET /api/emails',
-        get: 'GET /api/emails/:id'
+    const docs = {
+      version: '1.0.0',
+      baseUrl: process.env.API_BASE_URL || 'https://api.emailtracker.com',
+      endpoints: {
+        emails: {
+          send: 'POST /api/emails/send',
+          list: 'GET /api/emails',
+          get: 'GET /api/emails/:id'
+        },
+        contacts: {
+          create: 'POST /api/contacts',
+          list: 'GET /api/contacts',
+          update: 'PUT /api/contacts/:id'
+        },
+        campaigns: {
+          create: 'POST /api/campaigns',
+          list: 'GET /api/campaigns',
+          start: 'POST /api/campaigns/:id/start'
+        }
       },
-      contacts: {
-        create: 'POST /api/contacts',
-        list: 'GET /api/contacts',
-        update: 'PUT /api/contacts/:id'
-      },
-      campaigns: {
-        create: 'POST /api/campaigns',
-        list: 'GET /api/campaigns',
-        start: 'POST /api/campaigns/:id/start'
+      webhooks: {
+        events: [
+          'email.sent',
+          'email.opened',
+          'email.clicked',
+          'email.bounced',
+          'contact.created',
+          'contact.updated',
+          'campaign.created',
+          'campaign.completed'
+        ],
+        payload: {
+          event: 'string',
+          timestamp: 'ISO string',
+          data: 'object'
+        }
       }
-    },
-    webhooks: {
-      events: [
-        'email.sent',
-        'email.opened',
-        'email.clicked',
-        'email.bounced',
-        'contact.created',
-        'contact.updated',
-        'campaign.created',
-        'campaign.completed'
-      ],
-      payload: {
-        event: 'string',
-        timestamp: 'ISO string',
-        data: 'object'
-      }
-    }
-  };
+    };
 
-  res.json(docs);
+    res.json(docs);
   } catch (error) {
     res.status(500).json({ message: 'Server error', error: error.message });
   }

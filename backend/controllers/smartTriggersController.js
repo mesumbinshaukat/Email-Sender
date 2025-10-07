@@ -5,7 +5,7 @@ import User from '../models/User.js';
 // @desc    Get all triggers for user
 // @route   GET /api/triggers
 // @access  Private
-const getTriggers = asyncHandler(async (req, res) => {
+const getTriggers = async (req, res) => {
   const userId = req.user._id;
   const triggers = await Trigger.find({ user: userId }).populate('workflow');
   res.json(triggers);
@@ -14,7 +14,7 @@ const getTriggers = asyncHandler(async (req, res) => {
 // @desc    Create smart trigger
 // @route   POST /api/triggers/smart
 // @access  Private
-const createSmartTrigger = asyncHandler(async (req, res) => {
+const createSmartTrigger = async (req, res) => {
   const { name, type, conditions, actions, workflowId } = req.body;
   const userId = req.user._id;
 
@@ -33,7 +33,7 @@ const createSmartTrigger = asyncHandler(async (req, res) => {
 // @desc    Update trigger
 // @route   PUT /api/triggers/:id
 // @access  Private
-const updateTrigger = asyncHandler(async (req, res) => {
+const updateTrigger = async (req, res) => {
   const trigger = await Trigger.findById(req.params.id);
   if (!trigger) {
     res.status(404);
@@ -48,7 +48,7 @@ const updateTrigger = asyncHandler(async (req, res) => {
 // @desc    Delete trigger
 // @route   DELETE /api/triggers/:id
 // @access  Private
-const deleteTrigger = asyncHandler(async (req, res) => {
+const deleteTrigger = async (req, res) => {
   const trigger = await Trigger.findById(req.params.id);
   if (!trigger) {
     res.status(404);
@@ -62,7 +62,7 @@ const deleteTrigger = asyncHandler(async (req, res) => {
 // @desc    Fire event (simulate event triggering)
 // @route   POST /api/triggers/fire-event
 // @access  Private
-const fireEvent = asyncHandler(async (req, res) => {
+const fireEvent = async (req, res) => {
   const { eventType, data } = req.body;
   const userId = req.user._id;
 
@@ -90,7 +90,7 @@ const fireEvent = asyncHandler(async (req, res) => {
 // @desc    Get trigger analytics
 // @route   GET /api/triggers/:id/analytics
 // @access  Private
-const getTriggerAnalytics = asyncHandler(async (req, res) => {
+const getTriggerAnalytics = async (req, res) => {
   // Placeholder analytics
   res.json({
     executions: 45,
@@ -103,7 +103,7 @@ const getTriggerAnalytics = asyncHandler(async (req, res) => {
 // @desc    Test trigger
 // @route   POST /api/triggers/:id/test
 // @access  Private
-const testTrigger = asyncHandler(async (req, res) => {
+const testTrigger = async (req, res) => {
   const { testData } = req.body;
   const trigger = await Trigger.findById(req.params.id);
 

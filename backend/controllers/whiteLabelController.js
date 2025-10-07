@@ -30,19 +30,19 @@ const getWhiteLabelSettings = async (req, res) => {
 // @access  Private
 const updateBranding = async (req, res) => {
   try {
-  const { branding } = req.body;
-  const userId = req.user._id;
+    const { branding } = req.body;
+    const userId = req.user._id;
 
-  let whiteLabel = await WhiteLabel.findOne({ user: userId });
+    let whiteLabel = await WhiteLabel.findOne({ user: userId });
 
-  if (!whiteLabel) {
-    whiteLabel = await WhiteLabel.create({ user: userId });
-  }
+    if (!whiteLabel) {
+      whiteLabel = await WhiteLabel.create({ user: userId });
+    }
 
-  whiteLabel.branding = { ...whiteLabel.branding, ...branding };
-  await whiteLabel.save();
+    whiteLabel.branding = { ...whiteLabel.branding, ...branding };
+    await whiteLabel.save();
 
-  res.json(whiteLabel);
+    res.json(whiteLabel);
   } catch (error) {
     res.status(500).json({ message: 'Server error', error: error.message });
   }
@@ -53,19 +53,19 @@ const updateBranding = async (req, res) => {
 // @access  Private
 const updateDomain = async (req, res) => {
   try {
-  const { domain } = req.body;
-  const userId = req.user._id;
+    const { domain } = req.body;
+    const userId = req.user._id;
 
-  let whiteLabel = await WhiteLabel.findOne({ user: userId });
+    let whiteLabel = await WhiteLabel.findOne({ user: userId });
 
-  if (!whiteLabel) {
-    whiteLabel = await WhiteLabel.create({ user: userId });
-  }
+    if (!whiteLabel) {
+      whiteLabel = await WhiteLabel.create({ user: userId });
+    }
 
-  whiteLabel.domain = { ...whiteLabel.domain, ...domain };
-  await whiteLabel.save();
+    whiteLabel.domain = { ...whiteLabel.domain, ...domain };
+    await whiteLabel.save();
 
-  res.json(whiteLabel);
+    res.json(whiteLabel);
   } catch (error) {
     res.status(500).json({ message: 'Server error', error: error.message });
   }
@@ -76,19 +76,19 @@ const updateDomain = async (req, res) => {
 // @access  Private
 const updateEmailSettings = async (req, res) => {
   try {
-  const { emailSettings } = req.body;
-  const userId = req.user._id;
+    const { emailSettings } = req.body;
+    const userId = req.user._id;
 
-  let whiteLabel = await WhiteLabel.findOne({ user: userId });
+    let whiteLabel = await WhiteLabel.findOne({ user: userId });
 
-  if (!whiteLabel) {
-    whiteLabel = await WhiteLabel.create({ user: userId });
-  }
+    if (!whiteLabel) {
+      whiteLabel = await WhiteLabel.create({ user: userId });
+    }
 
-  whiteLabel.emailSettings = { ...whiteLabel.emailSettings, ...emailSettings };
-  await whiteLabel.save();
+    whiteLabel.emailSettings = { ...whiteLabel.emailSettings, ...emailSettings };
+    await whiteLabel.save();
 
-  res.json(whiteLabel);
+    res.json(whiteLabel);
   } catch (error) {
     res.status(500).json({ message: 'Server error', error: error.message });
   }
@@ -99,19 +99,19 @@ const updateEmailSettings = async (req, res) => {
 // @access  Private
 const updateSubscription = async (req, res) => {
   try {
-  const { subscription } = req.body;
-  const userId = req.user._id;
+    const { subscription } = req.body;
+    const userId = req.user._id;
 
-  let whiteLabel = await WhiteLabel.findOne({ user: userId });
+    let whiteLabel = await WhiteLabel.findOne({ user: userId });
 
-  if (!whiteLabel) {
-    whiteLabel = await WhiteLabel.create({ user: userId });
-  }
+    if (!whiteLabel) {
+      whiteLabel = await WhiteLabel.create({ user: userId });
+    }
 
-  whiteLabel.subscription = { ...whiteLabel.subscription, ...subscription };
-  await whiteLabel.save();
+    whiteLabel.subscription = { ...whiteLabel.subscription, ...subscription };
+    await whiteLabel.save();
 
-  res.json(whiteLabel);
+    res.json(whiteLabel);
   } catch (error) {
     res.status(500).json({ message: 'Server error', error: error.message });
   }

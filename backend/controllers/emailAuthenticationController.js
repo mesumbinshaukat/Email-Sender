@@ -1,3 +1,4 @@
+// express-async-handler removed - using native async/await
 import EmailAuthentication from '../models/EmailAuthentication.js';
 import dns from 'dns';
 import crypto from 'crypto';
@@ -85,7 +86,8 @@ const verifyAuthentication = async (req, res) => {
     const auth = await EmailAuthentication.findById(req.params.id);
 
     if (!auth) {
-      return res.status(404).json({ message: 'Authentication setup not found' });
+      res.status(404);
+      throw new Error('Authentication setup not found');
     }
 
     auth.status = 'verifying';
@@ -154,7 +156,8 @@ const getAuthentication = async (req, res) => {
     const auth = await EmailAuthentication.findById(req.params.id);
 
     if (!auth) {
-      return res.status(404).json({ message: 'Authentication setup not found' });
+      res.status(404);
+      throw new Error('Authentication setup not found');
     }
 
     res.json(auth);
@@ -172,7 +175,8 @@ const updateRecommendation = async (req, res) => {
     const auth = await EmailAuthentication.findById(req.params.id);
 
     if (!auth) {
-      return res.status(404).json({ message: 'Authentication setup not found' });
+      res.status(404);
+      throw new Error('Authentication setup not found');
     }
 
     if (auth.recommendations[recommendationIndex]) {

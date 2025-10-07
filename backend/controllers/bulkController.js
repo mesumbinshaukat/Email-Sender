@@ -49,59 +49,59 @@ const uploadCSV = async (req, res) => {
 // @access  Private
 const personalizeBulk = async (req, res) => {
   try {
-  const { bulkJobId, templateId, personalizationRules } = req.body;
-  const userId = req.user._id;
+    const { bulkJobId, templateId, personalizationRules } = req.body;
+    const userId = req.user._id;
 
-  const bulkJob = await BulkJob.findById(bulkJobId);
-  const template = await EmailTemplate.findById(templateId);
+    const bulkJob = await BulkJob.findById(bulkJobId);
+    const template = await EmailTemplate.findById(templateId);
 
-  if (!bulkJob || !template) {
-    res.status(404);
-    throw new Error('Bulk job or template not found');
-  }
-
-  const openai = await getOpenAIClient();
-  const personalizedData = [];
-
-  for (const contact of bulkJob.csvData) {
-    const personalizedFields = [];
-
-    for (const rule of personalizationRules) {
-      if (rule.aiGenerated) {
-        const prompt = `Generate personalized ${rule.field} for ${contact.firstName} ${contact.lastName} from ${contact.company}. Original: "${rule.value}"`;
-
-        const completion = await openai.chat.completions.create({
-          model: 'gpt-4',
-          messages: [{ role: 'user', content: prompt }],
-          max_tokens: 50
-        });
-
-        personalizedFields.push({
-          field: rule.field,
-          value: completion.choices[0].message.content.trim(),
-          aiGenerated: true
-        });
-      } else {
-        let value = rule.value;
-        // Replace merge fields
-        Object.keys(contact).forEach(key => {
-          value = value.replace(new RegExp(`\\{\\{${key}\\}\\}`, 'g'), contact[key] || '');
-        });
-        personalizedFields.push({ field: rule.field, value });
-      }
+    if (!bulkJob || !template) {
+      res.status(404);
+      throw new Error('Bulk job or template not found');
     }
 
-    personalizedData.push({
-      contact,
-      personalizedFields
-    });
-  }
+    const openai = await getOpenAIClient();
+    const personalizedData = [];
 
-  bulkJob.personalizationFields = personalizedFields;
-  bulkJob.template = templateId;
-  await bulkJob.save();
+    for (const contact of bulkJob.csvData) {
+      const personalizedFields = [];
 
-  res.json({ bulkJob, personalizedData });
+      for (const rule of personalizationRules) {
+        if (rule.aiGenerated) {
+          const prompt = `Generate personalized ${rule.field} for ${contact.firstName} ${contact.lastName} from ${contact.company}. Original: "${rule.value}"`;
+
+          const completion = await openai.chat.completions.create({
+            model: 'gpt-4',
+            messages: [{ role: 'user', content: prompt }],
+            max_tokens: 50
+          });
+
+          personalizedFields.push({
+            field: rule.field,
+            value: completion.choices[0].message.content.trim(),
+            aiGenerated: true
+          });
+        } else {
+          let value = rule.value;
+          // Replace merge fields
+          Object.keys(contact).forEach(key => {
+            value = value.replace(new RegExp(`\\{\\{${key}\\}\\}`, 'g'), contact[key] || '');
+          });
+          personalizedFields.push({ field: rule.field, value });
+        }
+      }
+
+      personalizedData.push({
+        contact,
+        personalizedFields
+      });
+    }
+
+    bulkJob.personalizationFields = personalizedFields;
+    bulkJob.template = templateId;
+    await bulkJob.save();
+
+    res.json({ bulkJob, personalizedData });
   } catch (error) {
     res.status(500).json({ message: 'Server error', error: error.message });
   }
@@ -143,29 +143,29 @@ const previewPersonalized = async (req, res) => {
 // @access  Private
 const sendBulkEmails = async (req, res) => {
   try {
-  const { bulkJobId } = req.body;
+    const { bulkJobId } = req.body;
 
-  const bulkJob = await BulkJob.findById(bulkJobId);
-  if (!bulkJob) {
-    res.status(404);
-    throw new Error('Bulk job not found');
-  }
+    const bulkJob = await BulkJob.findById(bulkJobId);
+    if (!bulkJob) {
+      res.status(404);
+      throw new Error('Bulk job not found');
+    }
 
-  // Mark as processing
-  bulkJob.status = 'processing';
-  await bulkJob.save();
-
-  // In real implementation, queue emails for sending
-  // For now, simulate completion
-  setTimeout(async () => {
-    bulkJob.status = 'completed';
-    bulkJob.processedContacts = bulkJob.totalContacts;
-    bulkJob.sentEmails = bulkJob.totalContacts;
-    bulkJob.completedAt = new Date();
+    // Mark as processing
+    bulkJob.status = 'processing';
     await bulkJob.save();
-  }, 1000);
 
-  res.json({ message: 'Bulk send initiated', bulkJobId });
+    // In real implementation, queue emails for sending
+    // For now, simulate completion
+    setTimeout(async () => {
+      bulkJob.status = 'completed';
+      bulkJob.processedContacts = bulkJob.totalContacts;
+      bulkJob.sentEmails = bulkJob.totalContacts;
+      bulkJob.completedAt = new Date();
+      await bulkJob.save();
+    }, 1000);
+
+    res.json({ message: 'Bulk send initiated', bulkJobId });
   } catch (error) {
     res.status(500).json({ message: 'Server error', error: error.message });
   }
@@ -176,13 +176,13 @@ const sendBulkEmails = async (req, res) => {
 // @access  Private
 const getBulkStatus = async (req, res) => {
   try {
-  const bulkJob = await BulkJob.findById(req.params.batchId);
-  if (!bulkJob) {
-    res.status(404);
-    throw new Error('Bulk job not found');
-  }
+    const bulkJob = await BulkJob.findById(req.params.batchId);
+    if (!bulkJob) {
+      res.status(404);
+      throw new Error('Bulk job not found');
+    }
 
-  res.json(bulkJob);
+    res.json(bulkJob);
   } catch (error) {
     res.status(500).json({ message: 'Server error', error: error.message });
   }
@@ -193,9 +193,9 @@ const getBulkStatus = async (req, res) => {
 // @access  Private
 const getBulkJobs = async (req, res) => {
   try {
-  const userId = req.user._id;
-  const bulkJobs = await BulkJob.find({ user: userId }).sort({ createdAt: -1 });
-  res.json(bulkJobs);
+    const userId = req.user._id;
+    const bulkJobs = await BulkJob.find({ user: userId }).sort({ createdAt: -1 });
+    res.json(bulkJobs);
   } catch (error) {
     res.status(500).json({ message: 'Server error', error: error.message });
   }

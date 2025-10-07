@@ -10,7 +10,7 @@ import { errorHandler, notFound } from './middleware/errorHandler.js';
 // Import routes
 import authRoutes from './routes/authRoutes.js';
 import smtpRoutes from './routes/smtpRoutes.js';
-import emailAuthenticationRoutes from './routes/emailAuthenticationRoutes.js';
+// import emailAuthenticationRoutes from './routes/emailAuthenticationRoutes.js';
 import dataPrivacyRoutes from './routes/dataPrivacyRoutes.js';
 import abTestRoutes from './routes/abTestRoutes.js';
 import inboxPreviewRoutes from './routes/inboxPreviewRoutes.js';
@@ -141,20 +141,18 @@ app.get('/', (req, res) => {
   });
 });
 
-// Health and testing routes
 app.use('/api/health', healthRoutes);
 
 // API Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/smtp', smtpRoutes);
-app.use('/api/emails', emailRoutes);
-app.use('/api/track', trackingRoutes);
+// app.use('/api/emails-auth', emailAuthenticationRoutes);
+app.use('/api/privacy', dataPrivacyRoutes);
 app.use('/api/chatbot', chatbotRoutes);
 app.use('/api/agentic', agenticRoutes);
 app.use('/api/ai', generativeRoutes);
 app.use('/api/predictor', predictorRoutes);
 app.use('/api/scheduler', schedulerRoutes);
-app.use('/api/warmup', warmupRoutes);
 app.use('/api/sequences', sequenceRoutes);
 app.use('/api/enrichment', enrichmentRoutes);
 app.use('/api/replies', replyRoutes);
