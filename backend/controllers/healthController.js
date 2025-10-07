@@ -11,7 +11,7 @@ export const healthCheck = async (req, res) => {
       timestamp: new Date().toISOString(),
       uptime: process.uptime(),
       environment: process.env.NODE_ENV || 'development',
-      database: mongoose.connection.readyState === 1 ? 'Connected' : 'Disconnected',
+      database: mongoose.connection && mongoose.connection.readyState === 1 ? 'Connected' : 'Disconnected',
       memory: {
         used: Math.round(process.memoryUsage().heapUsed / 1024 / 1024) + ' MB',
         total: Math.round(process.memoryUsage().heapTotal / 1024 / 1024) + ' MB'
