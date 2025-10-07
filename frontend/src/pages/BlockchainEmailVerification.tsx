@@ -4,10 +4,22 @@ import axios from 'axios';
 import { motion } from 'framer-motion';
 import { Link, CheckCircle, Clock, AlertCircle, ExternalLink } from 'lucide-react';
 
+interface Verification {
+  _id: string;
+  blockchain: string;
+  status: string;
+  transactionHash?: string;
+  createdAt: string;
+  verificationUrl?: string;
+  hash: string;
+  blockNumber?: number;
+  timestamp: string;
+}
+
 const BlockchainEmailVerification = () => {
-  const [verifications, setVerifications] = useState([]);
+  const [verifications, setVerifications] = useState<Verification[]>([]);
   const [showCreateForm, setShowCreateForm] = useState(false);
-  const [selectedVerification, setSelectedVerification] = useState(null);
+  const [selectedVerification, setSelectedVerification] = useState<Verification | null>(null);
 
   useEffect(() => {
     fetchVerifications();
@@ -22,7 +34,7 @@ const BlockchainEmailVerification = () => {
     }
   };
 
-  const createVerification = async (emailId) => {
+  const createVerification = async (emailId: string) => {
     try {
       const { data } = await axios.post('/api/gamification/blockchain-verify', { emailId });
       setVerifications([data, ...verifications]);
@@ -33,7 +45,7 @@ const BlockchainEmailVerification = () => {
     }
   };
 
-  const verifyRecord = async (verificationId) => {
+  const verifyRecord = async (verificationId: string) => {
     try {
       const { data } = await axios.get(`/api/gamification/blockchain-verify/${verificationId}/verify`);
       if (data.isValid) {
@@ -83,8 +95,9 @@ const BlockchainEmailVerification = () => {
             <h2 className="text-xl font-semibold mb-4">Create Blockchain Email Verification</h2>
             <form onSubmit={(e) => {
               e.preventDefault();
-              const formData = new FormData(e.target);
-              createVerification(formData.get('emailId'));
+              const formData = new FormData(e.target as HTMLFormElement);
+              const emailId = formData.get('emailId') as string;
+              if (emailId) createVerification(emailId);
             }}>
               <div className="mb-4">
                 <label className="block text-sm font-medium mb-2">Email ID</label>
