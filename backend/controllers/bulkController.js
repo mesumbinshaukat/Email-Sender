@@ -17,28 +17,28 @@ const getOpenAIClient = async () => {
 // @access  Private
 const uploadCSV = async (req, res) => {
   try {
-  const { csvContent, name } = req.body;
-  const userId = req.user._id;
+    const { csvContent, name } = req.body;
+    const userId = req.user._id;
 
-  const results = [];
-  const stream = Readable.from(csvContent);
+    const results = [];
+    const stream = Readable.from(csvContent);
 
-  await new Promise((resolve, reject) => {
-    stream
-      .pipe(csv())
-      .on('data', (data) => results.push(data))
-      .on('end', resolve)
-      .on('error', reject);
-  });
+    await new Promise((resolve, reject) => {
+      stream
+        .pipe(csv())
+        .on('data', (data) => results.push(data))
+        .on('end', resolve)
+        .on('error', reject);
+    });
 
-  const bulkJob = await BulkJob.create({
-    user: userId,
-    name,
-    csvData: results,
-    totalContacts: results.length
-  });
+    const bulkJob = await BulkJob.create({
+      user: userId,
+      name,
+      csvData: results,
+      totalContacts: results.length
+    });
 
-  res.status(201).json(bulkJob);
+    res.status(201).json(bulkJob);
   } catch (error) {
     res.status(500).json({ message: 'Server error', error: error.message });
   }
@@ -112,31 +112,27 @@ const personalizeBulk = async (req, res) => {
 // @access  Private
 const previewPersonalized = async (req, res) => {
   try {
-  const { bulkJobId, contactIndex } = req.body;
+    const { bulkJobId, contactIndex } = req.body;
 
-  const bulkJob = await BulkJob.findById(bulkJobId).populate('template');
-  if (!bulkJob) {
-    res.status(404);
-    throw new Error('Bulk job not found');
-  }
+    const bulkJob = await BulkJob.findById(bulkJobId).populate('template');
+    if (!bulkJob) {
+      return res.status(404).json({ message: 'Bulk job not found' });
+    }
 
-  const contact = bulkJob.csvData[contactIndex];
-  let html = bulkJob.template.html;
+    const contact = bulkJob.csvData[contactIndex];
+    let html = bulkJob.template.html;
 
-  // Apply personalization
-  bulkJob.personalizationFields.forEach(field => {
-    html = html.replace(new RegExp(`\\{\\{${field.field}\\}\\}`, 'g'), field.value);
-    } catch (error) {
-    res.status(500).json({ message: 'Server error', error: error.message });
-  }
-};
+    // Apply personalization
+    bulkJob.personalizationFields.forEach(field => {
+      html = html.replace(new RegExp(`\\{\\{${field.field}\\}\\}`, 'g'), field.value);
+    });
 
-  // Apply contact data
-  Object.keys(contact).forEach(key => {
-    html = html.replace(new RegExp(`\\{\\{${key}\\}\\}`, 'g'), contact[key] || '');
-  });
+    // Apply contact data
+    Object.keys(contact).forEach(key => {
+      html = html.replace(new RegExp(`\\{\\{${key}\\}\\}`, 'g'), contact[key] || '');
+    });
 
-  res.json({ html, contact });
+    res.json({ html, contact });
   } catch (error) {
     res.status(500).json({ message: 'Server error', error: error.message });
   }

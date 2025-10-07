@@ -6,21 +6,20 @@ import { getEnvVar } from '../utils/envManager.js';
 // @access  Private
 const sendSlackNotification = async (req, res) => {
   try {
-  const { channel, message, type } = req.body;
-  const userId = req.user._id;
+    const { channel, message, type } = req.body;
+    const userId = req.user._id;
 
-  const slackToken = await getEnvVar('SLACK_BOT_TOKEN');
-  const slackChannel = channel || await getEnvVar('SLACK_DEFAULT_CHANNEL');
+    const slackToken = await getEnvVar('SLACK_BOT_TOKEN');
+    const slackChannel = channel || await getEnvVar('SLACK_DEFAULT_CHANNEL');
 
-  if (!slackToken) {
-    res.status(400);
-    throw new Error('Slack integration not configured');
-  }
+    if (!slackToken) {
+      return res.status(400).json({ message: 'Slack integration not configured' });
+    }
 
-  // In real implementation, use Slack API
-  console.log(`Sending Slack notification to ${slackChannel}:`, message);
+    // In real implementation, use Slack API
+    console.log(`Sending Slack notification to ${slackChannel}:`, message);
 
-  res.json({ sent: true, channel: slackChannel });
+    res.json({ sent: true, channel: slackChannel });
   } catch (error) {
     res.status(500).json({ message: 'Server error', error: error.message });
   }
@@ -31,12 +30,12 @@ const sendSlackNotification = async (req, res) => {
 // @access  Public (Slack webhook)
 const handleSlackCommand = async (req, res) => {
   try {
-  const { command, text, user_id } = req.body;
+    const { command, text, user_id } = req.body;
 
-  // Process commands like /send-email, /analytics, etc.
-  let response;
+    // Process commands like /send-email, /analytics, etc.
+    let response;
 
-  switch (command) {
+    switch (command) {
     case '/email-stats':
       response = await getEmailStatsForSlack();
       break;
@@ -45,9 +44,9 @@ const handleSlackCommand = async (req, res) => {
       break;
     default:
       response = { text: 'Unknown command. Try /email-stats or /send-campaign' };
-  }
+    }
 
-  res.json(response);
+    res.json(response);
   } catch (error) {
     res.status(500).json({ message: 'Server error', error: error.message });
   }
@@ -58,26 +57,22 @@ const handleSlackCommand = async (req, res) => {
 // @access  Private
 const sendDailyDigest = async (req, res) => {
   try {
-  const userId = req.user._id;
+    const userId = req.user._id;
 
-  // Generate daily stats
-  const stats = {
-    emailsSent: 150,
-    openRate: '24.5%',
-    clickRate: '8.2%',
-    newContacts: 25
-  };
+    // Generate daily stats
+    const stats = {
+      emailsSent: 150,
+      openRate: '24.5%',
+      clickRate: '8.2%',
+      newContacts: 25
+    };
 
-  const message = `📊 *Daily Email Digest*\n• Emails Sent: ${stats.emailsSent}\n• Open Rate: ${stats.openRate}\n• Click Rate: ${stats.clickRate}\n• New Contacts: ${stats.newContacts}`;
+    const message = `📊 *Daily Email Digest*\n• Emails Sent: ${stats.emailsSent}\n• Open Rate: ${stats.openRate}\n• Click Rate: ${stats.clickRate}\n• New Contacts: ${stats.newContacts}`;
 
-  await sendSlackNotification({
-    body: { message, type: 'digest' }
-  }, { json: () => {}   } catch (error) {
-    res.status(500).json({ message: 'Server error', error: error.message });
-  }
-}; // Mock response
+    // Send notification (simplified)
+    console.log('Sending daily digest:', message);
 
-  res.json({ sent: true });
+    res.json({ sent: true });
   } catch (error) {
     res.status(500).json({ message: 'Server error', error: error.message });
   }

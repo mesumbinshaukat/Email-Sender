@@ -6,17 +6,17 @@ import EcommerceIntegration from '../models/EcommerceIntegration.js';
 // @access  Private
 const connectEcommerce = async (req, res) => {
   try {
-  const { platform, storeName, credentials, settings } = req.body;
-  const userId = req.user._id;
+    const { platform, storeName, credentials, settings } = req.body;
+    const userId = req.user._id;
 
-  const integration = await EcommerceIntegration.create({
+    const integration = await EcommerceIntegration.create({
     user: userId,
     platform,
     storeName,
     credentials,
     settings,
     status: 'connected'
-    } catch (error) {
+  } catch (error) {
     res.status(500).json({ message: 'Server error', error: error.message });
   }
 };
@@ -35,9 +35,9 @@ const connectEcommerce = async (req, res) => {
 // @access  Private
 const getEcommerceIntegrations = async (req, res) => {
   try {
-  const userId = req.user._id;
-  const integrations = await EcommerceIntegration.find({ user: userId });
-  res.json(integrations);
+    const userId = req.user._id;
+    const integrations = await EcommerceIntegration.find({ user: userId });
+    res.json(integrations);
   } catch (error) {
     res.status(500).json({ message: 'Server error', error: error.message });
   }
@@ -48,23 +48,23 @@ const getEcommerceIntegrations = async (req, res) => {
 // @access  Private
 const syncEcommerce = async (req, res) => {
   try {
-  const integration = await EcommerceIntegration.findById(req.params.id);
-  if (!integration) {
+    const integration = await EcommerceIntegration.findById(req.params.id);
+    if (!integration) {
     res.status(404);
     throw new Error('E-commerce integration not found');
-  }
+    }
 
-  integration.status = 'syncing';
-  await integration.save();
+    integration.status = 'syncing';
+    await integration.save();
 
-  // Perform sync
-  await performEcommerceSync(integration);
+    // Perform sync
+    await performEcommerceSync(integration);
 
-  integration.status = 'connected';
-  integration.lastSync = new Date();
-  await integration.save();
+    integration.status = 'connected';
+    integration.lastSync = new Date();
+    await integration.save();
 
-  res.json(integration);
+    res.json(integration);
   } catch (error) {
     res.status(500).json({ message: 'Server error', error: error.message });
   }
@@ -75,24 +75,24 @@ const syncEcommerce = async (req, res) => {
 // @access  Public (webhook)
 const handleWebhook = async (req, res) => {
   try {
-  const { platform } = req.params;
-  const eventData = req.body;
+    const { platform } = req.params;
+    const eventData = req.body;
 
-  // Find integration by webhook secret or store URL
-  const integration = await EcommerceIntegration.findOne({
+    // Find integration by webhook secret or store URL
+    const integration = await EcommerceIntegration.findOne({
     platform,
     'credentials.webhookSecret': req.headers['x-webhook-secret']
-  });
+    });
 
-  if (!integration) {
+    if (!integration) {
     res.status(404);
     throw new Error('Integration not found');
-  }
+    }
 
-  // Process webhook event
-  await processWebhookEvent(integration, eventData);
+    // Process webhook event
+    await processWebhookEvent(integration, eventData);
 
-  res.json({ received: true });
+    res.json({ received: true });
   } catch (error) {
     res.status(500).json({ message: 'Server error', error: error.message });
   }

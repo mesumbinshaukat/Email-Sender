@@ -8,22 +8,22 @@ import crypto from 'crypto';
 // @access  Private
 const setupAuthentication = async (req, res) => {
   try {
-  const { domain } = req.body;
-  const userId = req.user._id;
+    const { domain } = req.body;
+    const userId = req.user._id;
 
-  // Check if setup already exists
-  let auth = await EmailAuthentication.findOne({ user: userId, domain });
+    // Check if setup already exists
+    let auth = await EmailAuthentication.findOne({ user: userId, domain });
 
-  if (!auth) {
+    if (!auth) {
     auth = await EmailAuthentication.create({
       user: userId,
       domain,
       status: 'pending'
     });
-  }
+    }
 
-  // Generate DKIM keys
-  const { publicKey, privateKey } = crypto.generateKeyPairSync('rsa', {
+    // Generate DKIM keys
+    const { publicKey, privateKey } = crypto.generateKeyPairSync('rsa', {
     modulusLength: 2048,
     publicKeyEncoding: {
       type: 'spki',
@@ -33,7 +33,7 @@ const setupAuthentication = async (req, res) => {
       type: 'pkcs8',
       format: 'pem'
     }
-    } catch (error) {
+  } catch (error) {
     res.status(500).json({ message: 'Server error', error: error.message });
   }
 };
@@ -86,53 +86,53 @@ const setupAuthentication = async (req, res) => {
 // @access  Private
 const verifyAuthentication = async (req, res) => {
   try {
-  const auth = await EmailAuthentication.findById(req.params.id);
+    const auth = await EmailAuthentication.findById(req.params.id);
 
-  if (!auth) {
+    if (!auth) {
     res.status(404);
     throw new Error('Authentication setup not found');
-  }
+    }
 
-  auth.status = 'verifying';
-  await auth.save();
+    auth.status = 'verifying';
+    await auth.save();
 
-  // Perform verification
-  const results = await performVerification(auth);
+    // Perform verification
+    const results = await performVerification(auth);
 
-  auth.verificationResults = {
+    auth.verificationResults = {
     spfCheck: results.spf.verified,
     dkimCheck: results.dkim.verified,
     dmarcCheck: results.dmarc.verified,
     overallScore: calculateOverallScore(results),
     lastChecked: new Date()
-  };
+    };
 
-  auth.status = results.overallScore >= 80 ? 'verified' : 'failed';
+    auth.status = results.overallScore >= 80 ? 'verified' : 'failed';
 
-  // Update individual records
-  auth.spf.verified = results.spf.verified;
-  auth.spf.errors = results.spf.errors;
-  auth.dkim.verified = results.dkim.verified;
-  auth.dkim.errors = results.dkim.errors;
-  auth.dmarc.verified = results.dmarc.verified;
-  auth.dmarc.errors = results.dmarc.errors;
+    // Update individual records
+    auth.spf.verified = results.spf.verified;
+    auth.spf.errors = results.spf.errors;
+    auth.dkim.verified = results.dkim.verified;
+    auth.dkim.errors = results.dkim.errors;
+    auth.dmarc.verified = results.dmarc.verified;
+    auth.dmarc.errors = results.dmarc.errors;
 
-  // Log verification
-  auth.verificationHistory.push({
+    // Log verification
+    auth.verificationHistory.push({
     timestamp: new Date(),
     type: 'full_verification',
     result: auth.status === 'verified',
     details: `Score: ${auth.verificationResults.overallScore}%`
-  });
+    });
 
-  await auth.save();
+    await auth.save();
 
-  res.json({
+    res.json({
     auth,
     results,
     score: auth.verificationResults.overallScore,
     status: auth.status
-  });
+    });
   } catch (error) {
     res.status(500).json({ message: 'Server error', error: error.message });
   }
@@ -143,9 +143,9 @@ const verifyAuthentication = async (req, res) => {
 // @access  Private
 const getAuthentications = async (req, res) => {
   try {
-  const userId = req.user._id;
-  const auths = await EmailAuthentication.find({ user: userId }).sort({ createdAt: -1 });
-  res.json(auths);
+    const userId = req.user._id;
+    const auths = await EmailAuthentication.find({ user: userId }).sort({ createdAt: -1 });
+    res.json(auths);
   } catch (error) {
     res.status(500).json({ message: 'Server error', error: error.message });
   }
@@ -156,14 +156,14 @@ const getAuthentications = async (req, res) => {
 // @access  Private
 const getAuthentication = async (req, res) => {
   try {
-  const auth = await EmailAuthentication.findById(req.params.id);
+    const auth = await EmailAuthentication.findById(req.params.id);
 
-  if (!auth) {
+    if (!auth) {
     res.status(404);
     throw new Error('Authentication setup not found');
-  }
+    }
 
-  res.json(auth);
+    res.json(auth);
   } catch (error) {
     res.status(500).json({ message: 'Server error', error: error.message });
   }
@@ -174,20 +174,20 @@ const getAuthentication = async (req, res) => {
 // @access  Private
 const updateRecommendation = async (req, res) => {
   try {
-  const { recommendationIndex, status } = req.body;
-  const auth = await EmailAuthentication.findById(req.params.id);
+    const { recommendationIndex, status } = req.body;
+    const auth = await EmailAuthentication.findById(req.params.id);
 
-  if (!auth) {
+    if (!auth) {
     res.status(404);
     throw new Error('Authentication setup not found');
-  }
+    }
 
-  if (auth.recommendations[recommendationIndex]) {
+    if (auth.recommendations[recommendationIndex]) {
     auth.recommendations[recommendationIndex].status = status;
-  }
+    }
 
-  await auth.save();
-  res.json(auth);
+    await auth.save();
+    res.json(auth);
   } catch (error) {
     res.status(500).json({ message: 'Server error', error: error.message });
   }

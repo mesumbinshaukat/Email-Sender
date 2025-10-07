@@ -7,18 +7,18 @@ import { getEnvVar } from '../utils/envManager.js';
 // @access  Private
 const generatePreview = async (req, res) => {
   try {
-  const { emailId } = req.body;
-  const userId = req.user._id;
+    const { emailId } = req.body;
+    const userId = req.user._id;
 
-  // Check if preview already exists
-  let preview = await InboxPreview.findOne({ email: emailId, user: userId });
+    // Check if preview already exists
+    let preview = await InboxPreview.findOne({ email: emailId, user: userId });
 
-  if (!preview) {
+    if (!preview) {
     preview = await InboxPreview.create({
       user: userId,
       email: emailId,
       status: 'processing'
-      } catch (error) {
+  } catch (error) {
     res.status(500).json({ message: 'Server error', error: error.message });
   }
 };
@@ -38,18 +38,18 @@ const generatePreview = async (req, res) => {
 // @access  Private
 const getPreview = async (req, res) => {
   try {
-  const { emailId } = req.params;
-  const userId = req.user._id;
+    const { emailId } = req.params;
+    const userId = req.user._id;
 
-  const preview = await InboxPreview.findOne({ email: emailId, user: userId })
+    const preview = await InboxPreview.findOne({ email: emailId, user: userId })
     .populate('email');
 
-  if (!preview) {
+    if (!preview) {
     res.status(404);
     throw new Error('Preview not found');
-  }
+    }
 
-  res.json(preview);
+    res.json(preview);
   } catch (error) {
     res.status(500).json({ message: 'Server error', error: error.message });
   }
@@ -60,14 +60,14 @@ const getPreview = async (req, res) => {
 // @access  Private
 const getPreviewById = async (req, res) => {
   try {
-  const preview = await InboxPreview.findById(req.params.id).populate('email');
+    const preview = await InboxPreview.findById(req.params.id).populate('email');
 
-  if (!preview) {
+    if (!preview) {
     res.status(404);
     throw new Error('Preview not found');
-  }
+    }
 
-  res.json(preview);
+    res.json(preview);
   } catch (error) {
     res.status(500).json({ message: 'Server error', error: error.message });
   }
@@ -78,12 +78,12 @@ const getPreviewById = async (req, res) => {
 // @access  Private
 const getPreviews = async (req, res) => {
   try {
-  const userId = req.user._id;
-  const previews = await InboxPreview.find({ user: userId })
+    const userId = req.user._id;
+    const previews = await InboxPreview.find({ user: userId })
     .populate('email')
     .sort({ createdAt: -1 });
 
-  res.json(previews);
+    res.json(previews);
   } catch (error) {
     res.status(500).json({ message: 'Server error', error: error.message });
   }
@@ -94,21 +94,21 @@ const getPreviews = async (req, res) => {
 // @access  Private
 const regeneratePreview = async (req, res) => {
   try {
-  const preview = await InboxPreview.findById(req.params.id);
+    const preview = await InboxPreview.findById(req.params.id);
 
-  if (!preview) {
+    if (!preview) {
     res.status(404);
     throw new Error('Preview not found');
-  }
+    }
 
-  preview.status = 'processing';
-  preview.previews = [];
-  await preview.save();
+    preview.status = 'processing';
+    preview.previews = [];
+    await preview.save();
 
-  // Regenerate previews
-  generateInboxPreviews(preview);
+    // Regenerate previews
+    generateInboxPreviews(preview);
 
-  res.json(preview);
+    res.json(preview);
   } catch (error) {
     res.status(500).json({ message: 'Server error', error: error.message });
   }
@@ -230,7 +230,7 @@ const generateRecommendations = (previews) => {
     preview.issues.forEach(issue => {
       issueCount[issue.type] = (issueCount[issue.type] || 0) + 1;
     });
-    } catch (error) {
+  } catch (error) {
     res.status(500).json({ message: 'Server error', error: error.message });
   }
 };

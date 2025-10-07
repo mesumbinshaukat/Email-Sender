@@ -7,18 +7,18 @@ import Trigger from '../models/Trigger.js';
 // @access  Private
 const createWorkflow = async (req, res) => {
   try {
-  const { name, description, nodes, edges } = req.body;
-  const userId = req.user._id;
+    const { name, description, nodes, edges } = req.body;
+    const userId = req.user._id;
 
-  const workflow = await Workflow.create({
+    const workflow = await Workflow.create({
     user: userId,
     name,
     description,
     nodes,
     edges
-  });
+    });
 
-  res.status(201).json(workflow);
+    res.status(201).json(workflow);
   } catch (error) {
     res.status(500).json({ message: 'Server error', error: error.message });
   }
@@ -29,9 +29,9 @@ const createWorkflow = async (req, res) => {
 // @access  Private
 const getWorkflows = async (req, res) => {
   try {
-  const userId = req.user._id;
-  const workflows = await Workflow.find({ user: userId }).populate('triggers');
-  res.json(workflows);
+    const userId = req.user._id;
+    const workflows = await Workflow.find({ user: userId }).populate('triggers');
+    res.json(workflows);
   } catch (error) {
     res.status(500).json({ message: 'Server error', error: error.message });
   }
@@ -42,15 +42,15 @@ const getWorkflows = async (req, res) => {
 // @access  Private
 const updateWorkflow = async (req, res) => {
   try {
-  const workflow = await Workflow.findById(req.params.id);
-  if (!workflow) {
+    const workflow = await Workflow.findById(req.params.id);
+    if (!workflow) {
     res.status(404);
     throw new Error('Workflow not found');
-  }
+    }
 
-  Object.assign(workflow, req.body);
-  await workflow.save();
-  res.json(workflow);
+    Object.assign(workflow, req.body);
+    await workflow.save();
+    res.json(workflow);
   } catch (error) {
     res.status(500).json({ message: 'Server error', error: error.message });
   }
@@ -61,14 +61,14 @@ const updateWorkflow = async (req, res) => {
 // @access  Private
 const executeWorkflow = async (req, res) => {
   try {
-  const workflow = await Workflow.findById(req.params.id);
-  if (!workflow) {
+    const workflow = await Workflow.findById(req.params.id);
+    if (!workflow) {
     res.status(404);
     throw new Error('Workflow not found');
-  }
+    }
 
-  // Simplified execution logic
-  res.json({ status: 'executed', workflowId: workflow._id });
+    // Simplified execution logic
+    res.json({ status: 'executed', workflowId: workflow._id });
   } catch (error) {
     res.status(500).json({ message: 'Server error', error: error.message });
   }
@@ -95,27 +95,27 @@ const getWorkflowAnalytics = async (req, res) => {
 // @access  Private
 const createTrigger = async (req, res) => {
   try {
-  const { name, type, conditions, actions, workflowId } = req.body;
-  const userId = req.user._id;
+    const { name, type, conditions, actions, workflowId } = req.body;
+    const userId = req.user._id;
 
-  const trigger = await Trigger.create({
+    const trigger = await Trigger.create({
     user: userId,
     name,
     type,
     conditions,
     actions,
     workflow: workflowId
-  });
+    });
 
-  if (workflowId) {
+    if (workflowId) {
     const workflow = await Workflow.findById(workflowId);
     if (workflow) {
       workflow.triggers.push(trigger._id);
       await workflow.save();
     }
-  }
+    }
 
-  res.status(201).json(trigger);
+    res.status(201).json(trigger);
   } catch (error) {
     res.status(500).json({ message: 'Server error', error: error.message });
   }
@@ -126,9 +126,9 @@ const createTrigger = async (req, res) => {
 // @access  Private
 const getTriggers = async (req, res) => {
   try {
-  const userId = req.user._id;
-  const triggers = await Trigger.find({ user: userId }).populate('workflow');
-  res.json(triggers);
+    const userId = req.user._id;
+    const triggers = await Trigger.find({ user: userId }).populate('workflow');
+    res.json(triggers);
   } catch (error) {
     res.status(500).json({ message: 'Server error', error: error.message });
   }
@@ -139,13 +139,13 @@ const getTriggers = async (req, res) => {
 // @access  Private
 const fireEvent = async (req, res) => {
   try {
-  const { eventType, data } = req.body;
+    const { eventType, data } = req.body;
 
-  // Find matching triggers
-  const triggers = await Trigger.find({
+    // Find matching triggers
+    const triggers = await Trigger.find({
     type: eventType,
     isActive: true
-    } catch (error) {
+  } catch (error) {
     res.status(500).json({ message: 'Server error', error: error.message });
   }
 };
@@ -162,15 +162,15 @@ const fireEvent = async (req, res) => {
 // @access  Private
 const configureTrigger = async (req, res) => {
   try {
-  const trigger = await Trigger.findById(req.params.id);
-  if (!trigger) {
+    const trigger = await Trigger.findById(req.params.id);
+    if (!trigger) {
     res.status(404);
     throw new Error('Trigger not found');
-  }
+    }
 
-  Object.assign(trigger, req.body);
-  await trigger.save();
-  res.json(trigger);
+    Object.assign(trigger, req.body);
+    await trigger.save();
+    res.json(trigger);
   } catch (error) {
     res.status(500).json({ message: 'Server error', error: error.message });
   }
