@@ -28,30 +28,49 @@ export const generateTrackingId = () => {
 
 /**
  * Inject tracking pixel into HTML email with read time estimation
- * Uses multiple delayed pixel requests to estimate how long email is kept open
+ * Uses CSS animations to delay pixel loading at specific time intervals
  */
 export const injectTrackingPixel = (html, trackingId, backendUrl) => {
   // Main tracking pixel (fires immediately on open)
   const trackingPixel = `<img src="${backendUrl}/api/track/open/${trackingId}" width="1" height="1" style="display:none;" alt="" />`;
   
-  // Additional delayed pixels to estimate read time (fire after delays)
-  // These will only load if the email stays open
-  const delayedPixels = `
-    <img src="${backendUrl}/api/track/readtime/${trackingId}?t=5" width="1" height="1" style="display:none;" alt="" loading="lazy" />
-    <img src="${backendUrl}/api/track/readtime/${trackingId}?t=10" width="1" height="1" style="display:none;" alt="" loading="lazy" />
-    <img src="${backendUrl}/api/track/readtime/${trackingId}?t=15" width="1" height="1" style="display:none;" alt="" loading="lazy" />
-    <img src="${backendUrl}/api/track/readtime/${trackingId}?t=20" width="1" height="1" style="display:none;" alt="" loading="lazy" />
-    <img src="${backendUrl}/api/track/readtime/${trackingId}?t=30" width="1" height="1" style="display:none;" alt="" loading="lazy" />
-    <img src="${backendUrl}/api/track/readtime/${trackingId}?t=45" width="1" height="1" style="display:none;" alt="" loading="lazy" />
-    <img src="${backendUrl}/api/track/readtime/${trackingId}?t=60" width="1" height="1" style="display:none;" alt="" loading="lazy" />
-    <img src="${backendUrl}/api/track/readtime/${trackingId}?t=90" width="1" height="1" style="display:none;" alt="" loading="lazy" />
-    <img src="${backendUrl}/api/track/readtime/${trackingId}?t=120" width="1" height="1" style="display:none;" alt="" loading="lazy" />
-    <img src="${backendUrl}/api/track/readtime/${trackingId}?t=180" width="1" height="1" style="display:none;" alt="" loading="lazy" />
-    <img src="${backendUrl}/api/track/readtime/${trackingId}?t=240" width="1" height="1" style="display:none;" alt="" loading="lazy" />
-    <img src="${backendUrl}/api/track/readtime/${trackingId}?t=300" width="1" height="1" style="display:none;" alt="" loading="lazy" />
+  // CSS for delayed pixel loading using animation delays
+  const delayedPixelStyle = `
+    <style>
+      @keyframes loadPixel { from { opacity: 0; } to { opacity: 1; } }
+      .track-5s { animation: loadPixel 0.1s 5s forwards; opacity: 0; }
+      .track-10s { animation: loadPixel 0.1s 10s forwards; opacity: 0; }
+      .track-15s { animation: loadPixel 0.1s 15s forwards; opacity: 0; }
+      .track-20s { animation: loadPixel 0.1s 20s forwards; opacity: 0; }
+      .track-30s { animation: loadPixel 0.1s 30s forwards; opacity: 0; }
+      .track-45s { animation: loadPixel 0.1s 45s forwards; opacity: 0; }
+      .track-60s { animation: loadPixel 0.1s 60s forwards; opacity: 0; }
+      .track-90s { animation: loadPixel 0.1s 90s forwards; opacity: 0; }
+      .track-120s { animation: loadPixel 0.1s 120s forwards; opacity: 0; }
+      .track-180s { animation: loadPixel 0.1s 180s forwards; opacity: 0; }
+      .track-240s { animation: loadPixel 0.1s 240s forwards; opacity: 0; }
+      .track-300s { animation: loadPixel 0.1s 300s forwards; opacity: 0; }
+    </style>
   `;
   
-  const allPixels = trackingPixel + delayedPixels;
+  // Delayed pixels with CSS animation classes
+  // These will only load after the specified delay
+  const delayedPixels = `
+    <img class="track-5s" src="${backendUrl}/api/track/readtime/${trackingId}?t=5" width="1" height="1" style="display:none;" alt="" />
+    <img class="track-10s" src="${backendUrl}/api/track/readtime/${trackingId}?t=10" width="1" height="1" style="display:none;" alt="" />
+    <img class="track-15s" src="${backendUrl}/api/track/readtime/${trackingId}?t=15" width="1" height="1" style="display:none;" alt="" />
+    <img class="track-20s" src="${backendUrl}/api/track/readtime/${trackingId}?t=20" width="1" height="1" style="display:none;" alt="" />
+    <img class="track-30s" src="${backendUrl}/api/track/readtime/${trackingId}?t=30" width="1" height="1" style="display:none;" alt="" />
+    <img class="track-45s" src="${backendUrl}/api/track/readtime/${trackingId}?t=45" width="1" height="1" style="display:none;" alt="" />
+    <img class="track-60s" src="${backendUrl}/api/track/readtime/${trackingId}?t=60" width="1" height="1" style="display:none;" alt="" />
+    <img class="track-90s" src="${backendUrl}/api/track/readtime/${trackingId}?t=90" width="1" height="1" style="display:none;" alt="" />
+    <img class="track-120s" src="${backendUrl}/api/track/readtime/${trackingId}?t=120" width="1" height="1" style="display:none;" alt="" />
+    <img class="track-180s" src="${backendUrl}/api/track/readtime/${trackingId}?t=180" width="1" height="1" style="display:none;" alt="" />
+    <img class="track-240s" src="${backendUrl}/api/track/readtime/${trackingId}?t=240" width="1" height="1" style="display:none;" alt="" />
+    <img class="track-300s" src="${backendUrl}/api/track/readtime/${trackingId}?t=300" width="1" height="1" style="display:none;" alt="" />
+  `;
+  
+  const allPixels = trackingPixel + delayedPixelStyle + delayedPixels;
   
   // Try to inject before closing body tag, otherwise append
   if (html.includes('</body>')) {

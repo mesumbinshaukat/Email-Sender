@@ -170,20 +170,60 @@ export const trackReadTime = async (req, res) => {
       return res.json({ success: false, message: 'Email not found' });
     }
 
-    // For pixel-based tracking, only update if this is a higher time marker
+    // For pixel-based tracking, calculate actual time elapsed since first open
     if (req.method === 'GET') {
+      const timeMarker = parseInt(req.query.t) || 0;
+      
+      // Get the first open time for this email
+      const firstOpenTime = email.tracking.firstOpenedAt;
+      
+      if (!firstOpenTime) {
+        console.log('⚠️  No first open time recorded, skipping read time pixel');
+        // Return pixel anyway
+        const pixel = Buffer.from(
+          'R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7',
+          'base64'
+        );
+        res.writeHead(200, {
+          'Content-Type': 'image/gif',
+          'Content-Length': pixel.length,
+          'Cache-Control': 'no-store, no-cache, must-revalidate, private',
+        });
+        return res.end(pixel);
+      }
+      
+      // Calculate actual elapsed time since first open
+      const now = new Date();
+      const actualElapsedSeconds = Math.floor((now - firstOpenTime) / 1000);
+      
+      // Only record if the actual elapsed time is close to the time marker
+      // Strict tolerance: pixel must load within 5 seconds of expected time
+      const tolerance = 5;
+      const timeDifference = Math.abs(actualElapsedSeconds - timeMarker);
+      const isValidTimeMarker = timeDifference <= tolerance;
+      
+      console.log('⏱️  READ TIME PIXEL RECEIVED:', {
+        trackingId,
+        timeMarker: `${timeMarker}s`,
+        actualElapsed: `${actualElapsedSeconds}s`,
+        difference: `${timeDifference}s`,
+        firstOpenedAt: firstOpenTime.toISOString(),
+        isValid: isValidTimeMarker,
+        method: 'PIXEL'
+      });
+      
+      // Only update if this is a valid time marker and higher than current
       const currentMaxTime = email.tracking.totalReadTime || 0;
       
-      // Only update if this pixel represents more time than we've recorded
-      if (duration > currentMaxTime) {
+      if (isValidTimeMarker && actualElapsedSeconds > currentMaxTime) {
         const readSession = {
-          startTime: new Date(startTime),
-          endTime: new Date(endTime),
-          duration: duration || 0,
+          startTime: firstOpenTime,
+          endTime: now,
+          duration: actualElapsedSeconds,
         };
 
         email.tracking.readSessions.push(readSession);
-        email.tracking.totalReadTime = duration;
+        email.tracking.totalReadTime = actualElapsedSeconds;
 
         await email.save();
 
@@ -191,13 +231,20 @@ export const trackReadTime = async (req, res) => {
           emailId: email._id,
           subject: email.subject,
           previousTime: `${currentMaxTime} seconds`,
-          newTime: `${duration} seconds`,
+          newTime: `${actualElapsedSeconds} seconds`,
           totalSessions: email.tracking.readSessions.length
+        });
+      } else if (!isValidTimeMarker) {
+        console.log('⏭️  READ TIME PIXEL IGNORED (loaded too early/late):', {
+          trackingId,
+          expectedTime: `${timeMarker}s`,
+          actualTime: `${actualElapsedSeconds}s`,
+          difference: `${Math.abs(actualElapsedSeconds - timeMarker)}s`
         });
       } else {
         console.log('⏭️  READ TIME PIXEL IGNORED (already have higher time):', {
           trackingId,
-          pixelTime: `${duration}s`,
+          actualElapsed: `${actualElapsedSeconds}s`,
           currentMax: `${currentMaxTime}s`
         });
       }
