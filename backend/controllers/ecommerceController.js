@@ -10,21 +10,18 @@ const connectEcommerce = async (req, res) => {
     const userId = req.user._id;
 
     const integration = await EcommerceIntegration.create({
-    user: userId,
-    platform,
-    storeName,
-    credentials,
-    settings,
-    status: 'connected'
-  } catch (error) {
-    res.status(500).json({ message: 'Server error', error: error.message });
-  }
-};
+      user: userId,
+      platform,
+      storeName,
+      credentials,
+      settings,
+      status: 'connected'
+    });
 
-  // Setup webhooks
-  await setupWebhooks(integration);
+    // Setup webhooks
+    await setupWebhooks(integration);
 
-  res.status(201).json(integration);
+    res.status(201).json(integration);
   } catch (error) {
     res.status(500).json({ message: 'Server error', error: error.message });
   }
@@ -50,8 +47,7 @@ const syncEcommerce = async (req, res) => {
   try {
     const integration = await EcommerceIntegration.findById(req.params.id);
     if (!integration) {
-    res.status(404);
-    throw new Error('E-commerce integration not found');
+      return res.status(404).json({ message: 'E-commerce integration not found' });
     }
 
     integration.status = 'syncing';
@@ -80,13 +76,12 @@ const handleWebhook = async (req, res) => {
 
     // Find integration by webhook secret or store URL
     const integration = await EcommerceIntegration.findOne({
-    platform,
-    'credentials.webhookSecret': req.headers['x-webhook-secret']
+      platform,
+      'credentials.webhookSecret': req.headers['x-webhook-secret']
     });
 
     if (!integration) {
-    res.status(404);
-    throw new Error('Integration not found');
+      return res.status(404).json({ message: 'Integration not found' });
     }
 
     // Process webhook event

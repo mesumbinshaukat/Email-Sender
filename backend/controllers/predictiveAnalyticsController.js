@@ -21,7 +21,7 @@ const getForecast = async (req, res) => {
   }
 };
 
-  // Simple forecasting algorithm (linear regression)
+    // Simple forecasting algorithm (linear regression)
   const dataPoints = emails.length;
   const opens = emails.filter(e => e.openedAt).length;
   const clicks = emails.filter(e => e.clickedAt).length;
@@ -66,13 +66,12 @@ const getTrends = async (req, res) => {
 
     const emails = await Email.find({
     user: userId,
-    createdAt: { $gte: ninetyDaysAgo }
-  } catch (error) {
+    createdAt: { $gte: ninetyDaysAgo   } catch (error) {
     res.status(500).json({ message: 'Server error', error: error.message });
   }
 };
 
-  // Group by week
+    // Group by week
   const weeklyData = {};
   emails.forEach(email => {
     const week = new Date(email.createdAt);

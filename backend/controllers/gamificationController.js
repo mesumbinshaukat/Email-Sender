@@ -75,7 +75,7 @@ const createVoiceEmail = async (req, res) => {
   }
 };
 
-  // Start async processing
+    // Start async processing
   processVoiceEmail(voiceEmail._id);
 
   res.status(201).json(voiceEmail);
@@ -172,8 +172,7 @@ const getTemplates = async (req, res) => {
     const template = await TemplateMarketplace.findById(templateId);
 
     if (!template) {
-    res.status(404);
-    throw new Error('Template not found');
+      return res.status(404).json({ message: 'Template not found' });
     }
 
     // In production, handle payment processing
@@ -234,8 +233,7 @@ const createBlockchainVerification = async (req, res) => {
     const email = await Email.findById(emailId);
 
     if (!email) {
-    res.status(404);
-    throw new Error('Email not found');
+      return res.status(404).json({ message: 'Email not found' });
     }
 
     // Create hash of email content
@@ -260,7 +258,7 @@ const createBlockchainVerification = async (req, res) => {
   }
 };
 
-  // Simulate blockchain recording
+    // Simulate blockchain recording
   recordOnBlockchain(verification._id);
 
   res.status(201).json(verification);
@@ -284,8 +282,7 @@ const getBlockchainVerifications = async (req, res) => {
     const verification = await BlockchainVerification.findById(verificationId);
 
     if (!verification) {
-    res.status(404);
-    throw new Error('Verification not found');
+      return res.status(404).json({ message: 'Verification not found' });
     }
 
     // Simulate blockchain verification

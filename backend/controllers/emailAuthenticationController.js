@@ -15,67 +15,64 @@ const setupAuthentication = async (req, res) => {
     let auth = await EmailAuthentication.findOne({ user: userId, domain });
 
     if (!auth) {
-    auth = await EmailAuthentication.create({
-      user: userId,
-      domain,
-      status: 'pending'
-    });
+      auth = await EmailAuthentication.create({
+        user: userId,
+        domain,
+        status: 'pending'
+      });
     }
 
     // Generate DKIM keys
     const { publicKey, privateKey } = crypto.generateKeyPairSync('rsa', {
-    modulusLength: 2048,
-    publicKeyEncoding: {
-      type: 'spki',
-      format: 'pem'
-    },
-    privateKeyEncoding: {
-      type: 'pkcs8',
-      format: 'pem'
-    }
-  } catch (error) {
-    res.status(500).json({ message: 'Server error', error: error.message });
-  }
-};
+      modulusLength: 2048,
+      publicKeyEncoding: {
+        type: 'spki',
+        format: 'pem'
+      },
+      privateKeyEncoding: {
+        type: 'pkcs8',
+        format: 'pem'
+      }
+    });
 
-  // Generate DKIM selector
-  const selector = `selector_${Date.now()}`;
+    // Generate DKIM selector
+    const selector = `selector_${Date.now()}`;
 
-  auth.dkim = {
-    selector,
-    publicKey,
-    privateKey: encryptPrivateKey(privateKey), // Encrypt for storage
-    verified: false,
-    errors: []
-  };
+    auth.dkim = {
+      selector,
+      publicKey,
+      privateKey: encryptPrivateKey(privateKey), // Encrypt for storage
+      verified: false,
+      errors: []
+    };
 
-  // Generate recommended records
-  auth.spf = {
-    record: `v=spf1 include:_spf.google.com ~all`,
-    verified: false,
-    errors: []
-  };
+    // Generate recommended records
+    auth.spf = {
+      record: `v=spf1 include:_spf.google.com ~all`,
+      verified: false,
+      errors: []
+    };
 
-  auth.dmarc = {
-    record: `v=DMARC1; p=none; rua=mailto:dmarc@${domain}`,
-    policy: 'none',
-    verified: false,
-    errors: []
-  };
+    auth.dmarc = {
+      record: `v=DMARC1; p=none; rua=mailto:dmarc@${domain}`,
+      policy: 'none',
+      verified: false,
+      errors: []
+    };
 
-  // Generate recommendations
-  auth.recommendations = generateRecommendations(auth);
+    // Generate recommendations
+    auth.recommendations = generateRecommendations(auth);
 
-  await auth.save();
+    await auth.save();
 
-  res.status(200).json({
-    auth,
-    instructions: {
-      spf: `Add this TXT record to your DNS: ${auth.spf.record}`,
-      dkim: `Add this TXT record: ${selector}._domainkey.${domain} IN TXT "v=DKIM1; k=rsa; p=${publicKey.replace(/\n/g, '')}"`,
-      dmarc: `Add this TXT record: _dmarc.${domain} IN TXT "${auth.dmarc.record}"`
-    }
-  });
+    res.status(200).json({
+      auth,
+      instructions: {
+        spf: `Add this TXT record to your DNS: ${auth.spf.record}`,
+        dkim: `Add this TXT record: ${selector}._domainkey.${domain} IN TXT "v=DKIM1; k=rsa; p=${publicKey.replace(/\n/g, '')}"`,
+        dmarc: `Add this TXT record: _dmarc.${domain} IN TXT "${auth.dmarc.record}"`
+      }
+    });
   } catch (error) {
     res.status(500).json({ message: 'Server error', error: error.message });
   }
@@ -89,8 +86,7 @@ const verifyAuthentication = async (req, res) => {
     const auth = await EmailAuthentication.findById(req.params.id);
 
     if (!auth) {
-    res.status(404);
-    throw new Error('Authentication setup not found');
+      return res.status(404).json({ message: 'Authentication setup not found' });
     }
 
     auth.status = 'verifying';
@@ -159,8 +155,7 @@ const getAuthentication = async (req, res) => {
     const auth = await EmailAuthentication.findById(req.params.id);
 
     if (!auth) {
-    res.status(404);
-    throw new Error('Authentication setup not found');
+      return res.status(404).json({ message: 'Authentication setup not found' });
     }
 
     res.json(auth);
@@ -178,8 +173,7 @@ const updateRecommendation = async (req, res) => {
     const auth = await EmailAuthentication.findById(req.params.id);
 
     if (!auth) {
-    res.status(404);
-    throw new Error('Authentication setup not found');
+      return res.status(404).json({ message: 'Authentication setup not found' });
     }
 
     if (auth.recommendations[recommendationIndex]) {
@@ -224,9 +218,7 @@ const performVerification = async (auth) => {
     results.dmarc.verified = hasDMARC;
     if (!hasDMARC) {
       results.dmarc.errors.push('DMARC record not found');
-    }
-
-  } catch (error) {
+      } catch (error) {
     console.error('DNS verification error:', error);
     results.spf.errors.push('DNS lookup failed');
     results.dkim.errors.push('DNS lookup failed');

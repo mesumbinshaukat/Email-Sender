@@ -45,8 +45,7 @@ const updateTrigger = async (req, res) => {
   try {
     const trigger = await Trigger.findById(req.params.id);
     if (!trigger) {
-    res.status(404);
-    throw new Error('Trigger not found');
+      return res.status(404).json({ message: 'Trigger not found' });
     }
 
     Object.assign(trigger, req.body);
@@ -64,8 +63,7 @@ const deleteTrigger = async (req, res) => {
   try {
     const trigger = await Trigger.findById(req.params.id);
     if (!trigger) {
-    res.status(404);
-    throw new Error('Trigger not found');
+      return res.status(404).json({ message: 'Trigger not found' });
     }
 
     await trigger.remove();
@@ -93,7 +91,7 @@ const fireEvent = async (req, res) => {
   }
 };
 
-  // Simulate executing actions
+    // Simulate executing actions
   const results = triggers.map(trigger => ({
     triggerId: trigger._id,
     name: trigger.name,
@@ -136,8 +134,7 @@ const testTrigger = async (req, res) => {
     const trigger = await Trigger.findById(req.params.id);
 
     if (!trigger) {
-    res.status(404);
-    throw new Error('Trigger not found');
+      return res.status(404).json({ message: 'Trigger not found' });
     }
 
     // Simulate condition evaluation

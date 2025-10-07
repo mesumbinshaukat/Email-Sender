@@ -44,8 +44,7 @@ const updateWorkflow = async (req, res) => {
   try {
     const workflow = await Workflow.findById(req.params.id);
     if (!workflow) {
-    res.status(404);
-    throw new Error('Workflow not found');
+      return res.status(404).json({ message: 'Workflow not found' });
     }
 
     Object.assign(workflow, req.body);
@@ -63,8 +62,7 @@ const executeWorkflow = async (req, res) => {
   try {
     const workflow = await Workflow.findById(req.params.id);
     if (!workflow) {
-    res.status(404);
-    throw new Error('Workflow not found');
+      return res.status(404).json({ message: 'Workflow not found' });
     }
 
     // Simplified execution logic
@@ -150,7 +148,7 @@ const fireEvent = async (req, res) => {
   }
 };
 
-  // Execute actions (simplified)
+    // Execute actions (simplified)
   res.json({ triggered: triggers.length, eventType });
   } catch (error) {
     res.status(500).json({ message: 'Server error', error: error.message });
@@ -164,8 +162,7 @@ const configureTrigger = async (req, res) => {
   try {
     const trigger = await Trigger.findById(req.params.id);
     if (!trigger) {
-    res.status(404);
-    throw new Error('Trigger not found');
+      return res.status(404).json({ message: 'Trigger not found' });
     }
 
     Object.assign(trigger, req.body);

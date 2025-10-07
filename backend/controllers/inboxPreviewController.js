@@ -23,7 +23,7 @@ const generatePreview = async (req, res) => {
   }
 };
 
-    // Start async preview generation
+      // Start async preview generation
     generateInboxPreviews(preview);
   }
 
@@ -45,8 +45,7 @@ const getPreview = async (req, res) => {
     .populate('email');
 
     if (!preview) {
-    res.status(404);
-    throw new Error('Preview not found');
+      return res.status(404).json({ message: 'Preview not found' });
     }
 
     res.json(preview);
@@ -63,8 +62,7 @@ const getPreviewById = async (req, res) => {
     const preview = await InboxPreview.findById(req.params.id).populate('email');
 
     if (!preview) {
-    res.status(404);
-    throw new Error('Preview not found');
+      return res.status(404).json({ message: 'Preview not found' });
     }
 
     res.json(preview);
@@ -97,8 +95,7 @@ const regeneratePreview = async (req, res) => {
     const preview = await InboxPreview.findById(req.params.id);
 
     if (!preview) {
-    res.status(404);
-    throw new Error('Preview not found');
+      return res.status(404).json({ message: 'Preview not found' });
     }
 
     preview.status = 'processing';
@@ -225,7 +222,7 @@ const generateRecommendations = (previews) => {
   const recommendations = [];
   const issueCount = {};
 
-  // Count issues across all clients
+    // Count issues across all clients
   previews.forEach(preview => {
     preview.issues.forEach(issue => {
       issueCount[issue.type] = (issueCount[issue.type] || 0) + 1;
@@ -235,7 +232,7 @@ const generateRecommendations = (previews) => {
   }
 };
 
-  // Generate recommendations based on issue frequency
+    // Generate recommendations based on issue frequency
   Object.entries(issueCount).forEach(([type, count]) => {
     if (count >= 3) { // Issue appears in 3+ clients
       let recommendation = {

@@ -25,7 +25,6 @@ const startOptimization = async (req, res) => {
       segment: segmentId,
       status: 'analyzing'
     });
-    }
 
     // Start analysis asynchronously
     analyzeHistoricalData(optimization._id);
@@ -45,8 +44,7 @@ const getOptimization = async (req, res) => {
     .populate('campaign segment');
 
     if (!optimization) {
-    res.status(404);
-    throw new Error('Optimization not found');
+      return res.status(404).json({ message: 'Optimization not found' });
     }
 
     res.json(optimization);
@@ -79,8 +77,7 @@ const applyOptimization = async (req, res) => {
     const optimization = await SendTimeOptimization.findById(req.params.id);
 
     if (!optimization) {
-    res.status(404);
-    throw new Error('Optimization not found');
+      return res.status(404).json({ message: 'Optimization not found' });
     }
 
     if (optimization.status !== 'ready') {
@@ -110,8 +107,7 @@ const getOptimizationInsights = async (req, res) => {
     const optimization = await SendTimeOptimization.findById(req.params.id);
 
     if (!optimization) {
-    res.status(404);
-    throw new Error('Optimization not found');
+      return res.status(404).json({ message: 'Optimization not found' });
     }
 
     const insights = {
@@ -197,7 +193,7 @@ const generateOptimizedSchedule = async (historicalData) => {
   const schedule = [];
   const dayHourPerformance = {};
 
-  // Calculate performance by day and hour
+    // Calculate performance by day and hour
   historicalData.forEach(data => {
     const day = data.sentTime.getDay();
     const hour = data.sentTime.getHours();
@@ -215,7 +211,7 @@ const generateOptimizedSchedule = async (historicalData) => {
   }
 };
 
-  // Generate optimized schedule for each day/hour combination
+    // Generate optimized schedule for each day/hour combination
   for (let day = 0; day < 7; day++) {
     for (let hour = 8; hour <= 18; hour++) { // Business hours
       const key = `${day}-${hour}`;
@@ -293,13 +289,12 @@ const calculatePerformanceMetrics = (historicalData) => {
     if (score > bestHourScore) {
       bestHourScore = score;
       metrics.bestHour = index;
-    }
-  } catch (error) {
+      } catch (error) {
     res.status(500).json({ message: 'Server error', error: error.message });
   }
 };
 
-  // Calculate potential improvement
+    // Calculate potential improvement
   const bestDayRate = dayPerformance[metrics.bestDay].opens / dayPerformance[metrics.bestDay].total;
   const bestHourRate = hourPerformance[metrics.bestHour].opens / hourPerformance[metrics.bestHour].total;
   const optimizedRate = (bestDayRate + bestHourRate) / 2;
