@@ -50,7 +50,7 @@ const LiquidPersonalization = () => {
         </motion.div>
 
         <div className="space-y-6">
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+          <div className="bg-white rounded-lg shadow p-6">
             <h2 className="text-xl font-semibold mb-4">Apply Liquid Personalization</h2>
             <div className="space-y-4">
               <div>
@@ -59,7 +59,7 @@ const LiquidPersonalization = () => {
                   value={template}
                   onChange={(e) => setTemplate(e.target.value)}
                   rows={6}
-                  className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 font-mono text-sm"
+                  className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 font-mono text-sm"
                   placeholder="Hello {{firstName}}, your {{product}} is ready!"
                 />
               </div>
@@ -69,7 +69,7 @@ const LiquidPersonalization = () => {
                   value={recipientData}
                   onChange={(e) => setRecipientData(e.target.value)}
                   rows={4}
-                  className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 font-mono text-sm"
+                  className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 font-mono text-sm"
                   placeholder='{"firstName": "John", "product": "iPhone"}'
                 />
               </div>
@@ -85,9 +85,9 @@ const LiquidPersonalization = () => {
           </div>
 
           {personalizedContent && (
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+            <div className="bg-white rounded-lg shadow p-6">
               <h2 className="text-xl font-semibold mb-4">Personalized Output</h2>
-              <div className="bg-gray-50 dark:bg-gray-900 p-4 rounded-lg">
+              <div className="bg-gray-50 p-4 rounded-lg">
                 <pre className="text-gray-800 dark:text-gray-200 whitespace-pre-wrap">{personalizedContent}</pre>
               </div>
             </div>

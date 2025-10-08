@@ -11,7 +11,7 @@ export const Card: React.FC<CardProps> = ({ children, className, hover = false }
   return (
     <div
       className={cn(
-        'bg-white rounded-lg shadow-md p-6',
+        'bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 border border-gray-200 dark:border-gray-700',
         hover && 'transition-all duration-200 hover:shadow-lg hover:-translate-y-1',
         className
       )}
@@ -32,7 +32,7 @@ export const CardTitle: React.FC<{ children: React.ReactNode; className?: string
   children,
   className,
 }) => {
-  return <h3 className={cn('text-xl font-semibold text-gray-900', className)}>{children}</h3>;
+  return <h3 className={cn('text-xl font-semibold text-gray-900 dark:text-white', className)}>{children}</h3>;
 };
 
 export const CardContent: React.FC<{ children: React.ReactNode; className?: string }> = ({

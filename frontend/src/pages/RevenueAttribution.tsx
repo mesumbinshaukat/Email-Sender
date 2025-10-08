@@ -450,7 +450,7 @@ export const RevenueAttribution: React.FC = () => {
                   <div key={month.month} className="flex items-center space-x-4">
                     <div className="w-24 text-sm font-medium">{month.month}</div>
                     <div className="flex-1">
-                      <div className="bg-gray-200 dark:bg-gray-700 rounded-full h-4">
+                      <div className="bg-gray-200 rounded-full h-4">
                         <div
                           className="bg-blue-500 h-4 rounded-full transition-all duration-300"
                           style={{

@@ -486,7 +486,7 @@ export const CompetitorAnalysis: React.FC = () => {
                       <div key={keyword} className="flex items-center justify-between">
                         <span className="font-medium">"{keyword}"</span>
                         <div className="flex items-center space-x-2">
-                          <div className="bg-gray-200 dark:bg-gray-700 rounded-full h-2 flex-1 max-w-32">
+                          <div className="bg-gray-200 rounded-full h-2 flex-1 max-w-32">
                             <div
                               className="bg-blue-500 h-2 rounded-full"
                               style={{ width: `${(count / Math.max(...Object.values(trends.subjectLineTrends))) * 100}%` }}
@@ -505,7 +505,7 @@ export const CompetitorAnalysis: React.FC = () => {
         {/* Competitor Insights Modal */}
         {selectedCompetitor && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-            <div className="bg-white dark:bg-gray-800 rounded-lg w-full max-w-4xl max-h-[90vh] overflow-y-auto">
+            <div className="bg-white rounded-lg w-full max-w-4xl max-h-[90vh] overflow-y-auto">
               <div className="p-6">
                 <div className="flex items-center justify-between mb-6">
                   <div>
@@ -556,7 +556,7 @@ export const CompetitorAnalysis: React.FC = () => {
         {/* Add Competitor Modal */}
         {showAddModal && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-            <div className="bg-white dark:bg-gray-800 rounded-lg w-full max-w-md">
+            <div className="bg-white rounded-lg w-full max-w-md">
               <div className="p-6">
                 <h2 className="text-xl font-bold mb-4">Add Competitor</h2>
 

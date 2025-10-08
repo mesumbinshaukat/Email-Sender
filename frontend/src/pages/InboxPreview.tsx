@@ -109,7 +109,7 @@ const InboxPreview = () => {
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="bg-white dark:bg-gray-800 rounded-lg shadow p-6 mb-8"
+          className="bg-white rounded-lg shadow p-6 mb-8"
         >
           <div className="flex gap-4">
             <input
@@ -117,7 +117,7 @@ const InboxPreview = () => {
               value={emailId}
               onChange={(e) => setEmailId(e.target.value)}
               placeholder="Enter Email ID to preview"
-              className="flex-1 p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600"
+              className="flex-1 p-3 border rounded-lg focus:ring-2 focus:ring-blue-500"
             />
             <button
               onClick={generatePreview}
@@ -145,7 +145,7 @@ const InboxPreview = () => {
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              className="bg-white dark:bg-gray-800 rounded-lg shadow p-6 mb-8"
+              className="bg-white rounded-lg shadow p-6 mb-8"
             >
               <div className="flex items-center justify-between mb-4">
                 <h2 className="text-xl font-semibold">Overall Compatibility Score</h2>
@@ -183,7 +183,7 @@ const InboxPreview = () => {
                   <h3 className="text-lg font-semibold mb-3">Recommendations</h3>
                   <div className="space-y-2">
                     {preview.recommendations.map((rec: any, index: number) => (
-                      <div key={index} className="flex items-start gap-3 p-3 bg-gray-50 dark:bg-gray-700 rounded">
+                      <div key={index} className="flex items-start gap-3 p-3 bg-gray-50 rounded">
                         <AlertTriangle className="h-5 w-5 text-yellow-600 mt-0.5" />
                         <div>
                           <p className="font-medium">{rec.message}</p>
@@ -210,7 +210,7 @@ const InboxPreview = () => {
                   <div
                     key={client.name}
                     onClick={() => setSelectedClient(client.name)}
-                    className={`bg-white dark:bg-gray-800 rounded-lg shadow p-4 cursor-pointer transition-all ${
+                    className={`bg-white rounded-lg shadow p-4 cursor-pointer transition-all ${
                       selectedClient === client.name ? 'ring-2 ring-blue-500' : 'hover:shadow-md'
                     }`}
                   >
@@ -246,7 +246,7 @@ const InboxPreview = () => {
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="mt-8 bg-white dark:bg-gray-800 rounded-lg shadow p-6"
+                className="mt-8 bg-white rounded-lg shadow p-6"
               >
                 <div className="flex items-center justify-between mb-6">
                   <h2 className="text-xl font-semibold">
@@ -308,7 +308,7 @@ const InboxPreview = () => {
                       {clientPreview.html && (
                         <div>
                           <h3 className="font-semibold mb-3">Rendered Preview</h3>
-                          <div className="border rounded-lg p-4 max-h-96 overflow-auto bg-gray-50 dark:bg-gray-700">
+                          <div className="border rounded-lg p-4 max-h-96 overflow-auto bg-gray-50">
                             <div dangerouslySetInnerHTML={{ __html: clientPreview.html }} />
                           </div>
                         </div>
@@ -318,7 +318,7 @@ const InboxPreview = () => {
                       {clientPreview.text && (
                         <div>
                           <h3 className="font-semibold mb-3">Text Version</h3>
-                          <div className="border rounded-lg p-4 bg-gray-50 dark:bg-gray-700">
+                          <div className="border rounded-lg p-4 bg-gray-50">
                             <pre className="whitespace-pre-wrap text-sm">{clientPreview.text}</pre>
                           </div>
                         </div>
@@ -350,7 +350,7 @@ const InboxPreview = () => {
               {clients.slice(0, 8).map(client => {
                 const IconComponent = getClientIcon(client.name);
                 return (
-                  <div key={client.name} className="flex flex-col items-center p-4 bg-white dark:bg-gray-800 rounded-lg">
+                  <div key={client.name} className="flex flex-col items-center p-4 bg-white rounded-lg">
                     <IconComponent className="h-8 w-8 text-gray-600 mb-2" />
                     <span className="text-sm text-center">{client.label}</span>
                   </div>

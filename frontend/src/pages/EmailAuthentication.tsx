@@ -128,7 +128,7 @@ const EmailAuthentication = () => {
           <motion.div
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
-            className="bg-white dark:bg-gray-800 rounded-lg shadow p-6 mb-6"
+            className="bg-white rounded-lg shadow p-6 mb-6"
           >
             <h2 className="text-xl font-semibold mb-4">Setup Email Authentication</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -139,7 +139,7 @@ const EmailAuthentication = () => {
                   value={formData.domain}
                   onChange={(e) => setFormData({ ...formData, domain: e.target.value })}
                   placeholder="example.com"
-                  className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600"
+                  className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500"
                 />
                 <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
                   Enter the domain you want to authenticate for email sending
@@ -234,7 +234,7 @@ const EmailAuthentication = () => {
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
           >
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow">
+            <div className="bg-white rounded-lg shadow">
               <div className="px-6 py-4 border-b">
                 <h2 className="text-xl font-semibold">Your Domains</h2>
               </div>
@@ -319,7 +319,7 @@ const EmailAuthentication = () => {
             animate={{ opacity: 1, x: 0 }}
           >
             {selectedSetup ? (
-              <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+              <div className="bg-white rounded-lg shadow p-6">
                 <h2 className="text-xl font-semibold mb-6">
                   {selectedSetup.domain} - Authentication Details
                 </h2>
@@ -329,13 +329,13 @@ const EmailAuthentication = () => {
                   <div className="mb-6">
                     <h3 className="text-lg font-semibold mb-4">Verification Results</h3>
                     <div className="grid grid-cols-2 gap-4">
-                      <div className="text-center p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                      <div className="text-center p-4 bg-gray-50 rounded-lg">
                         <div className={`text-2xl font-bold ${getScoreColor(selectedSetup.verificationResults.overallScore)}`}>
                           {selectedSetup.verificationResults.overallScore}/100
                         </div>
                         <div className="text-sm text-gray-600 dark:text-gray-400">Overall Score</div>
                       </div>
-                      <div className="text-center p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                      <div className="text-center p-4 bg-gray-50 rounded-lg">
                         <div className={`text-2xl font-bold ${getStatusColor(selectedSetup.status)}`}>
                           {selectedSetup.status}
                         </div>
@@ -358,7 +358,7 @@ const EmailAuthentication = () => {
                         </span>
                       </div>
                       {selectedSetup.spf?.record && (
-                        <code className="block text-xs bg-gray-100 dark:bg-gray-700 p-2 rounded mt-2 break-all">
+                        <code className="block text-xs bg-gray-100 p-2 rounded mt-2 break-all">
                           {selectedSetup.spf.record}
                         </code>
                       )}
@@ -432,7 +432,7 @@ const EmailAuthentication = () => {
                 )}
               </div>
             ) : (
-              <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+              <div className="bg-white rounded-lg shadow p-6">
                 <div className="text-center py-12">
                   <Shield className="h-16 w-16 text-gray-400 mx-auto mb-4" />
                   <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">

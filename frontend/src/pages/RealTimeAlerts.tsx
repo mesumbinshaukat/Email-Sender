@@ -134,7 +134,7 @@ const RealTimeAlerts = () => {
           <motion.div
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
-            className="bg-white dark:bg-gray-800 rounded-lg shadow p-6 mb-6"
+            className="bg-white rounded-lg shadow p-6 mb-6"
           >
             <h2 className="text-xl font-semibold mb-4">Create Alert Rule</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -143,7 +143,7 @@ const RealTimeAlerts = () => {
                 <select
                   value={formData.type}
                   onChange={(e) => setFormData({ ...formData, type: e.target.value })}
-                  className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600"
+                  className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500"
                 >
                   <option value="email_bounce">Email Bounce</option>
                   <option value="low_open_rate">Low Open Rate</option>
@@ -158,7 +158,7 @@ const RealTimeAlerts = () => {
                 <select
                   value={formData.severity}
                   onChange={(e) => setFormData({ ...formData, severity: e.target.value })}
-                  className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600"
+                  className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500"
                 >
                   <option value="low">Low</option>
                   <option value="medium">Medium</option>
@@ -174,7 +174,7 @@ const RealTimeAlerts = () => {
                   value={formData.title}
                   onChange={(e) => setFormData({ ...formData, title: e.target.value })}
                   placeholder="Alert title"
-                  className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600"
+                  className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500"
                 />
               </div>
 
@@ -184,7 +184,7 @@ const RealTimeAlerts = () => {
                   value={formData.message}
                   onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                   placeholder="Alert message"
-                  className="w-full h-24 p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 resize-none"
+                  className="w-full h-24 p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 resize-none"
                 />
               </div>
 
@@ -228,7 +228,7 @@ const RealTimeAlerts = () => {
           </motion.div>
         )}
 
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden">
+        <div className="bg-white rounded-lg shadow overflow-hidden">
           <div className="px-6 py-4 border-b">
             <h2 className="text-xl font-semibold">Active Alerts</h2>
           </div>

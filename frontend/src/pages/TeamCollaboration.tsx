@@ -144,7 +144,7 @@ const TeamCollaboration = () => {
           <motion.div
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
-            className="bg-white dark:bg-gray-800 rounded-lg shadow p-6 mb-6"
+            className="bg-white rounded-lg shadow p-6 mb-6"
           >
             <h2 className="text-xl font-semibold mb-4">Create New Team</h2>
             <form onSubmit={(e) => {
@@ -157,7 +157,7 @@ const TeamCollaboration = () => {
                 <input
                   name="name"
                   placeholder="Marketing Team"
-                  className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600"
+                  className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500"
                   required
                 />
               </div>
@@ -186,7 +186,7 @@ const TeamCollaboration = () => {
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
           >
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow">
+            <div className="bg-white rounded-lg shadow">
               <div className="px-6 py-4 border-b">
                 <h2 className="text-xl font-semibold">Your Teams</h2>
               </div>
@@ -241,7 +241,7 @@ const TeamCollaboration = () => {
             animate={{ opacity: 1, x: 0 }}
           >
             {selectedTeam ? (
-              <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+              <div className="bg-white rounded-lg shadow p-6">
                 <h2 className="text-xl font-semibold mb-6">{selectedTeam.name}</h2>
 
                 <div className="mb-6">
@@ -323,7 +323,7 @@ const TeamCollaboration = () => {
                 </div>
               </div>
             ) : (
-              <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+              <div className="bg-white rounded-lg shadow p-6">
                 <div className="text-center py-12">
                   <Users className="h-16 w-16 text-gray-400 mx-auto mb-4" />
                   <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">
@@ -345,7 +345,7 @@ const TeamCollaboration = () => {
             animate={{ opacity: 1 }}
             className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
           >
-            <div className="bg-white dark:bg-gray-800 rounded-lg p-6 w-full max-w-md mx-4">
+            <div className="bg-white rounded-lg p-6 w-full max-w-md mx-4">
               <h3 className="text-lg font-semibold mb-4">Invite Team Member</h3>
               <form onSubmit={(e) => {
                 e.preventDefault();
@@ -359,7 +359,7 @@ const TeamCollaboration = () => {
                       value={inviteForm.email}
                       onChange={(e) => setInviteForm({ ...inviteForm, email: e.target.value })}
                       placeholder="user@example.com"
-                      className="w-full p-2 border rounded focus:ring-2 focus:ring-green-500 dark:bg-gray-700 dark:border-gray-600"
+                      className="w-full p-2 border rounded focus:ring-2 focus:ring-green-500"
                       required
                     />
                   </div>
@@ -368,7 +368,7 @@ const TeamCollaboration = () => {
                     <select
                       value={inviteForm.role}
                       onChange={(e) => setInviteForm({ ...inviteForm, role: e.target.value })}
-                      className="w-full p-2 border rounded focus:ring-2 focus:ring-green-500 dark:bg-gray-700 dark:border-gray-600"
+                      className="w-full p-2 border rounded focus:ring-2 focus:ring-green-500"
                     >
                       <option value="viewer">Viewer - Can view campaigns and analytics</option>
                       <option value="editor">Editor - Can create and edit campaigns</option>

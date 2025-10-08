@@ -83,7 +83,7 @@ const VoiceToEmail = () => {
           </p>
         </motion.div>
 
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6 mb-8">
+        <div className="bg-white rounded-lg shadow p-6 mb-8">
           <h2 className="text-xl font-semibold mb-4">Record Voice Message</h2>
           <div className="text-center">
             <button
@@ -112,7 +112,7 @@ const VoiceToEmail = () => {
           )}
         </div>
 
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow">
+        <div className="bg-white rounded-lg shadow">
           <div className="px-6 py-4 border-b">
             <h2 className="text-xl font-semibold">Your Voice Emails</h2>
           </div>
@@ -131,7 +131,7 @@ const VoiceToEmail = () => {
                         Status: {email.status} | Duration: {email.duration || 'N/A'}s
                       </p>
                       {email.transcription && (
-                        <p className="mt-2 text-sm bg-gray-50 dark:bg-gray-700 p-2 rounded">
+                        <p className="mt-2 text-sm bg-gray-50 p-2 rounded">
                           "{email.transcription}"
                         </p>
                       )}

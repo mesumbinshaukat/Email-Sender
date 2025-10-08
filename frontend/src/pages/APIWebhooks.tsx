@@ -150,7 +150,7 @@ const APIWebhooks = () => {
           <motion.div
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
-            className="bg-white dark:bg-gray-800 rounded-lg shadow p-6 mb-6"
+            className="bg-white rounded-lg shadow p-6 mb-6"
           >
             <h2 className="text-xl font-semibold mb-4">Create Webhook</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
@@ -161,7 +161,7 @@ const APIWebhooks = () => {
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                   placeholder="Order Confirmation Webhook"
-                  className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600"
+                  className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500"
                 />
               </div>
 
@@ -172,7 +172,7 @@ const APIWebhooks = () => {
                   value={formData.url}
                   onChange={(e) => setFormData({ ...formData, url: e.target.value })}
                   placeholder="https://yourapp.com/webhooks/email-events"
-                  className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600"
+                  className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500"
                 />
               </div>
 
@@ -217,7 +217,7 @@ const APIWebhooks = () => {
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
           >
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow">
+            <div className="bg-white rounded-lg shadow">
               <div className="px-6 py-4 border-b">
                 <h2 className="text-xl font-semibold">Your Webhooks</h2>
               </div>
@@ -299,7 +299,7 @@ const APIWebhooks = () => {
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
           >
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+            <div className="bg-white rounded-lg shadow p-6">
               <h2 className="text-xl font-semibold mb-6 flex items-center gap-2">
                 <Code className="h-5 w-5" />
                 API Documentation
@@ -332,7 +332,7 @@ const APIWebhooks = () => {
                           <div className="space-y-1">
                             {Object.entries(endpoints).map(([method, path]: [string, any]) => (
                               <div key={method} className="flex items-center gap-2 text-sm">
-                                <span className="font-mono bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded text-xs">
+                                <span className="font-mono bg-gray-100 px-2 py-1 rounded text-xs">
                                   {method.toUpperCase()}
                                 </span>
                                 <span className="font-mono text-blue-600">{path}</span>
@@ -348,7 +348,7 @@ const APIWebhooks = () => {
                     <h3 className="font-semibold mb-3">Webhook Events</h3>
                     <div className="space-y-2">
                       {apiDocs.webhooks.events.map((event: string) => (
-                        <div key={event} className="text-sm bg-gray-50 dark:bg-gray-700 p-2 rounded">
+                        <div key={event} className="text-sm bg-gray-50 p-2 rounded">
                           <code className="text-blue-600">{event}</code>
                         </div>
                       ))}
@@ -357,7 +357,7 @@ const APIWebhooks = () => {
 
                   <div>
                     <h3 className="font-semibold mb-3">Webhook Payload Format</h3>
-                    <pre className="text-xs bg-gray-100 dark:bg-gray-700 p-3 rounded overflow-x-auto">
+                    <pre className="text-xs bg-gray-100 p-3 rounded overflow-x-auto">
 {JSON.stringify(apiDocs.webhooks.payload, null, 2)}
                     </pre>
                   </div>

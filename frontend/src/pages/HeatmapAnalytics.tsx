@@ -102,7 +102,7 @@ export const HeatmapAnalytics: React.FC = () => {
     }
 
     return (
-      <div className="relative bg-gray-100 dark:bg-gray-800 rounded-lg p-4" style={{ height: '400px' }}>
+      <div className="relative bg-gray-100 rounded-lg p-4" style={{ height: '400px' }}>
         {heatmapData.clicks.map((click, index) => (
           <div
             key={index}
@@ -146,7 +146,7 @@ export const HeatmapAnalytics: React.FC = () => {
           .map(([depth, count]) => (
             <div key={depth} className="flex items-center space-x-4">
               <div className="w-16 text-sm font-medium">{depth}%</div>
-              <div className="flex-1 bg-gray-200 dark:bg-gray-700 rounded-full h-4">
+              <div className="flex-1 bg-gray-200 rounded-full h-4">
                 <div
                   className="bg-blue-500 h-4 rounded-full transition-all duration-300"
                   style={{ width: `${(count / maxCount) * 100}%` }}
@@ -184,7 +184,7 @@ export const HeatmapAnalytics: React.FC = () => {
           .map(([time, count]) => (
             <div key={time} className="flex items-center space-x-4">
               <div className="w-20 text-sm font-medium">{time}s</div>
-              <div className="flex-1 bg-gray-200 dark:bg-gray-700 rounded-full h-4">
+              <div className="flex-1 bg-gray-200 rounded-full h-4">
                 <div
                   className="bg-green-500 h-4 rounded-full transition-all duration-300"
                   style={{ width: `${(count / maxCount) * 100}%` }}

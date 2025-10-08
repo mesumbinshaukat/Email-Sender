@@ -142,7 +142,7 @@ const CRMIntegration = () => {
           <motion.div
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
-            className="bg-white dark:bg-gray-800 rounded-lg shadow p-6 mb-6"
+            className="bg-white rounded-lg shadow p-6 mb-6"
           >
             <h2 className="text-xl font-semibold mb-4">Connect CRM Platform</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -151,7 +151,7 @@ const CRMIntegration = () => {
                 <select
                   value={formData.provider}
                   onChange={(e) => setFormData({ ...formData, provider: e.target.value })}
-                  className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600"
+                  className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500"
                 >
                   <option value="hubspot">HubSpot</option>
                   <option value="salesforce">Salesforce</option>
@@ -168,7 +168,7 @@ const CRMIntegration = () => {
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                   placeholder="My HubSpot Integration"
-                  className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600"
+                  className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500"
                 />
               </div>
 
@@ -179,7 +179,7 @@ const CRMIntegration = () => {
                   value={formData.apiKey}
                   onChange={(e) => setFormData({ ...formData, apiKey: e.target.value })}
                   placeholder="Enter your API key"
-                  className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600"
+                  className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500"
                 />
               </div>
 
@@ -238,7 +238,7 @@ const CRMIntegration = () => {
               key={integration._id}
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
-              className="bg-white dark:bg-gray-800 rounded-lg shadow p-6"
+              className="bg-white rounded-lg shadow p-6"
             >
               <div className="flex items-start justify-between mb-4">
                 <div>

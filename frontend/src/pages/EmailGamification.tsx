@@ -55,15 +55,15 @@ const EmailGamification = () => {
 
         {profile && (
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6 text-center">
+            <div className="bg-white rounded-lg shadow p-6 text-center">
               <div className="text-3xl font-bold text-blue-600 mb-2">{profile.points}</div>
               <div className="text-sm text-gray-600 dark:text-gray-400">Total Points</div>
             </div>
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6 text-center">
+            <div className="bg-white rounded-lg shadow p-6 text-center">
               <div className="text-3xl font-bold text-green-600 mb-2">Level {profile.level}</div>
               <div className="text-sm text-gray-600 dark:text-gray-400">Current Level</div>
             </div>
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6 text-center">
+            <div className="bg-white rounded-lg shadow p-6 text-center">
               <div className="text-3xl font-bold text-purple-600 mb-2">{profile.badges?.length || 0}</div>
               <div className="text-sm text-gray-600 dark:text-gray-400">Badges Earned</div>
             </div>
@@ -71,7 +71,7 @@ const EmailGamification = () => {
         )}
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+          <div className="bg-white rounded-lg shadow p-6">
             <h2 className="text-xl font-semibold mb-4">Achievements</h2>
             <div className="space-y-3">
               {profile?.achievements?.map(achievement => (
@@ -88,7 +88,7 @@ const EmailGamification = () => {
             </div>
           </div>
 
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+          <div className="bg-white rounded-lg shadow p-6">
             <h2 className="text-xl font-semibold mb-4">Badges</h2>
             <div className="grid grid-cols-2 gap-4">
               {profile?.badges?.map(badge => (

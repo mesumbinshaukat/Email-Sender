@@ -71,7 +71,7 @@ const PredictiveAnalytics = () => {
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
-            className="bg-white dark:bg-gray-800 rounded-lg shadow p-6"
+            className="bg-white rounded-lg shadow p-6"
           >
             <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
               <LineChart className="h-5 w-5" />
@@ -109,7 +109,7 @@ const PredictiveAnalytics = () => {
           <motion.div
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
-            className="bg-white dark:bg-gray-800 rounded-lg shadow p-6"
+            className="bg-white rounded-lg shadow p-6"
           >
             <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
               <BarChart3 className="h-5 w-5" />
@@ -136,7 +136,7 @@ const PredictiveAnalytics = () => {
                   ? 'bg-green-100 text-green-800 dark:bg-green-800 dark:text-green-100'
                   : trendsData?.overallTrend === 'downward'
                   ? 'bg-red-100 text-red-800 dark:bg-red-800 dark:text-red-100'
-                  : 'bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-100'
+                  : 'bg-gray-100 text-gray-800 dark:text-gray-100'
               }`}>
                 {trendsData?.overallTrend || 'stable'}
               </span>
@@ -147,7 +147,7 @@ const PredictiveAnalytics = () => {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="bg-white dark:bg-gray-800 rounded-lg shadow p-6"
+            className="bg-white rounded-lg shadow p-6"
           >
             <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
               <AlertTriangle className="h-5 w-5" />
@@ -199,7 +199,7 @@ const PredictiveAnalytics = () => {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="bg-white dark:bg-gray-800 rounded-lg shadow p-6"
+            className="bg-white rounded-lg shadow p-6"
           >
             <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
               <Target className="h-5 w-5" />
@@ -237,7 +237,7 @@ const PredictiveAnalytics = () => {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="bg-white dark:bg-gray-800 rounded-lg shadow p-6 lg:col-span-2"
+            className="bg-white rounded-lg shadow p-6 lg:col-span-2"
           >
             <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
               <AlertTriangle className="h-5 w-5" />

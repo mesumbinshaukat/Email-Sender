@@ -325,7 +325,7 @@ export const ComplianceAssistant: React.FC = () => {
                               </Badge>
                             </div>
                             <p className="text-gray-600 dark:text-gray-400 mb-2">{rec.description}</p>
-                            <div className="bg-gray-50 dark:bg-gray-800 p-3 rounded">
+                            <div className="bg-gray-50 p-3 rounded">
                               <p className="text-sm font-medium mb-1">Implementation:</p>
                               <p className="text-sm text-gray-700 dark:text-gray-300">{rec.implementation}</p>
                             </div>
@@ -462,7 +462,7 @@ export const ComplianceAssistant: React.FC = () => {
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg max-h-96 overflow-y-auto">
+                  <div className="bg-gray-50 p-4 rounded-lg max-h-96 overflow-y-auto">
                     <pre className="whitespace-pre-wrap text-sm font-mono">{generatedPolicy.content}</pre>
                   </div>
                   <div className="flex justify-end mt-4 space-x-2">

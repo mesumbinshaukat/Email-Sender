@@ -306,7 +306,7 @@ export const Sequences: React.FC = () => {
         {/* Create Sequence Modal */}
         {showCreateModal && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-            <div className="bg-white dark:bg-gray-800 rounded-lg p-6 w-full max-w-md">
+            <div className="bg-white rounded-lg p-6 w-full max-w-md">
               <h2 className="text-xl font-bold mb-4">Create New Sequence</h2>
 
               <div className="space-y-4">

@@ -260,7 +260,7 @@ export const EmailListHygiene: React.FC = () => {
                       {Math.round(report.summary.avgHealthScore)}/100
                     </div>
                     <div className="flex-1">
-                      <div className="bg-gray-200 dark:bg-gray-700 rounded-full h-4">
+                      <div className="bg-gray-200 rounded-full h-4">
                         <div
                           className={`h-4 rounded-full transition-all duration-300 ${
                             report.summary.avgHealthScore >= 80 ? 'bg-green-500' :

@@ -69,7 +69,7 @@ const AMPBuilder = () => {
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           <div className="space-y-6">
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+            <div className="bg-white rounded-lg shadow p-6">
               <h2 className="text-xl font-semibold mb-4">Email Content</h2>
               <div className="space-y-4">
                 <div>
@@ -78,7 +78,7 @@ const AMPBuilder = () => {
                     type="text"
                     value={subject}
                     onChange={(e) => setSubject(e.target.value)}
-                    className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600"
+                    className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500"
                     placeholder="Enter email subject"
                   />
                 </div>
@@ -88,14 +88,14 @@ const AMPBuilder = () => {
                     value={content}
                     onChange={(e) => setContent(e.target.value)}
                     rows={8}
-                    className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600"
+                    className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500"
                     placeholder="Enter email content (AI will enhance with AMP)"
                   />
                 </div>
               </div>
             </div>
 
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+            <div className="bg-white rounded-lg shadow p-6">
               <h2 className="text-xl font-semibold mb-4">Interactive Elements</h2>
               <div className="grid grid-cols-2 gap-3">
                 {availableElements.map(element => (
@@ -105,7 +105,7 @@ const AMPBuilder = () => {
                     className={`p-3 border rounded-lg text-sm font-medium transition-colors ${
                       interactiveElements.includes(element)
                         ? 'bg-blue-600 text-white border-blue-600'
-                        : 'bg-gray-50 dark:bg-gray-700 border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-600'
+                        : 'bg-gray-50 border-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600'
                     }`}
                   >
                     {element.charAt(0).toUpperCase() + element.slice(1)}
@@ -124,7 +124,7 @@ const AMPBuilder = () => {
             </button>
           </div>
 
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+          <div className="bg-white rounded-lg shadow p-6">
             <div className="flex justify-between items-center mb-4">
               <h2 className="text-xl font-semibold">Generated AMP</h2>
               {generatedAMP && (
@@ -143,7 +143,7 @@ const AMPBuilder = () => {
                 </div>
               )}
             </div>
-            <div className="bg-gray-50 dark:bg-gray-900 rounded p-4 min-h-[400px]">
+            <div className="bg-gray-50 rounded p-4 min-h-[400px]">
               {generatedAMP ? (
                 <pre className="text-sm text-gray-800 dark:text-gray-200 whitespace-pre-wrap overflow-auto max-h-[400px]">
                   {generatedAMP}

@@ -59,7 +59,7 @@ const VisualPersonalization = () => {
         </motion.div>
 
         <div className="space-y-6">
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+          <div className="bg-white rounded-lg shadow p-6">
             <h2 className="text-xl font-semibold mb-4">Fetch Live Recipient Data</h2>
             <div className="flex gap-4">
               <input
@@ -67,7 +67,7 @@ const VisualPersonalization = () => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="Enter recipient email"
-                className="flex-1 p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600"
+                className="flex-1 p-3 border rounded-lg focus:ring-2 focus:ring-blue-500"
               />
               <button
                 onClick={fetchLiveData}
@@ -79,7 +79,7 @@ const VisualPersonalization = () => {
             </div>
 
             {liveData && (
-              <div className="mt-4 p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
+              <div className="mt-4 p-4 bg-gray-50 rounded-lg">
                 <h3 className="font-semibold mb-2">Live Data:</h3>
                 <div className="grid grid-cols-2 gap-4 text-sm">
                   <div><strong>Weather:</strong> {liveData.weather}</div>
@@ -92,7 +92,7 @@ const VisualPersonalization = () => {
           </div>
 
           {liveData && (
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+            <div className="bg-white rounded-lg shadow p-6">
               <div className="flex justify-between items-center mb-4">
                 <h2 className="text-xl font-semibold">Generated Personalized Visual</h2>
                 <button
@@ -104,7 +104,7 @@ const VisualPersonalization = () => {
                 </button>
               </div>
 
-              <div className="bg-gray-50 dark:bg-gray-900 rounded p-6 min-h-[200px] flex items-center justify-center">
+              <div className="bg-gray-50 rounded p-6 min-h-[200px] flex items-center justify-center">
                 {generatedVisual ? (
                   <div className="text-center">
                     <ImageIcon className="h-16 w-16 text-gray-400 mx-auto mb-4" />

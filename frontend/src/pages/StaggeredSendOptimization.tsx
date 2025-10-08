@@ -50,7 +50,7 @@ const StaggeredSendOptimization = () => {
         </motion.div>
 
         <div className="space-y-6">
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+          <div className="bg-white rounded-lg shadow p-6">
             <h2 className="text-xl font-semibold mb-4">Optimize Send Waves</h2>
             <div className="space-y-4">
               <div>
@@ -59,7 +59,7 @@ const StaggeredSendOptimization = () => {
                   type="text"
                   value={campaignId}
                   onChange={(e) => setCampaignId(e.target.value)}
-                  className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600"
+                  className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500"
                   placeholder="Enter campaign ID"
                 />
               </div>
@@ -69,7 +69,7 @@ const StaggeredSendOptimization = () => {
                   type="text"
                   value={segments}
                   onChange={(e) => setSegments(e.target.value)}
-                  className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600"
+                  className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500"
                   placeholder="high-engagement, low-engagement, new-subscribers"
                 />
               </div>
@@ -85,7 +85,7 @@ const StaggeredSendOptimization = () => {
           </div>
 
           {optimization && (
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+            <div className="bg-white rounded-lg shadow p-6">
               <h2 className="text-xl font-semibold mb-4">Optimized Send Strategy</h2>
               <div className="space-y-4">
                 {optimization.waves?.map((wave: any, index: number) => (

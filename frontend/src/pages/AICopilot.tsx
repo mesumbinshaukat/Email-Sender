@@ -116,17 +116,17 @@ const AICopilot = () => {
             animate={{ opacity: 1, x: 0 }}
             className="space-y-6"
           >
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+            <div className="bg-white rounded-lg shadow p-6">
               <h2 className="text-xl font-semibold mb-4">Your Text</h2>
               <textarea
                 value={text}
                 onChange={(e) => setText(e.target.value)}
                 placeholder="Paste your email content here for AI analysis..."
-                className="w-full h-64 p-4 border rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 resize-none"
+                className="w-full h-64 p-4 border rounded-lg focus:ring-2 focus:ring-blue-500 resize-none"
               />
             </div>
 
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+            <div className="bg-white rounded-lg shadow p-6">
               <h2 className="text-xl font-semibold mb-4">AI Analysis Tools</h2>
               <div className="grid grid-cols-2 gap-3">
                 <button
@@ -173,7 +173,7 @@ const AICopilot = () => {
           >
             {/* Suggestions */}
             {suggestions.length > 0 && (
-              <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+              <div className="bg-white rounded-lg shadow p-6">
                 <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
                   <Lightbulb className="h-5 w-5 text-blue-600" />
                   Writing Suggestions
@@ -191,7 +191,7 @@ const AICopilot = () => {
 
             {/* Grammar Feedback */}
             {grammarFeedback && (
-              <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+              <div className="bg-white rounded-lg shadow p-6">
                 <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
                   <CheckCircle className="h-5 w-5 text-green-600" />
                   Grammar & Style Feedback
@@ -202,7 +202,7 @@ const AICopilot = () => {
 
             {/* Tone Analysis */}
             {toneAnalysis && (
-              <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+              <div className="bg-white rounded-lg shadow p-6">
                 <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
                   <BarChart3 className="h-5 w-5 text-purple-600" />
                   Tone Analysis
@@ -213,7 +213,7 @@ const AICopilot = () => {
 
             {/* Readability Score */}
             {readabilityScore && (
-              <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+              <div className="bg-white rounded-lg shadow p-6">
                 <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
                   <Wand2 className="h-5 w-5 text-orange-600" />
                   Readability Score
@@ -234,7 +234,7 @@ const AICopilot = () => {
 
             {/* Empty State */}
             {!suggestions.length && !grammarFeedback && !toneAnalysis && !readabilityScore && (
-              <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-12 text-center">
+              <div className="bg-white rounded-lg shadow p-12 text-center">
                 <Bot className="h-16 w-16 text-gray-400 mx-auto mb-4" />
                 <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">
                   AI Assistant Ready

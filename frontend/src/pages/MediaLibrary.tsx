@@ -92,12 +92,12 @@ const MediaLibrary = () => {
         </motion.div>
 
         <div className="mb-6">
-          <div className="flex space-x-1 bg-gray-100 dark:bg-gray-800 p-1 rounded-lg">
+          <div className="flex space-x-1 bg-gray-100 p-1 rounded-lg">
             <button
               onClick={() => setActiveTab('gifs')}
               className={`flex-1 py-2 px-4 rounded-md text-sm font-medium transition-colors ${
                 activeTab === 'gifs'
-                  ? 'bg-white dark:bg-gray-700 text-gray-900 dark:text-white shadow'
+                  ? 'bg-white text-gray-900 dark:text-white shadow'
                   : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
               }`}
             >
@@ -107,7 +107,7 @@ const MediaLibrary = () => {
               onClick={() => setActiveTab('videos')}
               className={`flex-1 py-2 px-4 rounded-md text-sm font-medium transition-colors ${
                 activeTab === 'videos'
-                  ? 'bg-white dark:bg-gray-700 text-gray-900 dark:text-white shadow'
+                  ? 'bg-white text-gray-900 dark:text-white shadow'
                   : 'text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'
               }`}
             >
@@ -125,7 +125,7 @@ const MediaLibrary = () => {
             {gifs.map(gif => (
               <div
                 key={gif._id}
-                className="bg-white dark:bg-gray-800 rounded-lg shadow p-4"
+                className="bg-white rounded-lg shadow p-4"
               >
                 <img
                   src={gif.url}
@@ -143,7 +143,7 @@ const MediaLibrary = () => {
           </motion.div>
         ) : (
           <div>
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6 mb-6">
+            <div className="bg-white rounded-lg shadow p-6 mb-6">
               <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
                 <Upload className="h-5 w-5" />
                 Upload Video
@@ -154,7 +154,7 @@ const MediaLibrary = () => {
                   value={uploadUrl}
                   onChange={(e) => setUploadUrl(e.target.value)}
                   placeholder="Enter video URL"
-                  className="flex-1 p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600"
+                  className="flex-1 p-3 border rounded-lg focus:ring-2 focus:ring-blue-500"
                 />
                 <button
                   onClick={uploadVideo}
@@ -170,7 +170,7 @@ const MediaLibrary = () => {
               {videos.map(video => (
                 <div
                   key={video._id}
-                  className="bg-white dark:bg-gray-800 rounded-lg shadow p-4"
+                  className="bg-white rounded-lg shadow p-4"
                 >
                   <div className="relative">
                     <img

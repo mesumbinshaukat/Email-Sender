@@ -46,6 +46,29 @@ const WhiteLabelSolution = () => {
       setSettings(data);
     } catch (error) {
       toast.error('Failed to load white label settings');
+      // Set default settings if API fails
+      setSettings({
+        branding: {
+          companyName: 'Your Company',
+          logo: '',
+          primaryColor: '#3b82f6',
+          secondaryColor: '#8b5cf6',
+          fontFamily: 'Inter'
+        },
+        domain: {
+          customDomain: '',
+          isVerified: false
+        },
+        emailSettings: {
+          fromName: 'Your Company',
+          fromEmail: 'noreply@example.com'
+        },
+        features: {
+          removeBranding: false,
+          customIntegrations: false,
+          apiAccess: false
+        }
+      });
     }
   };
 
@@ -106,7 +129,7 @@ const WhiteLabelSolution = () => {
 
   if (!settings) {
     return (
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
           <p>Loading white label settings...</p>
@@ -137,7 +160,7 @@ const WhiteLabelSolution = () => {
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
-            className="bg-white dark:bg-gray-800 rounded-lg shadow p-6"
+            className="bg-white rounded-lg shadow p-6"
           >
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-xl font-semibold flex items-center gap-2">
@@ -178,7 +201,7 @@ const WhiteLabelSolution = () => {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="bg-white dark:bg-gray-800 rounded-lg shadow p-6"
+            className="bg-white rounded-lg shadow p-6"
           >
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-xl font-semibold flex items-center gap-2">
@@ -228,7 +251,7 @@ const WhiteLabelSolution = () => {
           <motion.div
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
-            className="bg-white dark:bg-gray-800 rounded-lg shadow p-6"
+            className="bg-white rounded-lg shadow p-6"
           >
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-xl font-semibold flex items-center gap-2">
@@ -263,7 +286,7 @@ const WhiteLabelSolution = () => {
             animate={{ opacity: 1 }}
             className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
           >
-            <div className="bg-white dark:bg-gray-800 rounded-lg p-6 w-full max-w-md mx-4">
+            <div className="bg-white rounded-lg p-6 w-full max-w-md mx-4">
               <h3 className="text-lg font-semibold mb-4">Update Branding</h3>
               <form onSubmit={(e) => {
                 e.preventDefault();
@@ -281,7 +304,7 @@ const WhiteLabelSolution = () => {
                     <input
                       name="companyName"
                       defaultValue={settings.branding.companyName}
-                      className="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600"
+                      className="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500"
                       required
                     />
                   </div>
@@ -308,7 +331,7 @@ const WhiteLabelSolution = () => {
                     <select
                       name="fontFamily"
                       defaultValue={settings.branding.fontFamily}
-                      className="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600"
+                      className="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500"
                     >
                       <option value="Inter">Inter</option>
                       <option value="Roboto">Roboto</option>
@@ -345,7 +368,7 @@ const WhiteLabelSolution = () => {
             animate={{ opacity: 1 }}
             className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
           >
-            <div className="bg-white dark:bg-gray-800 rounded-lg p-6 w-full max-w-md mx-4">
+            <div className="bg-white rounded-lg p-6 w-full max-w-md mx-4">
               <h3 className="text-lg font-semibold mb-4">Custom Domain Settings</h3>
               <form onSubmit={(e) => {
                 e.preventDefault();
@@ -361,7 +384,7 @@ const WhiteLabelSolution = () => {
                       name="customDomain"
                       defaultValue={settings.domain.customDomain}
                       placeholder="app.yourcompany.com"
-                      className="w-full p-2 border rounded focus:ring-2 focus:ring-green-500 dark:bg-gray-700 dark:border-gray-600"
+                      className="w-full p-2 border rounded focus:ring-2 focus:ring-green-500"
                       required
                     />
                   </div>
@@ -397,7 +420,7 @@ const WhiteLabelSolution = () => {
             animate={{ opacity: 1 }}
             className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
           >
-            <div className="bg-white dark:bg-gray-800 rounded-lg p-6 w-full max-w-md mx-4">
+            <div className="bg-white rounded-lg p-6 w-full max-w-md mx-4">
               <h3 className="text-lg font-semibold mb-4">Email Settings</h3>
               <form onSubmit={(e) => {
                 e.preventDefault();
@@ -415,7 +438,7 @@ const WhiteLabelSolution = () => {
                       name="fromName"
                       defaultValue={settings.emailSettings.fromName}
                       placeholder="Your Company"
-                      className="w-full p-2 border rounded focus:ring-2 focus:ring-purple-500 dark:bg-gray-700 dark:border-gray-600"
+                      className="w-full p-2 border rounded focus:ring-2 focus:ring-purple-500"
                     />
                   </div>
                   <div>
@@ -425,7 +448,7 @@ const WhiteLabelSolution = () => {
                       type="email"
                       defaultValue={settings.emailSettings.fromEmail}
                       placeholder="noreply@yourcompany.com"
-                      className="w-full p-2 border rounded focus:ring-2 focus:ring-purple-500 dark:bg-gray-700 dark:border-gray-600"
+                      className="w-full p-2 border rounded focus:ring-2 focus:ring-purple-500"
                     />
                   </div>
                   <div>
@@ -435,7 +458,7 @@ const WhiteLabelSolution = () => {
                       type="email"
                       defaultValue={settings.emailSettings.replyToEmail}
                       placeholder="support@yourcompany.com"
-                      className="w-full p-2 border rounded focus:ring-2 focus:ring-purple-500 dark:bg-gray-700 dark:border-gray-600"
+                      className="w-full p-2 border rounded focus:ring-2 focus:ring-purple-500"
                     />
                   </div>
                 </div>

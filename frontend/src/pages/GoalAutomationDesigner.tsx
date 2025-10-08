@@ -50,7 +50,7 @@ const GoalAutomationDesigner = () => {
         </motion.div>
 
         <div className="space-y-6">
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+          <div className="bg-white rounded-lg shadow p-6">
             <h2 className="text-xl font-semibold mb-4">Define Your Goal</h2>
             <div className="space-y-4">
               <div>
@@ -59,7 +59,7 @@ const GoalAutomationDesigner = () => {
                   value={goal}
                   onChange={(e) => setGoal(e.target.value)}
                   rows={3}
-                  className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600"
+                  className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500"
                   placeholder="e.g., Increase repeat purchases by 20% in Q4"
                 />
               </div>
@@ -69,7 +69,7 @@ const GoalAutomationDesigner = () => {
                   value={currentWorkflow}
                   onChange={(e) => setCurrentWorkflow(e.target.value)}
                   rows={2}
-                  className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600"
+                  className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500"
                   placeholder="Describe any existing automation..."
                 />
               </div>
@@ -85,7 +85,7 @@ const GoalAutomationDesigner = () => {
           </div>
 
           {designedWorkflow && (
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+            <div className="bg-white rounded-lg shadow p-6">
               <div className="flex justify-between items-center mb-4">
                 <h2 className="text-xl font-semibold">AI-Designed Workflow</h2>
                 <button className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 flex items-center gap-1">

@@ -107,7 +107,7 @@ const ImageAI = () => {
             animate={{ opacity: 1, x: 0 }}
             className="lg:col-span-1"
           >
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+            <div className="bg-white rounded-lg shadow p-6">
               <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
                 <Wand2 className="h-5 w-5" />
                 Generate Image
@@ -122,7 +122,7 @@ const ImageAI = () => {
                     value={prompt}
                     onChange={(e) => setPrompt(e.target.value)}
                     placeholder="Describe the image you want to generate (e.g., 'A professional email header with blue and white colors')"
-                    className="w-full h-32 p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600"
+                    className="w-full h-32 p-3 border rounded-lg focus:ring-2 focus:ring-blue-500"
                   />
                 </div>
 
@@ -133,7 +133,7 @@ const ImageAI = () => {
                   <select
                     value={size}
                     onChange={(e) => setSize(e.target.value)}
-                    className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600"
+                    className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500"
                   >
                     <option value="256x256">256x256 (Small)</option>
                     <option value="512x512">512x512 (Medium)</option>
@@ -163,7 +163,7 @@ const ImageAI = () => {
             animate={{ opacity: 1, y: 0 }}
             className="lg:col-span-2"
           >
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+            <div className="bg-white rounded-lg shadow p-6">
               <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
                 <Image className="h-5 w-5" />
                 Your Images

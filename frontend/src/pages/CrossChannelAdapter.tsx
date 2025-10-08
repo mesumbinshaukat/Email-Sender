@@ -50,7 +50,7 @@ const CrossChannelAdapter = () => {
         </motion.div>
 
         <div className="space-y-6">
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+          <div className="bg-white rounded-lg shadow p-6">
             <h2 className="text-xl font-semibold mb-4">Adapt Journey</h2>
             <div className="space-y-4">
               <div>
@@ -59,7 +59,7 @@ const CrossChannelAdapter = () => {
                   value={emailJourney}
                   onChange={(e) => setEmailJourney(e.target.value)}
                   rows={6}
-                  className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 font-mono text-sm"
+                  className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 font-mono text-sm"
                   placeholder='[{"step": "Welcome", "content": "Welcome email"}, {"step": "Follow-up", "content": "Check-in"}]'
                 />
               </div>
@@ -68,7 +68,7 @@ const CrossChannelAdapter = () => {
                 <select
                   value={targetChannel}
                   onChange={(e) => setTargetChannel(e.target.value)}
-                  className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600"
+                  className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500"
                 >
                   <option value="SMS">SMS</option>
                   <option value="Push">Push Notification</option>
@@ -88,7 +88,7 @@ const CrossChannelAdapter = () => {
           </div>
 
           {adaptedJourney && (
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+            <div className="bg-white rounded-lg shadow p-6">
               <h2 className="text-xl font-semibold mb-4">Adapted {targetChannel} Journey</h2>
               <div className="space-y-4">
                 {adaptedJourney.steps?.map((step: any, index: number) => (

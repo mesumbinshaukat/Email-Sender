@@ -91,7 +91,7 @@ const WorkflowBuilder = () => {
             animate={{ opacity: 1, x: 0 }}
             className="lg:col-span-1"
           >
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+            <div className="bg-white rounded-lg shadow p-6">
               <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
                 <GitBranch className="h-5 w-5" />
                 Create Workflow
@@ -107,7 +107,7 @@ const WorkflowBuilder = () => {
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                     placeholder="My Email Workflow"
-                    className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600"
+                    className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500"
                   />
                 </div>
 
@@ -119,7 +119,7 @@ const WorkflowBuilder = () => {
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
                     placeholder="Describe your workflow"
-                    className="w-full h-24 p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600"
+                    className="w-full h-24 p-3 border rounded-lg focus:ring-2 focus:ring-blue-500"
                   />
                 </div>
 
@@ -145,7 +145,7 @@ const WorkflowBuilder = () => {
             animate={{ opacity: 1, y: 0 }}
             className="lg:col-span-2"
           >
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+            <div className="bg-white rounded-lg shadow p-6">
               <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
                 <Settings className="h-5 w-5" />
                 Your Workflows
@@ -172,7 +172,7 @@ const WorkflowBuilder = () => {
                         <span className={`px-2 py-1 text-xs rounded ${
                           workflow.isActive
                             ? 'bg-green-100 text-green-800 dark:bg-green-800 dark:text-green-100'
-                            : 'bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-100'
+                            : 'bg-gray-100 text-gray-800 dark:text-gray-100'
                         }`}>
                           {workflow.isActive ? 'Active' : 'Inactive'}
                         </span>

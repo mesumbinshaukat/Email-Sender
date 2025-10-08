@@ -66,18 +66,18 @@ const AIEmailCoach = () => {
 
         {performance && (
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6 text-center">
+            <div className="bg-white rounded-lg shadow p-6 text-center">
               <div className="text-3xl font-bold text-blue-600 mb-2">{performance.currentScore}/100</div>
               <div className="text-sm text-gray-600 dark:text-gray-400">Performance Score</div>
               <div className={`text-xs mt-1 ${performance.trend === 'improving' ? 'text-green-600' : performance.trend === 'declining' ? 'text-red-600' : 'text-yellow-600'}`}>
                 {performance.trend === 'improving' ? '↗ Improving' : performance.trend === 'declining' ? '↘ Declining' : '→ Stable'}
               </div>
             </div>
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6 text-center">
+            <div className="bg-white rounded-lg shadow p-6 text-center">
               <div className="text-3xl font-bold text-green-600 mb-2">{insights.filter(i => i.implemented).length}</div>
               <div className="text-sm text-gray-600 dark:text-gray-400">Implemented Insights</div>
             </div>
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6 text-center">
+            <div className="bg-white rounded-lg shadow p-6 text-center">
               <div className="text-3xl font-bold text-purple-600 mb-2">{insights.filter(i => !i.implemented).length}</div>
               <div className="text-sm text-gray-600 dark:text-gray-400">Pending Actions</div>
             </div>
@@ -85,7 +85,7 @@ const AIEmailCoach = () => {
         )}
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow">
+          <div className="bg-white rounded-lg shadow">
             <div className="px-6 py-4 border-b">
               <h2 className="text-xl font-semibold">AI Insights & Recommendations</h2>
             </div>
@@ -139,7 +139,7 @@ const AIEmailCoach = () => {
             </div>
           </div>
 
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+          <div className="bg-white rounded-lg shadow p-6">
             <h2 className="text-xl font-semibold mb-6">Performance Goals</h2>
             <div className="space-y-4">
               <div className="border rounded-lg p-4">

@@ -104,7 +104,7 @@ const AdvancedReporting = () => {
 
         {dashboard && (
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+            <div className="bg-white rounded-lg shadow p-6">
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm text-gray-600 dark:text-gray-400">Total Emails</p>
@@ -113,7 +113,7 @@ const AdvancedReporting = () => {
                 <FileText className="h-8 w-8 text-blue-600" />
               </div>
             </div>
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+            <div className="bg-white rounded-lg shadow p-6">
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm text-gray-600 dark:text-gray-400">Open Rate</p>
@@ -122,7 +122,7 @@ const AdvancedReporting = () => {
                 <TrendingUp className="h-8 w-8 text-green-600" />
               </div>
             </div>
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+            <div className="bg-white rounded-lg shadow p-6">
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm text-gray-600 dark:text-gray-400">Click Rate</p>
@@ -131,7 +131,7 @@ const AdvancedReporting = () => {
                 <BarChart3 className="h-8 w-8 text-purple-600" />
               </div>
             </div>
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+            <div className="bg-white rounded-lg shadow p-6">
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm text-gray-600 dark:text-gray-400">Active Campaigns</p>
@@ -157,7 +157,7 @@ const AdvancedReporting = () => {
           <motion.div
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
-            className="bg-white dark:bg-gray-800 rounded-lg shadow p-6 mb-6"
+            className="bg-white rounded-lg shadow p-6 mb-6"
           >
             <h2 className="text-xl font-semibold mb-4">Create Custom Report</h2>
             <form onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
@@ -177,7 +177,7 @@ const AdvancedReporting = () => {
                   <input
                     name="name"
                     placeholder="Monthly Performance Report"
-                    className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600"
+                    className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500"
                     required
                   />
                 </div>
@@ -185,7 +185,7 @@ const AdvancedReporting = () => {
                   <label className="block text-sm font-medium mb-2">Report Type</label>
                   <select
                     name="type"
-                    className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600"
+                    className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500"
                   >
                     <option value="email_performance">Email Performance</option>
                     <option value="campaign_analysis">Campaign Analysis</option>
@@ -211,7 +211,7 @@ const AdvancedReporting = () => {
               key={report._id}
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
-              className="bg-white dark:bg-gray-800 rounded-lg shadow p-6"
+              className="bg-white rounded-lg shadow p-6"
             >
               <div className="flex items-center justify-between mb-4">
                 <h3 className="font-semibold">{report.name}</h3>

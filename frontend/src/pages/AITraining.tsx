@@ -79,7 +79,7 @@ const AITraining = () => {
               key={model.type}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              className="bg-white dark:bg-gray-800 rounded-lg shadow p-6 text-center"
+              className="bg-white rounded-lg shadow p-6 text-center"
             >
               <model.icon className="h-12 w-12 text-blue-600 mx-auto mb-4" />
               <h3 className="font-semibold mb-2">{model.name}</h3>
@@ -93,7 +93,7 @@ const AITraining = () => {
           ))}
         </div>
 
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow">
+        <div className="bg-white rounded-lg shadow">
           <div className="px-6 py-4 border-b">
             <h2 className="text-xl font-semibold">Your AI Models</h2>
           </div>

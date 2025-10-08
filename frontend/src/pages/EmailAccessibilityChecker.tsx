@@ -360,7 +360,7 @@ export const EmailAccessibilityChecker: React.FC = () => {
 
                               {issue.element && (
                                 <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">
-                                  Element: <code className="bg-gray-100 dark:bg-gray-800 px-1 py-0.5 rounded text-xs">{issue.element}</code>
+                                  Element: <code className="bg-gray-100 px-1 py-0.5 rounded text-xs">{issue.element}</code>
                                 </p>
                               )}
 
@@ -406,7 +406,7 @@ export const EmailAccessibilityChecker: React.FC = () => {
 
                           <p className="text-gray-600 dark:text-gray-400 mb-3">{rec.description}</p>
 
-                          <div className="bg-gray-50 dark:bg-gray-800 p-3 rounded">
+                          <div className="bg-gray-50 p-3 rounded">
                             <p className="text-sm font-medium mb-1">Implementation:</p>
                             <p className="text-sm text-gray-700 dark:text-gray-300">{rec.implementation}</p>
                           </div>

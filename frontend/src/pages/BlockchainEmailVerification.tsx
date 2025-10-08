@@ -91,7 +91,7 @@ const BlockchainEmailVerification = () => {
           <motion.div
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
-            className="bg-white dark:bg-gray-800 rounded-lg shadow p-6 mb-6"
+            className="bg-white rounded-lg shadow p-6 mb-6"
           >
             <h2 className="text-xl font-semibold mb-4">Create Blockchain Email Verification</h2>
             <form onSubmit={(e) => {
@@ -105,7 +105,7 @@ const BlockchainEmailVerification = () => {
                 <input
                   name="emailId"
                   placeholder="Enter email ID to verify on blockchain"
-                  className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600"
+                  className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500"
                   required
                 />
               </div>
@@ -127,7 +127,7 @@ const BlockchainEmailVerification = () => {
           </motion.div>
         )}
 
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow">
+        <div className="bg-white rounded-lg shadow">
           <div className="px-6 py-4 border-b">
             <h2 className="text-xl font-semibold">Blockchain Verifications</h2>
           </div>
@@ -187,7 +187,7 @@ const BlockchainEmailVerification = () => {
                   </div>
 
                   {selectedVerification?._id === verification._id && (
-                    <div className="mt-4 p-4 bg-gray-50 dark:bg-gray-700 rounded">
+                    <div className="mt-4 p-4 bg-gray-50 rounded">
                       <h4 className="font-medium mb-2">Verification Details</h4>
                       <div className="text-sm space-y-1">
                         <p><strong>Hash:</strong> {verification.hash}</p>

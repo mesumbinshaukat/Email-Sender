@@ -88,7 +88,7 @@ const CohortAnalysis = () => {
             animate={{ opacity: 1, x: 0 }}
             className="lg:col-span-1"
           >
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+            <div className="bg-white rounded-lg shadow p-6">
               <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
                 <Calendar className="h-5 w-5" />
                 Create Cohort
@@ -102,7 +102,7 @@ const CohortAnalysis = () => {
                     value={newCohort.name}
                     onChange={(e) => setNewCohort({ ...newCohort, name: e.target.value })}
                     placeholder="E.g., October 2024 Signups"
-                    className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600"
+                    className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500"
                   />
                 </div>
 
@@ -112,7 +112,7 @@ const CohortAnalysis = () => {
                     type="date"
                     value={newCohort.signupDate}
                     onChange={(e) => setNewCohort({ ...newCohort, signupDate: e.target.value })}
-                    className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600"
+                    className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500"
                   />
                 </div>
 
@@ -121,7 +121,7 @@ const CohortAnalysis = () => {
                   <select
                     value={newCohort.segmentType}
                     onChange={(e) => setNewCohort({ ...newCohort, segmentType: e.target.value })}
-                    className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600"
+                    className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500"
                   >
                     <option value="daily">Daily</option>
                     <option value="weekly">Weekly</option>
@@ -145,7 +145,7 @@ const CohortAnalysis = () => {
             animate={{ opacity: 1, y: 0 }}
             className="lg:col-span-2"
           >
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+            <div className="bg-white rounded-lg shadow p-6">
               <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
                 <BarChart3 className="h-5 w-5" />
                 Your Cohorts
@@ -198,7 +198,7 @@ const CohortAnalysis = () => {
             animate={{ opacity: 1, y: 0 }}
             className="mt-8"
           >
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+            <div className="bg-white rounded-lg shadow p-6">
               <h2 className="text-xl font-semibold mb-6">
                 Cohort Analysis: {selectedCohort.name}
               </h2>
@@ -245,7 +245,7 @@ const CohortAnalysis = () => {
                 <h3 className="text-lg font-semibold mb-4">Detailed Retention Rates</h3>
                 <div className="overflow-x-auto">
                   <table className="w-full">
-                    <thead className="bg-gray-50 dark:bg-gray-700">
+                    <thead className="bg-gray-50">
                       <tr>
                         <th className="px-4 py-2 text-left">Period (Days)</th>
                         <th className="px-4 py-2 text-left">Retained</th>

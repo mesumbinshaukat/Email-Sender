@@ -130,7 +130,7 @@ const AdminEnvVars = () => {
           <motion.div
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
-            className="bg-white dark:bg-gray-800 rounded-lg shadow p-6 mb-6"
+            className="bg-white rounded-lg shadow p-6 mb-6"
           >
             <h2 className="text-xl font-semibold mb-4">
               {editingVar ? 'Edit' : 'Add'} Environment Variable
@@ -143,7 +143,7 @@ const AdminEnvVars = () => {
                   value={formData.key}
                   onChange={(e) => setFormData({ ...formData, key: e.target.value })}
                   placeholder="OPENAI_API_KEY"
-                  className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600"
+                  className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500"
                   disabled={!!editingVar}
                 />
               </div>
@@ -154,7 +154,7 @@ const AdminEnvVars = () => {
                   value={formData.value}
                   onChange={(e) => setFormData({ ...formData, value: e.target.value })}
                   placeholder="sk-..."
-                  className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600"
+                  className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500"
                 />
               </div>
               <div>
@@ -164,7 +164,7 @@ const AdminEnvVars = () => {
                   value={formData.description}
                   onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                   placeholder="OpenAI API Key for AI features"
-                  className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600"
+                  className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500"
                 />
               </div>
               <div>
@@ -172,7 +172,7 @@ const AdminEnvVars = () => {
                 <select
                   value={formData.category}
                   onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                  className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600"
+                  className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500"
                 >
                   <option value="api_keys">API Keys</option>
                   <option value="database">Database</option>
@@ -199,13 +199,13 @@ const AdminEnvVars = () => {
           </motion.div>
         )}
 
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden">
+        <div className="bg-white rounded-lg shadow overflow-hidden">
           <div className="px-6 py-4 border-b">
             <h2 className="text-xl font-semibold">Environment Variables</h2>
           </div>
           <div className="overflow-x-auto">
             <table className="w-full">
-              <thead className="bg-gray-50 dark:bg-gray-700">
+              <thead className="bg-gray-50">
                 <tr>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                     Key
@@ -224,7 +224,7 @@ const AdminEnvVars = () => {
                   </th>
                 </tr>
               </thead>
-              <tbody className="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+              <tbody className="bg-white divide-y divide-gray-200 dark:divide-gray-700">
                 {envVars.map((envVar) => (
                   <tr key={envVar._id}>
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-white">

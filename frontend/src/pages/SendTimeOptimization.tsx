@@ -128,7 +128,7 @@ const SendTimeOptimization = () => {
           <motion.div
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
-            className="bg-white dark:bg-gray-800 rounded-lg shadow p-6 mb-6"
+            className="bg-white rounded-lg shadow p-6 mb-6"
           >
             <h2 className="text-xl font-semibold mb-4">Start Send Time Optimization</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -139,7 +139,7 @@ const SendTimeOptimization = () => {
                   value={formData.campaignId}
                   onChange={(e) => setFormData({ ...formData, campaignId: e.target.value })}
                   placeholder="Enter campaign ID"
-                  className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600"
+                  className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500"
                 />
               </div>
 
@@ -150,7 +150,7 @@ const SendTimeOptimization = () => {
                   value={formData.segmentId}
                   onChange={(e) => setFormData({ ...formData, segmentId: e.target.value })}
                   placeholder="Enter segment ID for targeted analysis"
-                  className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600"
+                  className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500"
                 />
               </div>
             </div>
@@ -184,7 +184,7 @@ const SendTimeOptimization = () => {
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
           >
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow">
+            <div className="bg-white rounded-lg shadow">
               <div className="px-6 py-4 border-b">
                 <h2 className="text-xl font-semibold">Your Optimizations</h2>
               </div>
@@ -261,7 +261,7 @@ const SendTimeOptimization = () => {
             animate={{ opacity: 1, x: 0 }}
           >
             {selectedOptimization ? (
-              <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+              <div className="bg-white rounded-lg shadow p-6">
                 <h2 className="text-xl font-semibold mb-6">Optimization Details</h2>
 
                 {selectedOptimization.status === 'ready' && selectedOptimization.optimizedSchedule && (
@@ -341,7 +341,7 @@ const SendTimeOptimization = () => {
                 )}
               </div>
             ) : insights ? (
-              <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+              <div className="bg-white rounded-lg shadow p-6">
                 <h2 className="text-xl font-semibold mb-6 flex items-center gap-2">
                   <TrendingUp className="h-5 w-5" />
                   Performance Insights
@@ -395,7 +395,7 @@ const SendTimeOptimization = () => {
                 </div>
               </div>
             ) : (
-              <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+              <div className="bg-white rounded-lg shadow p-6">
                 <div className="text-center py-12">
                   <Clock className="h-16 w-16 text-gray-400 mx-auto mb-4" />
                   <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">

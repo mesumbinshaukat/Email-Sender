@@ -50,7 +50,7 @@ const AIConversationAgents = () => {
         </motion.div>
 
         <div className="space-y-6">
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+          <div className="bg-white rounded-lg shadow p-6">
             <h2 className="text-xl font-semibold mb-4">Analyze Customer Reply</h2>
             <div className="space-y-4">
               <div>
@@ -59,7 +59,7 @@ const AIConversationAgents = () => {
                   value={replyContent}
                   onChange={(e) => setReplyContent(e.target.value)}
                   rows={4}
-                  className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600"
+                  className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500"
                   placeholder="Paste customer reply here..."
                 />
               </div>
@@ -68,7 +68,7 @@ const AIConversationAgents = () => {
                 <select
                   value={sentiment}
                   onChange={(e) => setSentiment(e.target.value)}
-                  className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600"
+                  className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500"
                 >
                   <option value="positive">Positive</option>
                   <option value="neutral">Neutral</option>
@@ -87,9 +87,9 @@ const AIConversationAgents = () => {
           </div>
 
           {aiResponse && (
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+            <div className="bg-white rounded-lg shadow p-6">
               <h2 className="text-xl font-semibold mb-4">AI Generated Response</h2>
-              <div className="bg-gray-50 dark:bg-gray-900 p-4 rounded-lg">
+              <div className="bg-gray-50 p-4 rounded-lg">
                 <p className="text-gray-800 dark:text-gray-200 whitespace-pre-wrap">{aiResponse}</p>
               </div>
             </div>

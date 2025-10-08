@@ -155,7 +155,7 @@ const ABTesting = () => {
           <motion.div
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
-            className="bg-white dark:bg-gray-800 rounded-lg shadow p-6 mb-6"
+            className="bg-white rounded-lg shadow p-6 mb-6"
           >
             <h2 className="text-xl font-semibold mb-4">Create A/B Test</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
@@ -166,7 +166,7 @@ const ABTesting = () => {
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                   placeholder="E.g., Subject Line Test #1"
-                  className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600"
+                  className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500"
                 />
               </div>
 
@@ -175,7 +175,7 @@ const ABTesting = () => {
                 <select
                   value={formData.testType}
                   onChange={(e) => setFormData({ ...formData, testType: e.target.value })}
-                  className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600"
+                  className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500"
                 >
                   <option value="subject_line">Subject Line</option>
                   <option value="content">Email Content</option>
@@ -195,13 +195,13 @@ const ABTesting = () => {
                     value={variant.name}
                     onChange={(e) => updateVariant(index, 'name', e.target.value)}
                     placeholder="Variant name"
-                    className="flex-1 p-2 border rounded focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600"
+                    className="flex-1 p-2 border rounded focus:ring-2 focus:ring-blue-500"
                   />
                   <textarea
                     value={variant.content}
                     onChange={(e) => updateVariant(index, 'content', e.target.value)}
                     placeholder={`Variant ${variant.name} content`}
-                    className="flex-1 h-20 p-2 border rounded focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 resize-none"
+                    className="flex-1 h-20 p-2 border rounded focus:ring-2 focus:ring-blue-500 resize-none"
                   />
                 </div>
               ))}
@@ -236,7 +236,7 @@ const ABTesting = () => {
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
           >
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow">
+            <div className="bg-white rounded-lg shadow">
               <div className="px-6 py-4 border-b">
                 <h2 className="text-xl font-semibold">Your A/B Tests</h2>
               </div>
@@ -300,7 +300,7 @@ const ABTesting = () => {
             animate={{ opacity: 1, x: 0 }}
           >
             {selectedTest && analysis ? (
-              <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+              <div className="bg-white rounded-lg shadow p-6">
                 <h2 className="text-xl font-semibold mb-6">
                   Analysis: {selectedTest.name}
                 </h2>
@@ -370,7 +370,7 @@ const ABTesting = () => {
                 )}
               </div>
             ) : (
-              <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+              <div className="bg-white rounded-lg shadow p-6">
                 <div className="text-center py-12">
                   <BarChart3 className="h-16 w-16 text-gray-400 mx-auto mb-4" />
                   <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">

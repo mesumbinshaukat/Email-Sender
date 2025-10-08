@@ -156,7 +156,7 @@ const BulkPersonalization = () => {
             className="space-y-6"
           >
             {/* CSV Upload */}
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+            <div className="bg-white rounded-lg shadow p-6">
               <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
                 <Upload className="h-5 w-5" />
                 Upload CSV
@@ -170,7 +170,7 @@ const BulkPersonalization = () => {
                     value={jobName}
                     onChange={(e) => setJobName(e.target.value)}
                     placeholder="My Bulk Email Campaign"
-                    className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600"
+                    className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500"
                   />
                 </div>
 
@@ -180,7 +180,7 @@ const BulkPersonalization = () => {
                     type="file"
                     accept=".csv"
                     onChange={handleFileUpload}
-                    className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600"
+                    className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500"
                   />
                 </div>
 
@@ -200,7 +200,7 @@ const BulkPersonalization = () => {
             </div>
 
             {/* Personalization Setup */}
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+            <div className="bg-white rounded-lg shadow p-6">
               <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
                 <FileText className="h-5 w-5" />
                 Personalization Setup
@@ -212,7 +212,7 @@ const BulkPersonalization = () => {
                   <select
                     value={selectedTemplate}
                     onChange={(e) => setSelectedTemplate(e.target.value)}
-                    className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600"
+                    className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500"
                   >
                     <option value="">Select template</option>
                     {templates.map(template => (
@@ -232,14 +232,14 @@ const BulkPersonalization = () => {
                         placeholder="Field name"
                         value={rule.field}
                         onChange={(e) => updateRule(index, 'field', e.target.value)}
-                        className="flex-1 p-2 border rounded focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600"
+                        className="flex-1 p-2 border rounded focus:ring-2 focus:ring-blue-500"
                       />
                       <input
                         type="text"
                         placeholder="Value or merge field"
                         value={rule.value}
                         onChange={(e) => updateRule(index, 'value', e.target.value)}
-                        className="flex-1 p-2 border rounded focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600"
+                        className="flex-1 p-2 border rounded focus:ring-2 focus:ring-blue-500"
                       />
                       <label className="flex items-center gap-1">
                         <input
@@ -285,7 +285,7 @@ const BulkPersonalization = () => {
             className="space-y-6"
           >
             {/* Bulk Jobs */}
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+            <div className="bg-white rounded-lg shadow p-6">
               <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
                 <FileText className="h-5 w-5" />
                 Bulk Jobs
@@ -314,7 +314,7 @@ const BulkPersonalization = () => {
                             ? 'bg-green-100 text-green-800 dark:bg-green-800 dark:text-green-100'
                             : job.status === 'processing'
                             ? 'bg-yellow-100 text-yellow-800 dark:bg-yellow-800 dark:text-yellow-100'
-                            : 'bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-100'
+                            : 'bg-gray-100 text-gray-800 dark:text-gray-100'
                         }`}>
                           {job.status}
                         </span>
@@ -336,7 +336,7 @@ const BulkPersonalization = () => {
             </div>
 
             {/* Preview */}
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+            <div className="bg-white rounded-lg shadow p-6">
               <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
                 <Eye className="h-5 w-5" />
                 Email Preview

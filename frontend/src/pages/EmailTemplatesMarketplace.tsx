@@ -71,7 +71,7 @@ const EmailTemplatesMarketplace = () => {
             placeholder="Search templates..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="flex-1 p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:border-gray-600"
+            className="flex-1 p-3 border rounded-lg focus:ring-2 focus:ring-blue-500"
           />
           <button
             onClick={() => setShowCreateForm(!showCreateForm)}
@@ -86,7 +86,7 @@ const EmailTemplatesMarketplace = () => {
           <motion.div
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
-            className="bg-white dark:bg-gray-800 rounded-lg shadow p-6 mb-6"
+            className="bg-white rounded-lg shadow p-6 mb-6"
           >
             <h2 className="text-xl font-semibold mb-4">Create Template Listing</h2>
             <form onSubmit={(e) => {
@@ -96,14 +96,14 @@ const EmailTemplatesMarketplace = () => {
               setShowCreateForm(false);
             }}>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                <input name="name" placeholder="Template Name" className="p-3 border rounded dark:bg-gray-700 dark:border-gray-600" required />
-                <select name="category" className="p-3 border rounded dark:bg-gray-700 dark:border-gray-600">
+                <input name="name" placeholder="Template Name" className="p-3 border rounded" required />
+                <select name="category" className="p-3 border rounded">
                   <option value="welcome">Welcome</option>
                   <option value="newsletter">Newsletter</option>
                   <option value="promotional">Promotional</option>
                 </select>
-                <input name="price" type="number" placeholder="Price ($)" className="p-3 border rounded dark:bg-gray-700 dark:border-gray-600" />
-                <textarea name="description" placeholder="Description" className="p-3 border rounded dark:bg-gray-700 dark:border-gray-600 md:col-span-2" />
+                <input name="price" type="number" placeholder="Price ($)" className="p-3 border rounded" />
+                <textarea name="description" placeholder="Description" className="p-3 border rounded md:col-span-2" />
               </div>
               <div className="flex gap-2">
                 <button type="submit" className="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700">
@@ -123,9 +123,9 @@ const EmailTemplatesMarketplace = () => {
               key={template._id}
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
-              className="bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden"
+              className="bg-white rounded-lg shadow overflow-hidden"
             >
-              <div className="h-48 bg-gray-200 dark:bg-gray-700 flex items-center justify-center">
+              <div className="h-48 bg-gray-200 flex items-center justify-center">
                 <ShoppingCart className="h-16 w-16 text-gray-400" />
               </div>
               <div className="p-4">

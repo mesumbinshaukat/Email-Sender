@@ -109,7 +109,7 @@ const EmailDesigner = () => {
             animate={{ opacity: 1, x: 0 }}
             className="lg:col-span-1"
           >
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+            <div className="bg-white rounded-lg shadow p-6">
               <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
                 <Wand2 className="h-5 w-5" />
                 Generate Template
@@ -124,7 +124,7 @@ const EmailDesigner = () => {
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
                     placeholder="Describe your email template (e.g., 'Newsletter about our new product launch with hero image and CTA')"
-                    className="w-full h-32 p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600"
+                    className="w-full h-32 p-3 border rounded-lg focus:ring-2 focus:ring-blue-500"
                   />
                 </div>
 
@@ -135,7 +135,7 @@ const EmailDesigner = () => {
                   <select
                     value={brandKitId}
                     onChange={(e) => setBrandKitId(e.target.value)}
-                    className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600"
+                    className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500"
                   >
                     <option value="">Use default</option>
                     {brandKits.map(kit => (
@@ -166,7 +166,7 @@ const EmailDesigner = () => {
             animate={{ opacity: 1, y: 0 }}
             className="lg:col-span-2"
           >
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+            <div className="bg-white rounded-lg shadow p-6">
               <h2 className="text-xl font-semibold mb-4 flex items-center gap-2">
                 <FileText className="h-5 w-5" />
                 Your Templates
@@ -218,7 +218,7 @@ const EmailDesigner = () => {
             animate={{ opacity: 1 }}
             className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50"
           >
-            <div className="bg-white dark:bg-gray-800 rounded-lg max-w-4xl w-full max-h-[80vh] overflow-hidden">
+            <div className="bg-white rounded-lg max-w-4xl w-full max-h-[80vh] overflow-hidden">
               <div className="p-4 border-b flex justify-between items-center">
                 <h3 className="text-lg font-semibold">{previewTemplate.name}</h3>
                 <button

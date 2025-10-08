@@ -121,7 +121,7 @@ const SmartTriggers = () => {
           <motion.div
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
-            className="bg-white dark:bg-gray-800 rounded-lg shadow p-6 mb-6"
+            className="bg-white rounded-lg shadow p-6 mb-6"
           >
             <h2 className="text-xl font-semibold mb-4">Create Smart Trigger</h2>
             <div className="space-y-4">
@@ -132,7 +132,7 @@ const SmartTriggers = () => {
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                   placeholder="E.g., Welcome Email Follow-up"
-                  className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600"
+                  className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500"
                 />
               </div>
               <div>
@@ -140,7 +140,7 @@ const SmartTriggers = () => {
                 <select
                   value={formData.type}
                   onChange={(e) => setFormData({ ...formData, type: e.target.value })}
-                  className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600"
+                  className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500"
                 >
                   <option value="email_open">Email Opened</option>
                   <option value="email_click">Email Clicked</option>
@@ -174,7 +174,7 @@ const SmartTriggers = () => {
               key={trigger._id}
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
-              className="bg-white dark:bg-gray-800 rounded-lg shadow p-6"
+              className="bg-white rounded-lg shadow p-6"
             >
               <div className="flex justify-between items-start mb-4">
                 <div>
@@ -186,7 +186,7 @@ const SmartTriggers = () => {
                 <span className={`px-2 py-1 text-xs rounded ${
                   trigger.isActive
                     ? 'bg-green-100 text-green-800 dark:bg-green-800 dark:text-green-100'
-                    : 'bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-100'
+                    : 'bg-gray-100 text-gray-800 dark:text-gray-100'
                 }`}>
                   {trigger.isActive ? 'Active' : 'Inactive'}
                 </span>

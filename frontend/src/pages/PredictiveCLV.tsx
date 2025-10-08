@@ -46,7 +46,7 @@ const PredictiveCLV = () => {
         </motion.div>
 
         <div className="space-y-6">
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+          <div className="bg-white rounded-lg shadow p-6">
             <h2 className="text-xl font-semibold mb-4">Predict Customer Value</h2>
             <div className="flex gap-4">
               <input
@@ -54,7 +54,7 @@ const PredictiveCLV = () => {
                 value={contactId}
                 onChange={(e) => setContactId(e.target.value)}
                 placeholder="Enter contact ID"
-                className="flex-1 p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600"
+                className="flex-1 p-3 border rounded-lg focus:ring-2 focus:ring-blue-500"
               />
               <button
                 onClick={predictCLV}
@@ -68,7 +68,7 @@ const PredictiveCLV = () => {
           </div>
 
           {prediction && (
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+            <div className="bg-white rounded-lg shadow p-6">
               <h2 className="text-xl font-semibold mb-4">Prediction Results</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div className="bg-green-50 dark:bg-green-900 p-4 rounded-lg">

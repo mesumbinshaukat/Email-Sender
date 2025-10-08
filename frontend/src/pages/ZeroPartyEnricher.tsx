@@ -68,7 +68,7 @@ const ZeroPartyEnricher = () => {
         </motion.div>
 
         <div className="space-y-6">
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+          <div className="bg-white rounded-lg shadow p-6">
             <h2 className="text-xl font-semibold mb-4">Collect Zero-Party Data</h2>
             <div className="space-y-4">
               <div>
@@ -77,7 +77,7 @@ const ZeroPartyEnricher = () => {
                   type="email"
                   value={emailId}
                   onChange={(e) => setEmailId(e.target.value)}
-                  className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600"
+                  className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500"
                   placeholder="user@example.com"
                 />
               </div>
@@ -87,7 +87,7 @@ const ZeroPartyEnricher = () => {
                   value={quizResponses}
                   onChange={(e) => setQuizResponses(e.target.value)}
                   rows={4}
-                  className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 font-mono text-sm"
+                  className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 font-mono text-sm"
                   placeholder='{"preferences": ["tech", "sports"], "interests": ["gaming"]}'
                 />
               </div>
@@ -111,7 +111,7 @@ const ZeroPartyEnricher = () => {
             </div>
           </div>
 
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+          <div className="bg-white rounded-lg shadow p-6">
             <h2 className="text-xl font-semibold mb-4">Profile Enrichment</h2>
             <div className="mb-4">
               <label className="block text-sm font-medium mb-2">Contact ID</label>
@@ -119,16 +119,16 @@ const ZeroPartyEnricher = () => {
                 type="text"
                 value={contactId}
                 onChange={(e) => setContactId(e.target.value)}
-                className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600"
+                className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500"
                 placeholder="Contact ID for enrichment"
               />
             </div>
           </div>
 
           {enrichedProfile && (
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+            <div className="bg-white rounded-lg shadow p-6">
               <h2 className="text-xl font-semibold mb-4">Enriched Profile Insights</h2>
-              <div className="bg-gray-50 dark:bg-gray-900 p-4 rounded-lg">
+              <div className="bg-gray-50 p-4 rounded-lg">
                 <p className="text-gray-800 dark:text-gray-200 whitespace-pre-wrap">{enrichedProfile}</p>
               </div>
             </div>

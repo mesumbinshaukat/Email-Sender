@@ -145,7 +145,7 @@ const DataPrivacyCenter = () => {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="text-center py-12 bg-white dark:bg-gray-800 rounded-lg shadow mb-8"
+            className="text-center py-12 bg-white rounded-lg shadow mb-8"
           >
             <Shield className="h-16 w-16 text-gray-400 mx-auto mb-4" />
             <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-4">
@@ -203,7 +203,7 @@ const DataPrivacyCenter = () => {
               <motion.div
                 initial={{ opacity: 0, height: 0 }}
                 animate={{ opacity: 1, height: 'auto' }}
-                className="bg-white dark:bg-gray-800 rounded-lg shadow p-6 mb-6"
+                className="bg-white rounded-lg shadow p-6 mb-6"
               >
                 <h2 className="text-xl font-semibold mb-4">GDPR Compliance Settings</h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -214,7 +214,7 @@ const DataPrivacyCenter = () => {
                       value={gdprSettings.privacyPolicy}
                       onChange={(e) => setGdprSettings({ ...gdprSettings, privacyPolicy: e.target.value })}
                       placeholder="https://example.com/privacy-policy"
-                      className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600"
+                      className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500"
                     />
                   </div>
 
@@ -223,7 +223,7 @@ const DataPrivacyCenter = () => {
                     <select
                       value={gdprSettings.consentMechanism}
                       onChange={(e) => setGdprSettings({ ...gdprSettings, consentMechanism: e.target.value })}
-                      className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600"
+                      className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500"
                     >
                       <option value="explicit">Explicit Consent</option>
                       <option value="implicit">Implicit Consent</option>
@@ -243,7 +243,7 @@ const DataPrivacyCenter = () => {
                           personalData: parseInt(e.target.value)
                         }
                       })}
-                      className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600"
+                      className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500"
                     />
                   </div>
 
@@ -259,7 +259,7 @@ const DataPrivacyCenter = () => {
                           emailData: parseInt(e.target.value)
                         }
                       })}
-                      className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600"
+                      className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500"
                     />
                   </div>
 
@@ -275,7 +275,7 @@ const DataPrivacyCenter = () => {
                           analyticsData: parseInt(e.target.value)
                         }
                       })}
-                      className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600"
+                      className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500"
                     />
                   </div>
                 </div>
@@ -302,7 +302,7 @@ const DataPrivacyCenter = () => {
               <motion.div
                 initial={{ opacity: 0, height: 0 }}
                 animate={{ opacity: 1, height: 'auto' }}
-                className="bg-white dark:bg-gray-800 rounded-lg shadow p-6 mb-6"
+                className="bg-white rounded-lg shadow p-6 mb-6"
               >
                 <h2 className="text-xl font-semibold mb-4">Submit Data Subject Request</h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -311,7 +311,7 @@ const DataPrivacyCenter = () => {
                     <select
                       value={dataRequest.type}
                       onChange={(e) => setDataRequest({ ...dataRequest, type: e.target.value })}
-                      className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600"
+                      className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500"
                     >
                       <option value="access">Access My Data</option>
                       <option value="rectification">Rectify My Data</option>
@@ -329,7 +329,7 @@ const DataPrivacyCenter = () => {
                       value={dataRequest.email}
                       onChange={(e) => setDataRequest({ ...dataRequest, email: e.target.value })}
                       placeholder="your.email@example.com"
-                      className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600"
+                      className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500"
                     />
                   </div>
 
@@ -340,7 +340,7 @@ const DataPrivacyCenter = () => {
                       value={dataRequest.name}
                       onChange={(e) => setDataRequest({ ...dataRequest, name: e.target.value })}
                       placeholder="John Doe"
-                      className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600"
+                      className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500"
                     />
                   </div>
 
@@ -350,7 +350,7 @@ const DataPrivacyCenter = () => {
                       value={dataRequest.reason}
                       onChange={(e) => setDataRequest({ ...dataRequest, reason: e.target.value })}
                       placeholder="Please explain why you're making this request..."
-                      className="w-full h-24 p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 resize-none"
+                      className="w-full h-24 p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 resize-none"
                     />
                   </div>
                 </div>
@@ -374,7 +374,7 @@ const DataPrivacyCenter = () => {
 
             {/* Dashboard Stats */}
             <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-              <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+              <div className="bg-white rounded-lg shadow p-6">
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-sm text-gray-600 dark:text-gray-400">GDPR Compliance</p>
@@ -386,7 +386,7 @@ const DataPrivacyCenter = () => {
                 </div>
               </div>
 
-              <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+              <div className="bg-white rounded-lg shadow p-6">
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-sm text-gray-600 dark:text-gray-400">Pending Requests</p>
@@ -398,7 +398,7 @@ const DataPrivacyCenter = () => {
                 </div>
               </div>
 
-              <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+              <div className="bg-white rounded-lg shadow p-6">
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-sm text-gray-600 dark:text-gray-400">Completed Requests</p>
@@ -410,7 +410,7 @@ const DataPrivacyCenter = () => {
                 </div>
               </div>
 
-              <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
+              <div className="bg-white rounded-lg shadow p-6">
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-sm text-gray-600 dark:text-gray-400">Total Requests</p>
@@ -424,7 +424,7 @@ const DataPrivacyCenter = () => {
             </div>
 
             {/* Recent Requests */}
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow">
+            <div className="bg-white rounded-lg shadow">
               <div className="px-6 py-4 border-b">
                 <h2 className="text-xl font-semibold">Recent Data Requests</h2>
               </div>

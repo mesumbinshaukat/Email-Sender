@@ -81,7 +81,7 @@ const EcommerceIntegration = () => {
           <motion.div
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
-            className="bg-white dark:bg-gray-800 rounded-lg shadow p-6 mb-6"
+            className="bg-white rounded-lg shadow p-6 mb-6"
           >
             <h2 className="text-xl font-semibold mb-4">Connect E-commerce Platform</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -90,7 +90,7 @@ const EcommerceIntegration = () => {
                 <select
                   value={formData.platform}
                   onChange={(e) => setFormData({ ...formData, platform: e.target.value })}
-                  className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600"
+                  className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500"
                 >
                   <option value="shopify">Shopify</option>
                   <option value="woocommerce">WooCommerce</option>
@@ -104,7 +104,7 @@ const EcommerceIntegration = () => {
                   value={formData.storeName}
                   onChange={(e) => setFormData({ ...formData, storeName: e.target.value })}
                   placeholder="My Store"
-                  className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600"
+                  className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500"
                 />
               </div>
               <div>
@@ -114,7 +114,7 @@ const EcommerceIntegration = () => {
                   value={formData.storeUrl}
                   onChange={(e) => setFormData({ ...formData, storeUrl: e.target.value })}
                   placeholder="https://mystorename.myshopify.com"
-                  className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600"
+                  className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500"
                 />
               </div>
               <div>
@@ -124,7 +124,7 @@ const EcommerceIntegration = () => {
                   value={formData.apiKey}
                   onChange={(e) => setFormData({ ...formData, apiKey: e.target.value })}
                   placeholder="API Key"
-                  className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600"
+                  className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500"
                 />
               </div>
             </div>
@@ -151,7 +151,7 @@ const EcommerceIntegration = () => {
               key={integration._id}
               initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
-              className="bg-white dark:bg-gray-800 rounded-lg shadow p-6"
+              className="bg-white rounded-lg shadow p-6"
             >
               <div className="flex items-start justify-between mb-4">
                 <div>

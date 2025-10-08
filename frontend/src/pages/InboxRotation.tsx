@@ -122,7 +122,7 @@ const InboxRotation = () => {
           <motion.div
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
-            className="bg-white dark:bg-gray-800 rounded-lg shadow p-6 mb-6"
+            className="bg-white rounded-lg shadow p-6 mb-6"
           >
             <h2 className="text-xl font-semibold mb-4">Add New Inbox</h2>
             <form onSubmit={(e) => {
@@ -144,7 +144,7 @@ const InboxRotation = () => {
                   <input
                     name="email"
                     type="email"
-                    className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600"
+                    className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500"
                     required
                   />
                 </div>
@@ -153,7 +153,7 @@ const InboxRotation = () => {
                   <input
                     name="password"
                     type="password"
-                    className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600"
+                    className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500"
                     required
                   />
                 </div>
@@ -161,7 +161,7 @@ const InboxRotation = () => {
                   <label className="block text-sm font-medium mb-2">Provider</label>
                   <select
                     name="provider"
-                    className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600"
+                    className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500"
                     required
                   >
                     <option value="gmail">Gmail</option>
@@ -175,7 +175,7 @@ const InboxRotation = () => {
                   <input
                     name="smtpHost"
                     placeholder="smtp.gmail.com"
-                    className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600"
+                    className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500"
                   />
                 </div>
                 <div>
@@ -184,7 +184,7 @@ const InboxRotation = () => {
                     name="smtpPort"
                     type="number"
                     defaultValue="587"
-                    className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600"
+                    className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500"
                   />
                 </div>
                 <div>
@@ -192,7 +192,7 @@ const InboxRotation = () => {
                   <input
                     name="imapHost"
                     placeholder="imap.gmail.com"
-                    className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600"
+                    className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500"
                   />
                 </div>
                 <div>
@@ -201,7 +201,7 @@ const InboxRotation = () => {
                     name="imapPort"
                     type="number"
                     defaultValue="993"
-                    className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600"
+                    className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500"
                   />
                 </div>
               </div>
@@ -217,7 +217,7 @@ const InboxRotation = () => {
           </motion.div>
         )}
 
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow">
+        <div className="bg-white rounded-lg shadow">
           <div className="px-6 py-4 border-b">
             <h2 className="text-xl font-semibold">Connected Inboxes</h2>
           </div>
