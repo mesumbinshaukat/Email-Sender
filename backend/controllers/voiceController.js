@@ -2,16 +2,21 @@ import axios from 'axios';
 import FormData from 'form-data';
 import aiService from '../services/aiService.js';
 import Email from '../models/Email.js';
-
-const OPENAI_API_KEY = process.env.OPENAI_API_KEY || process.env.OPEN_ROUTER_API_KEY;
+import { getAIClient } from '../utils/openaiHelper.js';
 
 // Transcribe audio using OpenAI Whisper
 export const transcribeAudio = async (req, res) => {
   try {
-    if (!OPENAI_API_KEY) {
+    // Get AI client
+    const userId = req.user?._id;
+    const aiClient = await getAIClient(userId);
+    
+    // Check if it's OpenAI (Whisper is OpenAI-specific)
+    if (aiClient.provider !== 'openai') {
       return res.status(400).json({
         success: false,
-        message: 'Voice transcription unavailable. Please configure OPENAI_API_KEY.',
+        message: 'Voice transcription requires OpenAI provider. Please configure OpenAI API key.',
+        code: 'OPENAI_REQUIRED'
       });
     }
 
@@ -30,22 +35,30 @@ export const transcribeAudio = async (req, res) => {
     formData.append('model', 'whisper-1');
     formData.append('language', 'en');
 
-    const response = await axios.post('https://api.openai.com/v1/audio/transcriptions', formData, {
-      headers: {
-        'Authorization': `Bearer ${OPENAI_API_KEY}`,
-        ...formData.getHeaders(),
-      },
-      maxContentLength: Infinity,
-      maxBodyLength: Infinity,
+    // Use OpenAI's transcription API
+    const response = await aiClient.audio.transcriptions.create({
+      file: req.file,
+      model: 'whisper-1',
+      language: 'en'
     });
 
     res.json({
       success: true,
-      transcription: response.data.text,
+      transcription: response.text,
       confidence: 0.9, // Whisper doesn't provide confidence, but assume high
     });
   } catch (error) {
     console.error('Transcription error:', error);
+    
+    if (error.message.includes('API key not configured') || error.message.includes('No AI provider')) {
+      return res.status(400).json({
+        success: false,
+        message: 'AI provider not configured',
+        code: 'AI_NOT_CONFIGURED',
+        action: 'Please configure an AI provider in settings'
+      });
+    }
+    
     res.status(500).json({
       success: false,
       message: 'Failed to transcribe audio',

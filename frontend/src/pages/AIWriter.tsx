@@ -4,6 +4,8 @@ import { Wand2, RefreshCw, Sparkles, Copy, Check, Plus, X, Zap } from 'lucide-re
 import { DashboardLayout } from '../components/layout/DashboardLayout';
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/Card';
 import { Button } from '../components/ui/Button';
+import { AINotConfiguredModal } from '../components/AINotConfiguredModal';
+import { useAIProvider } from '../hooks/useAIProvider';
 import axios from '../lib/axios';
 import toast from 'react-hot-toast';
 
@@ -23,6 +25,8 @@ export const AIWriter: React.FC = () => {
   const [spamResult, setSpamResult] = useState<any>(null);
   const [loading, setLoading] = useState(false);
   const [copied, setCopied] = useState(false);
+  
+  const { handleAIError, showConfigModal, setShowConfigModal } = useAIProvider();
 
   const addBullet = () => {
     setBullets([...bullets, '']);
@@ -59,7 +63,9 @@ export const AIWriter: React.FC = () => {
         toast.success('Email generated successfully!');
       }
     } catch (error: any) {
-      toast.error(error.response?.data?.message || 'Failed to generate email');
+      if (!handleAIError(error, 'AI Email Writer')) {
+        toast.error(error.response?.data?.message || 'Failed to generate email');
+      }
     } finally {
       setLoading(false);
     }
@@ -84,7 +90,9 @@ export const AIWriter: React.FC = () => {
         toast.success('Email rewritten successfully!');
       }
     } catch (error: any) {
-      toast.error(error.response?.data?.message || 'Failed to rewrite email');
+      if (!handleAIError(error, 'AI Email Writer')) {
+        toast.error(error.response?.data?.message || 'Failed to rewrite email');
+      }
     } finally {
       setLoading(false);
     }
@@ -546,6 +554,13 @@ export const AIWriter: React.FC = () => {
           </div>
         )}
       </motion.div>
+      
+      {/* AI Not Configured Modal */}
+      <AINotConfiguredModal
+        isOpen={showConfigModal}
+        onClose={() => setShowConfigModal(false)}
+        feature="AI Email Writer"
+      />
     </DashboardLayout>
   );
 };

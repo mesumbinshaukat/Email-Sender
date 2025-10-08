@@ -1,12 +1,5 @@
 // express-async-handler removed - using native async/await
-import OpenAI from 'openai';
-import { getEnvVar } from '../utils/envManager.js';
-
-// Initialize OpenAI with dynamic API key
-const getOpenAIClient = async () => {
-  const apiKey = await getEnvVar('OPENAI_API_KEY');
-  return new OpenAI({ apiKey });
-};
+import { getAIClient } from '../utils/openaiHelper.js';
 
 // @desc    Get writing suggestions
 // @route   POST /api/copilot/suggest
@@ -15,10 +8,10 @@ const getSuggestions = async (req, res) => {
   try {
     const { text, context } = req.body;
 
-    const openai = await getOpenAIClient();
+    const aiClient = await getAIClient(req.user._id);
     const prompt = `As an email writing assistant, provide suggestions to improve this text: "${text}". Context: ${context || 'General email'}. Provide 3-5 concise suggestions.`;
 
-    const completion = await openai.chat.completions.create({
+    const completion = await aiClient.chat.completions.create({
       model: 'gpt-4',
       messages: [{ role: 'user', content: prompt }],
       max_tokens: 200
@@ -38,10 +31,10 @@ const checkGrammar = async (req, res) => {
   try {
     const { text } = req.body;
 
-    const openai = await getOpenAIClient();
+    const aiClient = await getAIClient(req.user._id);
     const prompt = `Check this text for grammar, spelling, and style issues: "${text}". Return corrections and suggestions.`;
 
-    const completion = await openai.chat.completions.create({
+    const completion = await aiClient.chat.completions.create({
       model: 'gpt-4',
       messages: [{ role: 'user', content: prompt }],
       max_tokens: 150
@@ -60,10 +53,10 @@ const analyzeTone = async (req, res) => {
   try {
     const { text } = req.body;
 
-    const openai = await getOpenAIClient();
+    const aiClient = await getAIClient(req.user._id);
     const prompt = `Analyze the tone of this text: "${text}". Rate formality (1-10), friendliness (1-10), persuasiveness (1-10), and suggest improvements.`;
 
-    const completion = await openai.chat.completions.create({
+    const completion = await aiClient.chat.completions.create({
       model: 'gpt-4',
       messages: [{ role: 'user', content: prompt }],
       max_tokens: 150
@@ -105,10 +98,10 @@ const improveSentence = async (req, res) => {
   try {
     const { sentence } = req.body;
 
-    const openai = await getOpenAIClient();
+    const aiClient = await getAIClient(req.user._id);
     const prompt = `Improve this sentence for email communication: "${sentence}". Make it more engaging and professional.`;
 
-    const completion = await openai.chat.completions.create({
+    const completion = await aiClient.chat.completions.create({
       model: 'gpt-4',
       messages: [{ role: 'user', content: prompt }],
       max_tokens: 100

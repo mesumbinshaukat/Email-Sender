@@ -3,14 +3,7 @@ import csv from 'csv-parser';
 import { Readable } from 'stream';
 import BulkJob from '../models/BulkJob.js';
 import EmailTemplate from '../models/EmailTemplate.js';
-import { getEnvVar } from '../utils/envManager.js';
-import OpenAI from 'openai';
-
-// Initialize OpenAI
-const getOpenAIClient = async () => {
-  const apiKey = await getEnvVar('OPENAI_API_KEY');
-  return new OpenAI({ apiKey });
-};
+import { getAIClient } from '../utils/openaiHelper.js';
 
 // @desc    Upload CSV and create bulk job
 // @route   POST /api/bulk/upload-csv
@@ -60,7 +53,7 @@ const personalizeBulk = async (req, res) => {
       throw new Error('Bulk job or template not found');
     }
 
-    const openai = await getOpenAIClient();
+    const aiClient = await getAIClient(req.user._id);
     const personalizedData = [];
 
     for (const contact of bulkJob.csvData) {
@@ -70,7 +63,7 @@ const personalizeBulk = async (req, res) => {
         if (rule.aiGenerated) {
           const prompt = `Generate personalized ${rule.field} for ${contact.firstName} ${contact.lastName} from ${contact.company}. Original: "${rule.value}"`;
 
-          const completion = await openai.chat.completions.create({
+          const completion = await aiClient.chat.completions.create({
             model: 'gpt-4',
             messages: [{ role: 'user', content: prompt }],
             max_tokens: 50

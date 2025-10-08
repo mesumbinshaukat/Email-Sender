@@ -1,15 +1,8 @@
 // express-async-handler removed - using native async/await
-import OpenAI from 'openai';
 import EmailTemplate from '../models/EmailTemplate.js';
 import BrandKit from '../models/BrandKit.js';
 import User from '../models/User.js';
-import { getEnvVar } from '../utils/envManager.js';
-
-// Initialize OpenAI with dynamic API key
-const getOpenAIClient = async () => {
-  const apiKey = await getEnvVar('OPENAI_API_KEY');
-  return new OpenAI({ apiKey });
-};
+import { getAIClient } from '../utils/openaiHelper.js';
 
 // @desc    Generate email template from description
 // @route   POST /api/design/generate-template
@@ -31,8 +24,8 @@ const generateTemplate = async (req, res) => {
 ${brandKit ? `Use these brand colors: ${JSON.stringify(brandKit.colors)}, fonts: ${JSON.stringify(brandKit.fonts)}, logo: ${brandKit.logo?.url}` : ''}
 Make it responsive, accessible, and mobile-friendly. Include proper HTML structure with inline CSS.`;
 
-  const openai = await getOpenAIClient();
-  const completion = await openai.chat.completions.create({
+  const aiClient = await getAIClient(userId);
+  const completion = await aiClient.chat.completions.create({
     model: 'gpt-4',
     messages: [{ role: 'user', content: prompt }],
     max_tokens: 2000

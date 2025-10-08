@@ -1,9 +1,7 @@
 import InboxRotation from '../models/InboxRotation.js';
 import User from '../models/User.js';
-import { OpenAI } from 'openai';
 import nodemailer from 'nodemailer';
-
-const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+import { getAIClient } from '../utils/openaiHelper.js';
 
 // Get all inboxes for user
 export const getInboxes = async (req, res) => {
@@ -46,11 +44,14 @@ export const startWarmup = async (req, res) => {
     const inbox = await InboxRotation.findOne({ _id: inboxId, userId: req.user._id });
     if (!inbox) return res.status(404).json({ message: 'Inbox not found' });
 
+    // Get AI client
+    const aiClient = await getAIClient(req.user._id);
+
     // Use AI to determine optimal warmup strategy
     const prompt = `Design a dual warmup strategy for email inbox with current reputation ${inbox.reputationScore}/100. 
     Provide daily send limits progression over 30 days, alternating between gradual increase and stabilization phases.`;
 
-    const completion = await openai.chat.completions.create({
+    const completion = await aiClient.chat.completions.create({
       model: "gpt-3.5-turbo",
       messages: [{ role: "user", content: prompt }],
     });
@@ -63,6 +64,14 @@ export const startWarmup = async (req, res) => {
 
     res.json({ message: 'Warmup started', strategy, inbox });
   } catch (error) {
+    if (error.message.includes('API key not configured') || error.message.includes('No AI provider')) {
+      return res.status(400).json({
+        success: false,
+        message: 'AI provider not configured',
+        code: 'AI_NOT_CONFIGURED',
+        action: 'Please configure an AI provider (OpenRouter, OpenAI, Gemini, or Grok) in settings'
+      });
+    }
     res.status(500).json({ message: 'Server error', error: error.message });
   }
 };
@@ -75,6 +84,9 @@ export const getRotationRecommendation = async (req, res) => {
       status: 'active'
     }).sort({ warmupLevel: -1, reputationScore: -1 });
 
+    // Get AI client
+    const aiClient = await getAIClient(req.user._id);
+
     // AI-based rotation logic
     const prompt = `Given these inboxes: ${JSON.stringify(inboxes.map(i => ({
       email: i.email,
@@ -84,7 +96,7 @@ export const getRotationRecommendation = async (req, res) => {
       limit: i.dailySendLimit
     })))}, recommend which inbox to use for the next send to minimize spam flags.`;
 
-    const completion = await openai.chat.completions.create({
+    const completion = await aiClient.chat.completions.create({
       model: "gpt-3.5-turbo",
       messages: [{ role: "user", content: prompt }],
     });
@@ -93,6 +105,14 @@ export const getRotationRecommendation = async (req, res) => {
 
     res.json({ recommendation, inboxes });
   } catch (error) {
+    if (error.message.includes('API key not configured') || error.message.includes('No AI provider')) {
+      return res.status(400).json({
+        success: false,
+        message: 'AI provider not configured',
+        code: 'AI_NOT_CONFIGURED',
+        action: 'Please configure an AI provider (OpenRouter, OpenAI, Gemini, or Grok) in settings'
+      });
+    }
     res.status(500).json({ message: 'Server error', error: error.message });
   }
 };

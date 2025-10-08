@@ -3,6 +3,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { MessageCircle, X, Send, Minimize2 } from 'lucide-react';
 import axios from '../lib/axios';
 import { cn } from '../lib/utils';
+import { AINotConfiguredModal } from './AINotConfiguredModal';
+import { useAIProvider } from '../hooks/useAIProvider';
 
 interface Message {
   role: 'user' | 'assistant';
@@ -21,6 +23,7 @@ export const Chatbot: React.FC = () => {
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const { handleAIError, showConfigModal, setShowConfigModal } = useAIProvider();
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -52,11 +55,13 @@ export const Chatbot: React.FC = () => {
         setMessages((prev) => [...prev, assistantMessage]);
       }
     } catch (error: any) {
-      const errorMessage: Message = {
-        role: 'assistant',
-        content: 'Sorry, I encountered an error. Please try again.',
-      };
-      setMessages((prev) => [...prev, errorMessage]);
+      if (!handleAIError(error, 'AI Chatbot')) {
+        const errorMessage: Message = {
+          role: 'assistant',
+          content: 'Sorry, I encountered an error. Please try again.',
+        };
+        setMessages((prev) => [...prev, errorMessage]);
+      }
     } finally {
       setIsLoading(false);
     }
@@ -189,6 +194,13 @@ export const Chatbot: React.FC = () => {
           </motion.div>
         )}
       </AnimatePresence>
+
+      {/* AI Not Configured Modal */}
+      <AINotConfiguredModal
+        isOpen={showConfigModal}
+        onClose={() => setShowConfigModal(false)}
+        feature="AI Chatbot"
+      />
     </>
   );
 };

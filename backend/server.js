@@ -74,6 +74,8 @@ import liquidRoutes from './routes/liquidRoutes.js';
 import crossChannelRoutes from './routes/crossChannelRoutes.js';
 import zeroPartyRoutes from './routes/zeroPartyRoutes.js';
 import healthRoutes from './routes/healthRoutes.js';
+import envRoutes from './routes/envRoutes.js';
+import aiProviderRoutes from './routes/aiProviderRoutes.js';
 
 // Load environment variables
 dotenv.config();
@@ -142,6 +144,8 @@ app.get('/', (req, res) => {
 });
 
 app.use('/api/health', healthRoutes);
+app.use('/api/env', envRoutes);
+app.use('/api/ai-providers', aiProviderRoutes);
 
 // API Routes
 app.use('/api/auth', authRoutes);

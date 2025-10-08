@@ -3,8 +3,11 @@ import toast from 'react-hot-toast';
 import axios from 'axios';
 import { motion } from 'framer-motion';
 import { Bot, Lightbulb, CheckCircle, BarChart3, Wand2 } from 'lucide-react';
+import { AINotConfiguredModal } from '../components/AINotConfiguredModal';
+import { useAIProvider } from '../hooks/useAIProvider';
 
 const AICopilot = () => {
+  const { handleAIError, showConfigModal, setShowConfigModal } = useAIProvider();
   const [text, setText] = useState('');
   const [suggestions, setSuggestions] = useState<string[]>([]);
   const [grammarFeedback, setGrammarFeedback] = useState('');
@@ -26,7 +29,9 @@ const AICopilot = () => {
       });
       setSuggestions(data.suggestions);
     } catch (error) {
-      toast.error('Failed to get suggestions');
+      if (!handleAIError(error, 'AI Copilot')) {
+        toast.error('Failed to get suggestions');
+      }
     } finally {
       setLoading(false);
     }
@@ -43,7 +48,9 @@ const AICopilot = () => {
       const { data } = await axios.post('/api/copilot/check-grammar', { text });
       setGrammarFeedback(data.feedback);
     } catch (error) {
-      toast.error('Failed to check grammar');
+      if (!handleAIError(error, 'AI Copilot')) {
+        toast.error('Failed to check grammar');
+      }
     } finally {
       setLoading(false);
     }
@@ -60,7 +67,9 @@ const AICopilot = () => {
       const { data } = await axios.post('/api/copilot/analyze-tone', { text });
       setToneAnalysis(data.analysis);
     } catch (error) {
-      toast.error('Failed to analyze tone');
+      if (!handleAIError(error, 'AI Copilot')) {
+        toast.error('Failed to analyze tone');
+      }
     } finally {
       setLoading(false);
     }
@@ -246,6 +255,13 @@ const AICopilot = () => {
           </motion.div>
         </div>
       </div>
+
+      {/* AI Not Configured Modal */}
+      <AINotConfiguredModal
+        isOpen={showConfigModal}
+        onClose={() => setShowConfigModal(false)}
+        feature="AI Copilot"
+      />
     </div>
   );
 };

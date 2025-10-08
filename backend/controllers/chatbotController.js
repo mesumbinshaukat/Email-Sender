@@ -1,4 +1,4 @@
-import axios from 'axios';
+import { getAIClient } from '../utils/openaiHelper.js';
 
 const SYSTEM_CONTEXT = `You are an intelligent AI assistant for the Email Tracker application - a professional MERN stack email tracking tool.
 
@@ -76,32 +76,17 @@ export const chat = async (req, res) => {
       },
     ];
 
-    // Call OpenRouter API
-    const apiKey = process.env.OPEN_ROUTER_API_KEY;
-    
-    if (!apiKey) {
-      throw new Error('OpenRouter API key not configured');
-    }
+    // Get AI client (supports multiple providers)
+    const userId = req.user?._id;
+    const aiClient = await getAIClient(userId);
 
-    const response = await axios.post(
-      'https://openrouter.ai/api/v1/chat/completions',
-      {
-        model: 'openai/gpt-oss-20b:free',
-        messages: messages,
-        temperature: 0.7,
-        max_tokens: 1000,
-      },
-      {
-        headers: {
-          'Authorization': `Bearer ${apiKey}`,
-          'HTTP-Referer': process.env.BACKEND_URL || 'http://localhost:5000',
-          'X-Title': 'Email Tracker Assistant',
-          'Content-Type': 'application/json',
-        },
-      }
-    );
+    const response = await aiClient.chat.completions.create({
+      messages: messages,
+      temperature: 0.7,
+      max_tokens: 1000,
+    });
 
-    const aiResponse = response.data.choices[0].message.content;
+    const aiResponse = response.choices[0].message.content;
 
     res.json({
       success: true,
@@ -112,6 +97,16 @@ export const chat = async (req, res) => {
     });
   } catch (error) {
     console.error('Chatbot error:', error.response?.data || error.message);
+    
+    if (error.message.includes('API key not configured') || error.message.includes('No AI provider')) {
+      return res.status(400).json({
+        success: false,
+        message: 'AI provider not configured',
+        code: 'AI_NOT_CONFIGURED',
+        action: 'Please configure an AI provider in settings'
+      });
+    }
+    
     res.status(500).json({
       success: false,
       message: 'Failed to get AI response',

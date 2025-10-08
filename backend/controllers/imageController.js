@@ -1,40 +1,40 @@
 // express-async-handler removed - using native async/await
-import OpenAI from 'openai';
 import sharp from 'sharp';
 import Image from '../models/Image.js';
-import { getEnvVar } from '../utils/envManager.js';
-
-// Initialize OpenAI with dynamic API key
-const getOpenAIClient = async () => {
-  const apiKey = await getEnvVar('OPENAI_API_KEY');
-  return new OpenAI({ apiKey });
-};
+import { getAIClient } from '../utils/openaiHelper.js';
 
 // @desc    Generate image
 // @route   POST /api/images/generate
 // @access  Private
 const generateImage = async (req, res) => {
   try {
-  const { prompt, size = '1024x1024' } = req.body;
-  const userId = req.user._id;
+    const { prompt, size = '1024x1024' } = req.body;
+    const userId = req.user._id;
 
-  const openai = await getOpenAIClient();
-  const response = await openai.images.generate({
-    prompt,
-    n: 1,
-    size
-  });
+    const aiClient = await getAIClient(userId);
+    const response = await aiClient.images.generate({
+      prompt,
+      n: 1,
+      size
+    });
 
-  const imageUrl = response.data[0].url;
+    const imageUrl = response.data[0].url;
 
-  const image = await Image.create({
-    user: userId,
-    prompt,
-    url: imageUrl
-  });
+    const image = await Image.create({
+      user: userId,
+      prompt,
+      url: imageUrl
+    });
 
-  res.status(201).json(image);
+    res.status(201).json(image);
   } catch (error) {
+    if (error.message.includes('API key not configured') || error.message.includes('No AI provider')) {
+      return res.status(400).json({
+        success: false,
+        message: 'AI provider not configured',
+        code: 'AI_NOT_CONFIGURED'
+      });
+    }
     res.status(500).json({ message: 'Server error', error: error.message });
   }
 };
@@ -91,8 +91,8 @@ const generateAltText = async (req, res) => {
 
   const prompt = `Generate concise, descriptive alt text for an image with this description: "${image.prompt}". Make it accessible and SEO-friendly.`;
 
-  const openai = await getOpenAIClient();
-  const completion = await openai.chat.completions.create({
+  const aiClient = await getAIClient(req.user._id);
+  const completion = await aiClient.chat.completions.create({
     model: 'gpt-4',
     messages: [{ role: 'user', content: prompt }],
     max_tokens: 50
@@ -105,6 +105,13 @@ const generateAltText = async (req, res) => {
 
   res.json({ altText });
   } catch (error) {
+    if (error.message.includes('API key not configured') || error.message.includes('No AI provider')) {
+      return res.status(400).json({
+        success: false,
+        message: 'AI provider not configured',
+        code: 'AI_NOT_CONFIGURED'
+      });
+    }
     res.status(500).json({ message: 'Server error', error: error.message });
   }
 };

@@ -1,36 +1,29 @@
 // express-async-handler removed - using native async/await
-import OpenAI from 'openai';
-import { getEnvVar } from '../utils/envManager.js';
-
-// Initialize OpenAI with dynamic API key
-const getOpenAIClient = async () => {
-  const apiKey = await getEnvVar('OPENAI_API_KEY');
-  return new OpenAI({ apiKey });
-};
+import { getAIClient } from '../utils/openaiHelper.js';
 
 // @desc    Suggest emojis
 // @route   POST /api/emoji/suggest
 // @access  Private
 const suggestEmojis = async (req, res) => {
   try {
-  const { subject, content } = req.body;
+    const { subject, content } = req.body;
 
-  const prompt = `Suggest 5-7 relevant emojis for this email subject and content. Consider the tone, topic, and cultural appropriateness.
+    const prompt = `Suggest 5-7 relevant emojis for this email subject and content. Consider the tone, topic, and cultural appropriateness.
 
 Subject: "${subject}"
 Content: "${content?.substring(0, 200)}..."
 
 Return only emojis separated by spaces, no explanation.`;
 
-  const openai = await getOpenAIClient();
-  const completion = await openai.chat.completions.create({
-    model: 'gpt-4',
-    messages: [{ role: 'user', content: prompt }],
-    max_tokens: 50
-  });
+    const aiClient = await getAIClient(req.user._id);
+    const completion = await aiClient.chat.completions.create({
+      model: 'gpt-4',
+      messages: [{ role: 'user', content: prompt }],
+      max_tokens: 50
+    });
 
-  const emojis = completion.choices[0].message.content.trim().split(' ');
-  res.json({ emojis });
+    const emojis = completion.choices[0].message.content.trim().split(' ');
+    res.json({ emojis });
   } catch (error) {
     res.status(500).json({ message: 'Server error', error: error.message });
   }
@@ -41,21 +34,21 @@ Return only emojis separated by spaces, no explanation.`;
 // @access  Private
 const checkAppropriateness = async (req, res) => {
   try {
-  const { emojis, context } = req.body;
+    const { emojis, context } = req.body;
 
-  const prompt = `Check if these emojis are culturally appropriate for this context: "${context}". Emojis: ${emojis.join(' ')}
+    const prompt = `Check if these emojis are culturally appropriate for this context: "${context}". Emojis: ${emojis.join(' ')}
 
 Return JSON: {"appropriate": true/false, "reason": "explanation"}`;
 
-  const openai = await getOpenAIClient();
-  const completion = await openai.chat.completions.create({
-    model: 'gpt-4',
-    messages: [{ role: 'user', content: prompt }],
-    max_tokens: 100
-  });
+    const aiClient = await getAIClient(req.user._id);
+    const completion = await aiClient.chat.completions.create({
+      model: 'gpt-4',
+      messages: [{ role: 'user', content: prompt }],
+      max_tokens: 100
+    });
 
-  const result = JSON.parse(completion.choices[0].message.content);
-  res.json(result);
+    const result = JSON.parse(completion.choices[0].message.content);
+    res.json(result);
   } catch (error) {
     res.status(500).json({ message: 'Server error', error: error.message });
   }

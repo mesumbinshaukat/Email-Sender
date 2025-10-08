@@ -66,6 +66,7 @@ import StaggeredSendOptimization from './pages/StaggeredSendOptimization';
 import LiquidPersonalization from './pages/LiquidPersonalization';
 import CrossChannelAdapter from './pages/CrossChannelAdapter';
 import ZeroPartyEnricher from './pages/ZeroPartyEnricher';
+import AIProviderSettings from './pages/AIProviderSettings';
 
 function App() {
   const { checkAuth, isAuthenticated } = useAuthStore();
@@ -632,6 +633,15 @@ function App() {
           element={
             <ProtectedRoute>
               <ZeroPartyEnricher />
+            </ProtectedRoute>
+          }
+        />
+        
+        <Route
+          path="/ai-providers"
+          element={
+            <ProtectedRoute>
+              <AIProviderSettings />
             </ProtectedRoute>
           }
         />

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { NavLink } from 'react-router-dom';
-import { Home, Send, Mail, BarChart3, Settings, Zap, Wand2, Eye, Thermometer, Clock, GitBranch, MessageSquare, MousePointer, Calendar, Shield, DollarSign, Users, Target, ShieldCheck, Palette, ImageIcon, Film, Bot, UserCheck, TrendingUp, Bell, Building, ShoppingCart, FlaskConical, Monitor, Lock, Crown, Code, Brain, Trophy, Mic, Package, Lightbulb, Link, RotateCcw, Shuffle, Database, ChevronDown, ChevronRight } from 'lucide-react';
+import { Home, Send, Mail, BarChart3, Settings, Zap, Wand2, Eye, Thermometer, Clock, GitBranch, MessageSquare, MousePointer, Calendar, Shield, DollarSign, Users, Target, ShieldCheck, Palette, ImageIcon, Film, Bot, UserCheck, TrendingUp, Bell, Building, ShoppingCart, FlaskConical, Monitor, Lock, Crown, Code, Brain, Trophy, Mic, Package, Lightbulb, Link, RotateCcw, Shuffle, Database, ChevronDown, ChevronRight, ChevronLeft } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '../../lib/utils';
 
@@ -157,14 +157,21 @@ const navCategories: NavCategory[] = [
     icon: Settings,
     items: [
       { name: 'Settings', path: '/settings', icon: Settings },
+      { name: 'AI Providers', path: '/ai-providers', icon: Brain },
     ]
   },
 ];
 
-export const Sidebar: React.FC = () => {
+interface SidebarProps {
+  isCollapsed: boolean;
+  onToggle: () => void;
+}
+
+export const Sidebar: React.FC<SidebarProps> = ({ isCollapsed, onToggle }) => {
   const [openCategories, setOpenCategories] = useState<string[]>(['Core Features']);
 
   const toggleCategory = (categoryName: string) => {
+    if (isCollapsed) return;
     setOpenCategories(prev =>
       prev.includes(categoryName)
         ? prev.filter(name => name !== categoryName)
@@ -175,74 +182,134 @@ export const Sidebar: React.FC = () => {
   return (
     <motion.aside
       initial={{ x: -100, opacity: 0 }}
-      animate={{ x: 0, opacity: 1 }}
-      className="fixed left-0 top-0 h-screen w-64 bg-white dark:bg-gray-800 shadow-lg overflow-y-auto z-40"
+      animate={{ 
+        x: 0, 
+        opacity: 1,
+        width: isCollapsed ? '80px' : '280px'
+      }}
+      transition={{ duration: 0.3, ease: 'easeInOut' }}
+      className="fixed left-0 top-0 h-screen bg-gradient-to-b from-indigo-600 via-purple-600 to-pink-600 shadow-2xl overflow-y-auto z-40 border-r border-white/10"
     >
-      <div className="p-6">
-        <h2 className="text-2xl font-bold text-gray-800 dark:text-white mb-6">
-          Email Tracker
-        </h2>
-        <nav className="space-y-2">
-          {navCategories.map((category) => {
-            const CategoryIcon = category.icon;
-            const isOpen = openCategories.includes(category.name);
-
-            return (
-              <div key={category.name} className="mb-1">
-                <button
-                  onClick={() => toggleCategory(category.name)}
-                  className="w-full flex items-center justify-between px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
-                >
-                  <div className="flex items-center gap-3">
-                    <CategoryIcon className="h-5 w-5" />
-                    <span className="font-medium text-sm">{category.name}</span>
-                  </div>
-                  {isOpen ? (
-                    <ChevronDown className="h-4 w-4" />
-                  ) : (
-                    <ChevronRight className="h-4 w-4" />
-                  )}
-                </button>
-
-                <AnimatePresence>
-                  {isOpen && (
-                    <motion.div
-                      initial={{ height: 0, opacity: 0 }}
-                      animate={{ height: 'auto', opacity: 1 }}
-                      exit={{ height: 0, opacity: 0 }}
-                      transition={{ duration: 0.2 }}
-                      className="overflow-hidden"
-                    >
-                      <div className="ml-4 mt-1 space-y-1">
-                        {category.items.map((item) => {
-                          const ItemIcon = item.icon;
-                          return (
-                            <NavLink
-                              key={item.path}
-                              to={item.path}
-                              className={({ isActive }) =>
-                                cn(
-                                  'flex items-center gap-3 px-3 py-2 rounded-lg transition-colors text-sm',
-                                  isActive
-                                    ? 'bg-blue-50 dark:bg-blue-900 text-blue-600 dark:text-blue-300'
-                                    : 'text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-700'
-                                )
-                              }
-                            >
-                              <ItemIcon className="h-4 w-4" />
-                              <span>{item.name}</span>
-                            </NavLink>
-                          );
-                        })}
-                      </div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </div>
-            );
-          })}
-        </nav>
+      {/* Header */}
+      <div className={cn(
+        "p-6 border-b border-white/10 flex items-center justify-between",
+        isCollapsed && "justify-center"
+      )}>
+        {!isCollapsed && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="flex items-center gap-3"
+          >
+            <div className="w-10 h-10 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center">
+              <Mail className="h-6 w-6 text-white" />
+            </div>
+            <div>
+              <h2 className="text-xl font-bold text-white">
+                Email Tracker
+              </h2>
+              <p className="text-xs text-white/70">AI-Powered Platform</p>
+            </div>
+          </motion.div>
+        )}
+        <button
+          onClick={onToggle}
+          className="p-2 hover:bg-white/10 rounded-lg transition-colors text-white"
+          title={isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+        >
+          {isCollapsed ? (
+            <ChevronRight className="h-5 w-5" />
+          ) : (
+            <ChevronLeft className="h-5 w-5" />
+          )}
+        </button>
       </div>
+
+      {/* Navigation */}
+      <nav className="p-4 space-y-2">
+        {navCategories.map((category) => {
+          const CategoryIcon = category.icon;
+          const isOpen = openCategories.includes(category.name);
+
+          return (
+            <div key={category.name} className="mb-1">
+              <button
+                onClick={() => toggleCategory(category.name)}
+                className={cn(
+                  "w-full flex items-center gap-3 px-3 py-2.5 text-white/90 hover:bg-white/10 rounded-xl transition-all group",
+                  isCollapsed && "justify-center"
+                )}
+                title={isCollapsed ? category.name : undefined}
+              >
+                <CategoryIcon className={cn(
+                  "h-5 w-5 flex-shrink-0 group-hover:scale-110 transition-transform",
+                  isCollapsed && "h-6 w-6"
+                )} />
+                {!isCollapsed && (
+                  <>
+                    <span className="font-medium text-sm flex-1 text-left">{category.name}</span>
+                    {isOpen ? (
+                      <ChevronDown className="h-4 w-4 flex-shrink-0" />
+                    ) : (
+                      <ChevronRight className="h-4 w-4 flex-shrink-0" />
+                    )}
+                  </>
+                )}
+              </button>
+
+              <AnimatePresence>
+                {isOpen && !isCollapsed && (
+                  <motion.div
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: 'auto', opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    transition={{ duration: 0.2 }}
+                    className="overflow-hidden"
+                  >
+                    <div className="ml-4 mt-1 space-y-1 border-l-2 border-white/10 pl-3">
+                      {category.items.map((item) => {
+                        const ItemIcon = item.icon;
+                        return (
+                          <NavLink
+                            key={item.path}
+                            to={item.path}
+                            className={({ isActive }) =>
+                              cn(
+                                'flex items-center gap-3 px-3 py-2 rounded-lg transition-all text-sm group',
+                                isActive
+                                  ? 'bg-white/20 text-white font-medium shadow-lg backdrop-blur-sm'
+                                  : 'text-white/70 hover:bg-white/10 hover:text-white'
+                              )
+                            }
+                          >
+                            <ItemIcon className="h-4 w-4 group-hover:scale-110 transition-transform" />
+                            <span>{item.name}</span>
+                          </NavLink>
+                        );
+                      })}
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+          );
+        })}
+      </nav>
+
+      {/* Footer */}
+      {!isCollapsed && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="absolute bottom-0 left-0 right-0 p-4 border-t border-white/10 bg-black/20 backdrop-blur-sm"
+        >
+          <div className="text-xs text-white/60 text-center">
+            <p>© 2025 Email Tracker</p>
+            <p className="mt-1">v1.0.0</p>
+          </div>
+        </motion.div>
+      )}
     </motion.aside>
   );
 };
