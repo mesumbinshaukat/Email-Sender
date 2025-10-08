@@ -149,6 +149,8 @@ app.use('/api/ai-providers', aiProviderRoutes);
 
 // API Routes
 app.use('/api/auth', authRoutes);
+app.use('/api/emails', emailRoutes);
+app.use('/api/tracking', trackingRoutes);
 app.use('/api/smtp', smtpRoutes);
 // app.use('/api/emails-auth', emailAuthenticationRoutes);
 app.use('/api/privacy', dataPrivacyRoutes);
@@ -157,6 +159,8 @@ app.use('/api/agentic', agenticRoutes);
 app.use('/api/ai', generativeRoutes);
 app.use('/api/predictor', predictorRoutes);
 app.use('/api/scheduler', schedulerRoutes);
+app.use('/api/warmup', warmupRoutes);
+app.use('/api/voice', voiceRoutes);
 app.use('/api/sequences', sequenceRoutes);
 app.use('/api/enrichment', enrichmentRoutes);
 app.use('/api/replies', replyRoutes);
