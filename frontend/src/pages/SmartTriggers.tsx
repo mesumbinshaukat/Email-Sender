@@ -249,7 +249,7 @@ const SmartTriggers = () => {
           </div>
         )}
       </div>
-    </div>
+    </DashboardLayout>
   );
 };
 

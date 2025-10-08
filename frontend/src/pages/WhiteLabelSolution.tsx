@@ -20,6 +20,7 @@ interface WhiteLabelSettings {
   emailSettings: {
     fromName: string;
     fromEmail: string;
+    replyToEmail?: string;
   };
   features: {
     removeBranding: boolean;
@@ -459,7 +460,7 @@ const WhiteLabelSolution = () => {
           </motion.div>
         )}
       </div>
-    </div>
+    </DashboardLayout>
   );
 };
 

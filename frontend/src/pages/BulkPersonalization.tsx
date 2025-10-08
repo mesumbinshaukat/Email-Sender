@@ -347,8 +347,8 @@ const BulkPersonalization = () => {
             </div>
           </motion.div>
         </div>
-      </div>
     </div>
+      </DashboardLayout>
   );
 };
 

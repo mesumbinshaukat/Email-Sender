@@ -280,8 +280,8 @@ const InboxRotation = () => {
             )}
           </div>
         </div>
-      </div>
     </div>
+      </DashboardLayout>
   );
 };
 

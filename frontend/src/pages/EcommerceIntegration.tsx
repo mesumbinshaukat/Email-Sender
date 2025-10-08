@@ -5,8 +5,18 @@ import { motion } from 'framer-motion';
 import { ShoppingCart, Plus, RefreshCw, Webhook, Settings } from 'lucide-react';
 import { DashboardLayout } from '../components/layout/DashboardLayout';
 
+interface Integration {
+  _id: string;
+  storeName: string;
+  platform: string;
+  syncStats?: {
+    ordersSynced: number;
+    productsSynced: number;
+  };
+}
+
 const EcommerceIntegration = () => {
-  const [integrations, setIntegrations] = useState([]);
+  const [integrations, setIntegrations] = useState<Integration[]>([]);
   const [showConnectForm, setShowConnectForm] = useState(false);
   const [formData, setFormData] = useState({
     platform: 'shopify',
@@ -176,8 +186,8 @@ const EcommerceIntegration = () => {
             </motion.div>
           ))}
         </div>
-      </div>
     </div>
+      </DashboardLayout>
   );
 };
 

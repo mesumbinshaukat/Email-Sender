@@ -5,9 +5,18 @@ import { motion } from 'framer-motion';
 import { Brain, Zap, TrendingUp, Target, Play, Pause } from 'lucide-react';
 import { DashboardLayout } from '../components/layout/DashboardLayout';
 
+interface AIModel {
+  _id: string;
+  modelType: string;
+  status: string;
+  performance?: {
+    accuracy: number;
+  };
+}
+
 const AITraining = () => {
-  const [models, setModels] = useState([]);
-  const [selectedModel, setSelectedModel] = useState(null);
+  const [models, setModels] = useState<AIModel[]>([]);
+  const [selectedModel, setSelectedModel] = useState<AIModel | null>(null);
 
   useEffect(() => {
     fetchModels();
@@ -22,7 +31,7 @@ const AITraining = () => {
     }
   };
 
-  const startTraining = async (modelType) => {
+  const startTraining = async (modelType: string) => {
     try {
       const { data } = await axios.post('/api/ai-training/train', { modelType });
       toast.success('AI training started!');
@@ -32,7 +41,7 @@ const AITraining = () => {
     }
   };
 
-  const useModel = async (modelId, input) => {
+  const useModel = async (modelId: string, input: string) => {
     try {
       const { data } = await axios.post(`/api/ai-training/${modelId}/predict`, { input });
       toast.success('AI prediction completed!');
@@ -126,7 +135,7 @@ const AITraining = () => {
           </div>
         </div>
       </div>
-    </div>
+    </DashboardLayout>
   );
 };
 

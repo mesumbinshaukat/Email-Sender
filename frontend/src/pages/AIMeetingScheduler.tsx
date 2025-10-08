@@ -264,7 +264,7 @@ export const AIMeetingScheduler: React.FC = () => {
                 <p className="text-gray-600 dark:text-gray-400 text-center mb-4">
                   The AI will automatically detect meeting requests from incoming emails and suggest scheduling options.
                 </p>
-                <Button onClick={() => toast.info('AI monitoring is always active for new emails')}>
+                <Button onClick={() => toast('AI monitoring is always active for new emails')}>
                   Learn More
                 </Button>
               </CardContent>

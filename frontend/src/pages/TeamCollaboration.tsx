@@ -5,6 +5,17 @@ import { motion } from 'framer-motion';
 import { Users, UserPlus, Settings, Crown, Shield, Eye, Edit, Mail } from 'lucide-react';
 import { DashboardLayout } from '../components/layout/DashboardLayout';
 
+interface TeamMember {
+  _id: string;
+  user: {
+    _id: string;
+    name: string;
+    email: string;
+  };
+  role: string;
+  permissions: any;
+}
+
 interface Team {
   _id: string;
   name: string;
@@ -12,15 +23,7 @@ interface Team {
     name: string;
     email: string;
   };
-  members: Array<{
-    user: {
-      _id: string;
-      name: string;
-      email: string;
-    };
-    role: string;
-    permissions: any;
-  }>;
+  members: TeamMember[];
   settings: any;
 }
 
@@ -265,7 +268,7 @@ const TeamCollaboration = () => {
 
                           <select
                             value={member.role}
-                            onChange={(e) => updateMemberRole(selectedTeam._id, member._id, e.target.value)}
+                            onChange={(e) => updateMemberRole(selectedTeam._id, member.user._id, e.target.value)}
                             className="text-sm border rounded px-2 py-1"
                           >
                             <option value="viewer">Viewer</option>
@@ -300,7 +303,7 @@ const TeamCollaboration = () => {
                         checked={selectedTeam.settings.allowMemberInvites}
                         onChange={(e) => {
                           // Update setting logic would go here
-                          toast.info('Settings update coming soon');
+                          toast('Settings update coming soon');
                         }}
                         className="rounded"
                       />
@@ -311,7 +314,7 @@ const TeamCollaboration = () => {
                         type="checkbox"
                         checked={selectedTeam.settings.requireApproval}
                         onChange={(e) => {
-                          toast.info('Settings update coming soon');
+                          toast('Settings update coming soon');
                         }}
                         className="rounded"
                       />
@@ -393,7 +396,7 @@ const TeamCollaboration = () => {
           </motion.div>
         )}
       </div>
-    </div>
+    </DashboardLayout>
   );
 };
 

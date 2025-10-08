@@ -459,7 +459,7 @@ const DataPrivacyCenter = () => {
           </>
         )}
       </div>
-    </div>
+    </DashboardLayout>
   );
 };
 

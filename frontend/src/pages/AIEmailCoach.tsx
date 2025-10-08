@@ -5,9 +5,23 @@ import { motion } from 'framer-motion';
 import { Lightbulb, TrendingUp, Target, CheckCircle, AlertTriangle } from 'lucide-react';
 import { DashboardLayout } from '../components/layout/DashboardLayout';
 
+interface Insight {
+  _id: string;
+  type: string;
+  message: string;
+  action: string;
+  impact: string;
+  implemented: boolean;
+}
+
+interface Performance {
+  currentScore: number;
+  trend: string;
+}
+
 const AIEmailCoach = () => {
-  const [insights, setInsights] = useState([]);
-  const [performance, setPerformance] = useState(null);
+  const [insights, setInsights] = useState<Insight[]>([]);
+  const [performance, setPerformance] = useState<Performance | null>(null);
 
   useEffect(() => {
     fetchInsights();
@@ -23,7 +37,7 @@ const AIEmailCoach = () => {
     }
   };
 
-  const implementInsight = async (insightId) => {
+  const implementInsight = async (insightId: string) => {
     try {
       await axios.post('/api/gamification/ai-coach/implement', { insightId });
       toast.success('Insight marked as implemented!');
@@ -171,7 +185,7 @@ const AIEmailCoach = () => {
           </div>
         </div>
       </div>
-    </div>
+    </DashboardLayout>
   );
 };
 

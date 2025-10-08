@@ -156,8 +156,8 @@ const AMPBuilder = () => {
             </div>
           </div>
         </div>
-      </div>
     </div>
+      </DashboardLayout>
   );
 };
 

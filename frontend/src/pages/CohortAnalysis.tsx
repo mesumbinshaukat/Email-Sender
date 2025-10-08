@@ -270,7 +270,7 @@ const CohortAnalysis = () => {
           </motion.div>
         )}
       </div>
-    </div>
+    </DashboardLayout>
   );
 };
 

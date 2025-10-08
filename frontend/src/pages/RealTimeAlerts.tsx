@@ -286,8 +286,8 @@ const RealTimeAlerts = () => {
             )}
           </div>
         </div>
-      </div>
     </div>
+      </DashboardLayout>
   );
 };
 

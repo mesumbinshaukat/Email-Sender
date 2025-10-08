@@ -228,8 +228,8 @@ const ImageAI = () => {
             </div>
           </motion.div>
         </div>
-      </div>
     </div>
+      </DashboardLayout>
   );
 };
 

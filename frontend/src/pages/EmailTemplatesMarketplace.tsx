@@ -162,8 +162,8 @@ const EmailTemplatesMarketplace = () => {
             </motion.div>
           ))}
         </div>
-      </div>
     </div>
+      </DashboardLayout>
   );
 };
 

@@ -273,8 +273,8 @@ const PredictiveAnalytics = () => {
             </div>
           </motion.div>
         </div>
-      </div>
     </div>
+      </DashboardLayout>
   );
 };
 

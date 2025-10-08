@@ -5,11 +5,41 @@ import { motion } from 'framer-motion';
 import { BarChart3, Download, FileText, Calendar, TrendingUp } from 'lucide-react';
 import { DashboardLayout } from '../components/layout/DashboardLayout';
 
+interface Report {
+  _id: string;
+  name: string;
+  type: string;
+  description?: string;
+  config?: any;
+  data?: any;
+}
+
+interface Dashboard {
+  overview: {
+    totalEmails: number;
+    activeCampaigns: number;
+  };
+  performance: {
+    openRate: number;
+    clickRate: number;
+  };
+}
+
+interface ReportData {
+  name: string;
+  type: string;
+  config: {
+    dateRange: {
+      preset: string;
+    };
+  };
+}
+
 const AdvancedReporting = () => {
-  const [reports, setReports] = useState([]);
-  const [selectedReport, setSelectedReport] = useState(null);
+  const [reports, setReports] = useState<Report[]>([]);
+  const [selectedReport, setSelectedReport] = useState<Report | null>(null);
   const [showCreateForm, setShowCreateForm] = useState(false);
-  const [dashboard, setDashboard] = useState(null);
+  const [dashboard, setDashboard] = useState<Dashboard | null>(null);
 
   useEffect(() => {
     fetchReports();
@@ -34,7 +64,7 @@ const AdvancedReporting = () => {
     }
   };
 
-  const createReport = async (reportData) => {
+  const createReport = async (reportData: ReportData) => {
     try {
       const { data } = await axios.post('/api/reports', reportData);
       setReports([data, ...reports]);
@@ -45,7 +75,7 @@ const AdvancedReporting = () => {
     }
   };
 
-  const generateReport = async (reportId) => {
+  const generateReport = async (reportId: string) => {
     try {
       const { data } = await axios.post(`/api/reports/${reportId}/generate`);
       setSelectedReport(data.report);
@@ -130,12 +160,12 @@ const AdvancedReporting = () => {
             className="bg-white dark:bg-gray-800 rounded-lg shadow p-6 mb-6"
           >
             <h2 className="text-xl font-semibold mb-4">Create Custom Report</h2>
-            <form onSubmit={(e) => {
+            <form onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
               e.preventDefault();
-              const formData = new FormData(e.target);
+              const formData = new FormData(e.currentTarget);
               createReport({
-                name: formData.get('name'),
-                type: formData.get('type'),
+                name: formData.get('name') as string,
+                type: formData.get('type') as string,
                 config: {
                   dateRange: { preset: 'last_30_days' }
                 }
@@ -211,8 +241,8 @@ const AdvancedReporting = () => {
             </motion.div>
           ))}
         </div>
-      </div>
     </div>
+      </DashboardLayout>
   );
 };
 

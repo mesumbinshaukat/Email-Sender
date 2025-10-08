@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Shield, AlertTriangle, CheckCircle, XCircle, Trash2, Upload, Download, RefreshCw } from 'lucide-react';
+import { Shield, AlertTriangle, CheckCircle, XCircle, Trash2, Download, RefreshCw } from 'lucide-react';
 import { DashboardLayout } from '../components/layout/DashboardLayout';
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/Card';
 import { Button } from '../components/ui/Button';

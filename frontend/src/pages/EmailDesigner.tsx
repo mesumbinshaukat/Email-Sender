@@ -239,7 +239,7 @@ const EmailDesigner = () => {
           </motion.div>
         )}
       </div>
-    </div>
+    </DashboardLayout>
   );
 };
 

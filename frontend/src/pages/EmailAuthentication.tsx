@@ -446,8 +446,8 @@ const EmailAuthentication = () => {
             )}
           </motion.div>
         </div>
-      </div>
     </div>
+      </DashboardLayout>
   );
 };
 

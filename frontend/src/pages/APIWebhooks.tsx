@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import toast from 'react-hot-toast';
 import axios from 'axios';
 import { motion } from 'framer-motion';
-import { Webhook, Plus, TestTube, Trash2, CheckCircle, XCircle, Code, Zap } from 'lucide-react';
+import { Webhook, Plus, TestTube, Trash2, CheckCircle, XCircle, Code } from 'lucide-react';
 import { DashboardLayout } from '../components/layout/DashboardLayout';
 
 interface WebhookData {
@@ -374,7 +374,7 @@ const APIWebhooks = () => {
           </motion.div>
         </div>
       </div>
-    </div>
+    </DashboardLayout>
   );
 };
 

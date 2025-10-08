@@ -2,11 +2,26 @@ import { useState, useEffect } from 'react';
 import toast from 'react-hot-toast';
 import axios from 'axios';
 import { motion } from 'framer-motion';
-import { Trophy, Star, Mic, Shopping, Lightbulb, Link } from 'lucide-react';
+import { Trophy, Star } from 'lucide-react';
 import { DashboardLayout } from '../components/layout/DashboardLayout';
 
+interface GamificationProfile {
+  points: number;
+  level: number;
+  badges?: Array<{
+    name: string;
+    rarity: string;
+  }>;
+  achievements?: Array<{
+    type: string;
+    count: number;
+    target: number;
+    completed: boolean;
+  }>;
+}
+
 const EmailGamification = () => {
-  const [profile, setProfile] = useState(null);
+  const [profile, setProfile] = useState<GamificationProfile | null>(null);
 
   useEffect(() => {
     fetchProfile();
@@ -90,8 +105,8 @@ const EmailGamification = () => {
             </div>
           </div>
         </div>
-      </div>
     </div>
+      </DashboardLayout>
   );
 };
 

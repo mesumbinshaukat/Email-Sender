@@ -409,8 +409,8 @@ const SendTimeOptimization = () => {
             )}
           </motion.div>
         </div>
-      </div>
     </div>
+      </DashboardLayout>
   );
 };
 

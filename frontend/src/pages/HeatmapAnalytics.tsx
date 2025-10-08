@@ -131,7 +131,7 @@ export const HeatmapAnalytics: React.FC = () => {
     }
 
     // Group scrolls by depth ranges
-    const scrollBuckets = {};
+    const scrollBuckets: Record<number, number> = {};
     heatmapData.scrolls.forEach(scroll => {
       const bucket = Math.floor(scroll.depth / 10) * 10;
       scrollBuckets[bucket] = (scrollBuckets[bucket] || 0) + 1;
@@ -169,7 +169,7 @@ export const HeatmapAnalytics: React.FC = () => {
     }
 
     // Group by time ranges
-    const timeBuckets = {};
+    const timeBuckets: Record<number, number> = {};
     heatmapData.timeTracking.forEach(session => {
       const bucket = Math.floor(session.totalTime / 30) * 30;
       timeBuckets[bucket] = (timeBuckets[bucket] || 0) + 1;
@@ -207,7 +207,7 @@ export const HeatmapAnalytics: React.FC = () => {
     }
 
     // Group by country
-    const countryStats = {};
+    const countryStats: Record<string, number> = {};
     heatmapData.geographic.forEach(geo => {
       countryStats[geo.country] = (countryStats[geo.country] || 0) + 1;
     });

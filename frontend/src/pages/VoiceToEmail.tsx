@@ -5,10 +5,21 @@ import { motion } from 'framer-motion';
 import { Mic, Play, Square, FileText, Download } from 'lucide-react';
 import { DashboardLayout } from '../components/layout/DashboardLayout';
 
+interface VoiceEmail {
+  _id: string;
+  status: string;
+  duration?: number;
+  transcription?: string;
+  emailContent?: {
+    subject: string;
+    body: string;
+  };
+}
+
 const VoiceToEmail = () => {
-  const [voiceEmails, setVoiceEmails] = useState([]);
+  const [voiceEmails, setVoiceEmails] = useState<VoiceEmail[]>([]);
   const [isRecording, setIsRecording] = useState(false);
-  const [audioBlob, setAudioBlob] = useState(null);
+  const [audioBlob, setAudioBlob] = useState<Blob | null>(null);
 
   useEffect(() => {
     fetchVoiceEmails();
@@ -26,7 +37,7 @@ const VoiceToEmail = () => {
   const startRecording = () => {
     setIsRecording(true);
     // In a real implementation, this would use the Web Audio API
-    toast.info('Recording started (simulated)');
+    toast('Recording started (simulated)');
   };
 
   const stopRecording = () => {
@@ -56,8 +67,8 @@ const VoiceToEmail = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <DashboardLayout>
+      <div>
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -139,7 +150,7 @@ const VoiceToEmail = () => {
           </div>
         </div>
       </div>
-    </div>
+    </DashboardLayout>
   );
 };
 

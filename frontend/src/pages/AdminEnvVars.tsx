@@ -262,7 +262,7 @@ const AdminEnvVars = () => {
           </div>
         </div>
       </div>
-    </div>
+    </DashboardLayout>
   );
 };
 

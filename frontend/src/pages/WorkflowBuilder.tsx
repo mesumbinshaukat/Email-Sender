@@ -200,8 +200,8 @@ const WorkflowBuilder = () => {
             </div>
           </motion.div>
         </div>
-      </div>
     </div>
+      </DashboardLayout>
   );
 };
 

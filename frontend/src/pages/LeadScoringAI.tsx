@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Target, TrendingUp, Users, Star, AlertTriangle, CheckCircle, BarChart3, Zap } from 'lucide-react';
+import { Target, TrendingUp, Users, Star, AlertTriangle, BarChart3, Zap } from 'lucide-react';
 import { DashboardLayout } from '../components/layout/DashboardLayout';
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/Card';
 import { Button } from '../components/ui/Button';
