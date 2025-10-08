@@ -29,6 +29,58 @@ interface WhiteLabelSettings {
   };
 }
 
+// Ensure we always have a fully-populated settings object to avoid undefined property access
+const normalizeSettings = (input: Partial<WhiteLabelSettings> | null | undefined): WhiteLabelSettings => {
+  const defaults: WhiteLabelSettings = {
+    branding: {
+      companyName: 'Your Company',
+      logo: '',
+      primaryColor: '#3b82f6',
+      secondaryColor: '#8b5cf6',
+      fontFamily: 'Inter',
+    },
+    domain: {
+      customDomain: '',
+      isVerified: false,
+    },
+    emailSettings: {
+      fromName: 'Your Company',
+      fromEmail: 'noreply@example.com',
+      replyToEmail: '',
+    },
+    features: {
+      removeBranding: false,
+      customIntegrations: false,
+      apiAccess: false,
+    },
+  };
+
+  const safe = input ?? {} as Partial<WhiteLabelSettings>;
+  return {
+    branding: {
+      companyName: safe.branding?.companyName ?? defaults.branding.companyName,
+      logo: safe.branding?.logo ?? defaults.branding.logo,
+      primaryColor: safe.branding?.primaryColor ?? defaults.branding.primaryColor,
+      secondaryColor: safe.branding?.secondaryColor ?? defaults.branding.secondaryColor,
+      fontFamily: safe.branding?.fontFamily ?? defaults.branding.fontFamily,
+    },
+    domain: {
+      customDomain: safe.domain?.customDomain ?? defaults.domain.customDomain,
+      isVerified: safe.domain?.isVerified ?? defaults.domain.isVerified,
+    },
+    emailSettings: {
+      fromName: safe.emailSettings?.fromName ?? defaults.emailSettings.fromName,
+      fromEmail: safe.emailSettings?.fromEmail ?? defaults.emailSettings.fromEmail,
+      replyToEmail: safe.emailSettings?.replyToEmail ?? defaults.emailSettings.replyToEmail,
+    },
+    features: {
+      removeBranding: safe.features?.removeBranding ?? defaults.features.removeBranding,
+      customIntegrations: safe.features?.customIntegrations ?? defaults.features.customIntegrations,
+      apiAccess: safe.features?.apiAccess ?? defaults.features.apiAccess,
+    },
+  };
+};
+
 const WhiteLabelSolution = () => {
   const [settings, setSettings] = useState<WhiteLabelSettings | null>(null);
   const [showBrandingForm, setShowBrandingForm] = useState(false);
@@ -43,32 +95,12 @@ const WhiteLabelSolution = () => {
   const fetchSettings = async () => {
     try {
       const { data } = await axios.get('/api/white-label');
-      setSettings(data);
+      const payload = (data && (data as any).data) ? (data as any).data : data;
+      setSettings(normalizeSettings(payload));
     } catch (error) {
       toast.error('Failed to load white label settings');
-      // Set default settings if API fails
-      setSettings({
-        branding: {
-          companyName: 'Your Company',
-          logo: '',
-          primaryColor: '#3b82f6',
-          secondaryColor: '#8b5cf6',
-          fontFamily: 'Inter'
-        },
-        domain: {
-          customDomain: '',
-          isVerified: false
-        },
-        emailSettings: {
-          fromName: 'Your Company',
-          fromEmail: 'noreply@example.com'
-        },
-        features: {
-          removeBranding: false,
-          customIntegrations: false,
-          apiAccess: false
-        }
-      });
+      // Fall back to defaults if API fails
+      setSettings(normalizeSettings(null));
     }
   };
 
@@ -76,7 +108,8 @@ const WhiteLabelSolution = () => {
     setLoading(true);
     try {
       const { data } = await axios.put('/api/white-label/branding', { branding });
-      setSettings(data);
+      const payload = (data && (data as any).data) ? (data as any).data : data;
+      setSettings(normalizeSettings(payload));
       setShowBrandingForm(false);
       toast.success('Branding updated successfully!');
     } catch (error) {
@@ -90,7 +123,8 @@ const WhiteLabelSolution = () => {
     setLoading(true);
     try {
       const { data } = await axios.put('/api/white-label/domain', { domain });
-      setSettings(data);
+      const payload = (data && (data as any).data) ? (data as any).data : data;
+      setSettings(normalizeSettings(payload));
       setShowDomainForm(false);
       toast.success('Domain settings updated!');
     } catch (error) {
@@ -104,7 +138,8 @@ const WhiteLabelSolution = () => {
     setLoading(true);
     try {
       const { data } = await axios.put('/api/white-label/email', { emailSettings });
-      setSettings(data);
+      const payload = (data && (data as any).data) ? (data as any).data : data;
+      setSettings(normalizeSettings(payload));
       setShowEmailForm(false);
       toast.success('Email settings updated!');
     } catch (error) {
@@ -178,21 +213,21 @@ const WhiteLabelSolution = () => {
             <div className="space-y-3">
               <div>
                 <span className="text-sm text-gray-600 dark:text-gray-400">Company:</span>
-                <p className="font-medium">{settings.branding.companyName}</p>
+                <p className="font-medium">{settings?.branding?.companyName ?? 'Your Company'}</p>
               </div>
               <div>
                 <span className="text-sm text-gray-600 dark:text-gray-400">Primary Color:</span>
                 <div className="flex items-center gap-2 mt-1">
                   <div
                     className="w-6 h-6 rounded border"
-                    style={{ backgroundColor: settings.branding.primaryColor }}
+                    style={{ backgroundColor: settings?.branding?.primaryColor ?? '#3b82f6' }}
                   ></div>
-                  <span className="text-sm font-mono">{settings.branding.primaryColor}</span>
+                  <span className="text-sm font-mono">{settings?.branding?.primaryColor ?? '#3b82f6'}</span>
                 </div>
               </div>
               <div>
                 <span className="text-sm text-gray-600 dark:text-gray-400">Font:</span>
-                <p className="font-medium">{settings.branding.fontFamily}</p>
+                <p className="font-medium">{settings?.branding?.fontFamily ?? 'Inter'}</p>
               </div>
             </div>
           </motion.div>
@@ -219,11 +254,11 @@ const WhiteLabelSolution = () => {
             <div className="space-y-3">
               <div>
                 <span className="text-sm text-gray-600 dark:text-gray-400">Domain:</span>
-                <p className="font-medium">{settings.domain.customDomain || 'Not configured'}</p>
+                <p className="font-medium">{settings?.domain?.customDomain || 'Not configured'}</p>
               </div>
               <div className="flex items-center gap-2">
                 <span className="text-sm text-gray-600 dark:text-gray-400">Status:</span>
-                {settings.domain.isVerified ? (
+                {settings?.domain?.isVerified ? (
                   <span className="flex items-center gap-1 text-green-600">
                     <CheckCircle className="h-4 w-4" />
                     Verified
@@ -235,7 +270,7 @@ const WhiteLabelSolution = () => {
                   </span>
                 )}
               </div>
-              {settings.domain.customDomain && !settings.domain.isVerified && (
+              {settings?.domain?.customDomain && !settings?.domain?.isVerified && (
                 <button
                   onClick={verifyDomain}
                   disabled={loading}
@@ -269,11 +304,11 @@ const WhiteLabelSolution = () => {
             <div className="space-y-3">
               <div>
                 <span className="text-sm text-gray-600 dark:text-gray-400">From Name:</span>
-                <p className="font-medium">{settings.emailSettings.fromName || 'Default'}</p>
+                <p className="font-medium">{settings?.emailSettings?.fromName || 'Default'}</p>
               </div>
               <div>
                 <span className="text-sm text-gray-600 dark:text-gray-400">From Email:</span>
-                <p className="font-medium">{settings.emailSettings.fromEmail || 'Default'}</p>
+                <p className="font-medium">{settings?.emailSettings?.fromEmail || 'Default'}</p>
               </div>
             </div>
           </motion.div>
@@ -303,7 +338,7 @@ const WhiteLabelSolution = () => {
                     <label className="block text-sm font-medium mb-1">Company Name</label>
                     <input
                       name="companyName"
-                      defaultValue={settings.branding.companyName}
+                      defaultValue={settings?.branding?.companyName ?? ''}
                       className="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500"
                       required
                     />
@@ -313,7 +348,7 @@ const WhiteLabelSolution = () => {
                     <input
                       name="primaryColor"
                       type="color"
-                      defaultValue={settings.branding.primaryColor}
+                      defaultValue={settings?.branding?.primaryColor ?? '#3b82f6'}
                       className="w-full p-2 border rounded"
                     />
                   </div>
@@ -322,7 +357,7 @@ const WhiteLabelSolution = () => {
                     <input
                       name="secondaryColor"
                       type="color"
-                      defaultValue={settings.branding.secondaryColor}
+                      defaultValue={settings?.branding?.secondaryColor ?? '#8b5cf6'}
                       className="w-full p-2 border rounded"
                     />
                   </div>
@@ -330,7 +365,7 @@ const WhiteLabelSolution = () => {
                     <label className="block text-sm font-medium mb-1">Font Family</label>
                     <select
                       name="fontFamily"
-                      defaultValue={settings.branding.fontFamily}
+                      defaultValue={settings?.branding?.fontFamily ?? 'Inter'}
                       className="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500"
                     >
                       <option value="Inter">Inter</option>
@@ -382,7 +417,7 @@ const WhiteLabelSolution = () => {
                     <label className="block text-sm font-medium mb-1">Custom Domain</label>
                     <input
                       name="customDomain"
-                      defaultValue={settings.domain.customDomain}
+                      defaultValue={settings?.domain?.customDomain ?? ''}
                       placeholder="app.yourcompany.com"
                       className="w-full p-2 border rounded focus:ring-2 focus:ring-green-500"
                       required
@@ -436,7 +471,7 @@ const WhiteLabelSolution = () => {
                     <label className="block text-sm font-medium mb-1">From Name</label>
                     <input
                       name="fromName"
-                      defaultValue={settings.emailSettings.fromName}
+                      defaultValue={settings?.emailSettings?.fromName ?? ''}
                       placeholder="Your Company"
                       className="w-full p-2 border rounded focus:ring-2 focus:ring-purple-500"
                     />
@@ -446,7 +481,7 @@ const WhiteLabelSolution = () => {
                     <input
                       name="fromEmail"
                       type="email"
-                      defaultValue={settings.emailSettings.fromEmail}
+                      defaultValue={settings?.emailSettings?.fromEmail ?? ''}
                       placeholder="noreply@yourcompany.com"
                       className="w-full p-2 border rounded focus:ring-2 focus:ring-purple-500"
                     />
@@ -456,7 +491,7 @@ const WhiteLabelSolution = () => {
                     <input
                       name="replyToEmail"
                       type="email"
-                      defaultValue={settings.emailSettings.replyToEmail}
+                      defaultValue={settings?.emailSettings?.replyToEmail ?? ''}
                       placeholder="support@yourcompany.com"
                       className="w-full p-2 border rounded focus:ring-2 focus:ring-purple-500"
                     />
