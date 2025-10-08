@@ -16,7 +16,7 @@ export const useAIProvider = (): AIProviderHook => {
     try {
       const token = localStorage.getItem('token');
       const response = await axios.get(
-        `${import.meta.env.VITE_API_URL}/api/ai-providers`,
+        `${import.meta.env.VITE_API_URL}/ai-providers`,
         { headers: { Authorization: `Bearer ${token}` } }
       );
       return response.data.data && response.data.data.length > 0;

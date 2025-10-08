@@ -92,7 +92,7 @@ export default function AIProviderSettings() {
   const fetchProviders = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await axios.get(`${import.meta.env.VITE_API_URL}/api/ai-providers`, {
+      const response = await axios.get(`${import.meta.env.VITE_API_URL}/ai-providers`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setProviders(response.data.data);
@@ -107,7 +107,7 @@ export default function AIProviderSettings() {
     try {
       const token = localStorage.getItem('token');
       const response = await axios.get(
-        `${import.meta.env.VITE_API_URL}/api/ai-providers/models/${provider}`,
+        `${import.meta.env.VITE_API_URL}/ai-providers/models/${provider}`,
         { headers: { Authorization: `Bearer ${token}` } }
       );
       setAvailableModels(response.data.data);
@@ -131,7 +131,7 @@ export default function AIProviderSettings() {
     try {
       const token = localStorage.getItem('token');
       const response = await axios.post(
-        `${import.meta.env.VITE_API_URL}/api/ai-providers/test`,
+        `${import.meta.env.VITE_API_URL}/ai-providers/test`,
         {
           provider: selectedProvider,
           apiKey,
@@ -167,7 +167,7 @@ export default function AIProviderSettings() {
     try {
       const token = localStorage.getItem('token');
       await axios.post(
-        `${import.meta.env.VITE_API_URL}/api/ai-providers`,
+        `${import.meta.env.VITE_API_URL}/ai-providers`,
         {
           provider: selectedProvider,
           apiKey,
@@ -197,7 +197,7 @@ export default function AIProviderSettings() {
     try {
       const token = localStorage.getItem('token');
       await axios.put(
-        `${import.meta.env.VITE_API_URL}/api/ai-providers/${id}/set-default`,
+        `${import.meta.env.VITE_API_URL}/ai-providers/${id}/set-default`,
         {},
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -212,7 +212,7 @@ export default function AIProviderSettings() {
     try {
       const token = localStorage.getItem('token');
       await axios.put(
-        `${import.meta.env.VITE_API_URL}/api/ai-providers/${id}`,
+        `${import.meta.env.VITE_API_URL}/ai-providers/${id}`,
         { isActive: !isActive },
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -229,7 +229,7 @@ export default function AIProviderSettings() {
     try {
       const token = localStorage.getItem('token');
       await axios.delete(
-        `${import.meta.env.VITE_API_URL}/api/ai-providers/${id}`,
+        `${import.meta.env.VITE_API_URL}/ai-providers/${id}`,
         { headers: { Authorization: `Bearer ${token}` } }
       );
       toast.success('Provider deleted');

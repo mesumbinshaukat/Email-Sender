@@ -2,8 +2,9 @@ import { useState, useEffect } from 'react';
 import toast from 'react-hot-toast';
 import axios from 'axios';
 import { motion } from 'framer-motion';
-import { FlaskConical, Plus, Play, BarChart3, Trophy, TrendingUp } from 'lucide-react';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LineChart, Line } from 'recharts';
+import { FlaskConical, Plus, Play, Trophy, BarChart3 } from 'lucide-react';
+import { DashboardLayout } from '../components/layout/DashboardLayout';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 
 interface ABTest {
   _id: string;
@@ -124,8 +125,8 @@ const ABTesting = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <DashboardLayout>
+      <div>
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -305,31 +306,30 @@ const ABTesting = () => {
                 </h2>
 
                 {analysis.winner && (
-                  <div className="mb-6 p-4 bg-green-50 dark:bg-green-900 rounded-lg">
-                    <div className="flex items-center gap-2 mb-2">
-                      <Trophy className="h-5 w-5 text-green-600" />
-                      <span className="font-semibold text-green-800 dark:text-green-200">
-                        Winner Declared!
-                      </span>
+                  <>
+                    <div className="mb-6 p-4 bg-green-50 dark:bg-green-900 rounded-lg">
+                      <div className="flex items-center gap-2 mb-2">
+                        <Trophy className="h-5 w-5 text-green-600" />
+                        <span className="font-semibold text-green-800 dark:text-green-200">
+                          Winner Declared!
+                        </span>
+                      </div>
+                      <p className="text-green-700 dark:text-green-300">
+                        {analysis.winner.variantIndex === 0 ? 'Control' :
+                         `Variant ${String.fromCharCode(65 + analysis.winner.variantIndex - 1)}`}
+                        improved performance by {analysis.winner.improvement}%
+                      </p>
+                      <button
+                        onClick={() => declareWinner(selectedTest._id, analysis.winner.variantIndex)}
+                        className="mt-2 bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 text-sm"
+                      >
+                        Apply Winner
+                      </button>
                     </div>
-                    <p className="text-green-700 dark:text-green-300">
-                      {analysis.winner.variantIndex === 0 ? 'Control' :
-                       `Variant ${String.fromCharCode(65 + analysis.winner.variantIndex - 1)}`}
-                      improved performance by {analysis.winner.improvement}%
-                    </p>
-                    <button
-                      onClick={() => declareWinner(selectedTest._id, analysis.winner.variantIndex)}
-                      className="mt-2 bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 text-sm"
-                    >
-                      Apply Winner
-                    </button>
-                  </div>
-                )}
-
-                <div className="mb-6">
+                    <div className="mb-6">
                   <h3 className="text-lg font-semibold mb-4">Performance Comparison</h3>
                   <ResponsiveContainer width="100%" height={300}>
-                    <BarChart data={selectedTest.variants.map((variant, index) => ({
+                    <BarChart data={selectedTest.variants.map((variant) => ({
                       name: variant.name,
                       opens: variant.opens || 0,
                       clicks: variant.clicks || 0
@@ -345,7 +345,6 @@ const ABTesting = () => {
                 </div>
 
                 <div>
-                  <h3 className="text-lg font-semibold mb-4">Detailed Results</h3>
                   <div className="space-y-3">
                     {selectedTest.variants.map((variant, index) => (
                       <div key={index} className="flex justify-between items-center p-3 border rounded">
@@ -367,6 +366,8 @@ const ABTesting = () => {
                     ))}
                   </div>
                 </div>
+                  </>
+                )}
               </div>
             ) : (
               <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
@@ -384,7 +385,7 @@ const ABTesting = () => {
           </motion.div>
         </div>
       </div>
-    </div>
+    </DashboardLayout>
   );
 };
 

@@ -3,6 +3,7 @@ import toast from 'react-hot-toast';
 import axios from 'axios';
 import { motion } from 'framer-motion';
 import { Mic, Play, Square, FileText, Download } from 'lucide-react';
+import { DashboardLayout } from '../components/layout/DashboardLayout';
 
 const VoiceToEmail = () => {
   const [voiceEmails, setVoiceEmails] = useState([]);

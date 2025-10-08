@@ -2,7 +2,8 @@ import { useState, useEffect } from 'react';
 import toast from 'react-hot-toast';
 import axios from 'axios';
 import { motion } from 'framer-motion';
-import { Building, Plus, RefreshCw, CheckCircle, XCircle, Settings } from 'lucide-react';
+import { Building, Plus, RefreshCw, CheckCircle, XCircle } from 'lucide-react';
+import { DashboardLayout } from '../components/layout/DashboardLayout';
 
 interface CRMIntegration {
   _id: string;
@@ -93,7 +94,7 @@ const CRMIntegration = () => {
   };
 
   const getProviderColor = (provider: string) => {
-    const colors = {
+    const colors: Record<string, string> = {
       hubspot: 'bg-orange-100 text-orange-800',
       salesforce: 'bg-blue-100 text-blue-800',
       pipedrive: 'bg-green-100 text-green-800',
@@ -111,8 +112,8 @@ const CRMIntegration = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <DashboardLayout>
+      <div>
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -303,7 +304,7 @@ const CRMIntegration = () => {
           </div>
         )}
       </div>
-    </div>
+    </DashboardLayout>
   );
 };
 

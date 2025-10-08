@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 import { Bot, Lightbulb, CheckCircle, BarChart3, Wand2 } from 'lucide-react';
 import { AINotConfiguredModal } from '../components/AINotConfiguredModal';
 import { useAIProvider } from '../hooks/useAIProvider';
+import { DashboardLayout } from '../components/layout/DashboardLayout';
 
 const AICopilot = () => {
   const { handleAIError, showConfigModal, setShowConfigModal } = useAIProvider();
@@ -91,18 +92,9 @@ const AICopilot = () => {
     }
   };
 
-  const improveSentence = async (sentence: string) => {
-    try {
-      const { data } = await axios.post('/api/copilot/improve-sentence', { sentence });
-      toast.success(`Improved: ${data.improved}`);
-    } catch (error) {
-      toast.error('Failed to improve sentence');
-    }
-  };
-
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <DashboardLayout>
+      <div>
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -262,7 +254,7 @@ const AICopilot = () => {
         onClose={() => setShowConfigModal(false)}
         feature="AI Copilot"
       />
-    </div>
+    </DashboardLayout>
   );
 };
 

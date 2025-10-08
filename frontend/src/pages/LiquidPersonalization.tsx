@@ -3,6 +3,7 @@ import toast from 'react-hot-toast';
 import axios from 'axios';
 import { motion } from 'framer-motion';
 import { Code, Wand2 } from 'lucide-react';
+import { DashboardLayout } from '../components/layout/DashboardLayout';
 
 const LiquidPersonalization = () => {
   const [template, setTemplate] = useState('');

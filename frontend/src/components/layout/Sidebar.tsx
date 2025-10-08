@@ -188,7 +188,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isCollapsed, onToggle }) => {
         width: isCollapsed ? '80px' : '280px'
       }}
       transition={{ duration: 0.3, ease: 'easeInOut' }}
-      className="fixed left-0 top-0 h-screen bg-gradient-to-b from-indigo-600 via-purple-600 to-pink-600 shadow-2xl overflow-y-auto z-40 border-r border-white/10"
+      className="fixed left-0 top-0 h-screen bg-gradient-to-b from-indigo-600 via-purple-600 to-pink-600 shadow-2xl z-40 border-r border-white/10 flex flex-col"
     >
       {/* Header */}
       <div className={cn(
@@ -227,7 +227,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isCollapsed, onToggle }) => {
       </div>
 
       {/* Navigation */}
-      <nav className="p-4 space-y-2">
+      <nav className="flex-1 p-4 space-y-2 overflow-y-auto pb-20">
         {navCategories.map((category) => {
           const CategoryIcon = category.icon;
           const isOpen = openCategories.includes(category.name);

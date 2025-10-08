@@ -3,6 +3,7 @@ import toast from 'react-hot-toast';
 import axios from 'axios';
 import { motion } from 'framer-motion';
 import { Target, Zap, Play } from 'lucide-react';
+import { DashboardLayout } from '../components/layout/DashboardLayout';
 
 const GoalAutomationDesigner = () => {
   const [goal, setGoal] = useState('');
