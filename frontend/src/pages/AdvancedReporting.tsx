@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import toast from 'react-hot-toast';
-import axios from 'axios';
+import axios from '../lib/axios';
 import { motion } from 'framer-motion';
-import { BarChart3, Download, FileText, Calendar, TrendingUp } from 'lucide-react';
+import { BarChart3, FileText, Calendar, TrendingUp } from 'lucide-react';
 import { DashboardLayout } from '../components/layout/DashboardLayout';
 
 interface Report {
@@ -49,8 +49,10 @@ const AdvancedReporting = () => {
   const fetchReports = async () => {
     try {
       const { data } = await axios.get('/api/reports');
-      setReports(data);
+      const payload = (data?.data ?? data) as any;
+      setReports(Array.isArray(payload) ? payload : []);
     } catch (error) {
+      setReports([]);
       toast.error('Failed to fetch reports');
     }
   };
@@ -58,8 +60,24 @@ const AdvancedReporting = () => {
   const fetchDashboard = async () => {
     try {
       const { data } = await axios.get('/api/reports/dashboard');
-      setDashboard(data);
+      const payload = (data?.data ?? data) as any;
+      const normalized: Dashboard | null = payload && typeof payload === 'object' && payload.overview && payload.performance
+        ? payload
+        : payload && typeof payload === 'object'
+          ? {
+              overview: {
+                totalEmails: payload?.overview?.totalEmails ?? 0,
+                activeCampaigns: payload?.overview?.activeCampaigns ?? 0,
+              },
+              performance: {
+                openRate: payload?.performance?.openRate ?? 0,
+                clickRate: payload?.performance?.clickRate ?? 0,
+              },
+            }
+          : null;
+      setDashboard(normalized);
     } catch (error) {
+      setDashboard(null);
       toast.error('Failed to fetch dashboard');
     }
   };
@@ -67,7 +85,8 @@ const AdvancedReporting = () => {
   const createReport = async (reportData: ReportData) => {
     try {
       const { data } = await axios.post('/api/reports', reportData);
-      setReports([data, ...reports]);
+      const created = (data?.data ?? data) as any;
+      setReports([created, ...reports]);
       setShowCreateForm(false);
       toast.success('Report created!');
     } catch (error) {
@@ -78,7 +97,8 @@ const AdvancedReporting = () => {
   const generateReport = async (reportId: string) => {
     try {
       const { data } = await axios.post(`/api/reports/${reportId}/generate`);
-      setSelectedReport(data.report);
+      const report = (data?.report ?? data?.data?.report ?? null) as Report | null;
+      setSelectedReport(report);
       toast.success('Report generated!');
     } catch (error) {
       toast.error('Failed to generate report');
@@ -108,7 +128,7 @@ const AdvancedReporting = () => {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm text-gray-600 dark:text-gray-400">Total Emails</p>
-                  <p className="text-2xl font-bold text-blue-600">{dashboard.overview.totalEmails}</p>
+                  <p className="text-2xl font-bold text-blue-600">{dashboard?.overview?.totalEmails ?? 0}</p>
                 </div>
                 <FileText className="h-8 w-8 text-blue-600" />
               </div>
@@ -117,7 +137,7 @@ const AdvancedReporting = () => {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm text-gray-600 dark:text-gray-400">Open Rate</p>
-                  <p className="text-2xl font-bold text-green-600">{dashboard.performance.openRate}%</p>
+                  <p className="text-2xl font-bold text-green-600">{dashboard?.performance?.openRate ?? 0}%</p>
                 </div>
                 <TrendingUp className="h-8 w-8 text-green-600" />
               </div>
@@ -126,7 +146,7 @@ const AdvancedReporting = () => {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm text-gray-600 dark:text-gray-400">Click Rate</p>
-                  <p className="text-2xl font-bold text-purple-600">{dashboard.performance.clickRate}%</p>
+                  <p className="text-2xl font-bold text-purple-600">{dashboard?.performance?.clickRate ?? 0}%</p>
                 </div>
                 <BarChart3 className="h-8 w-8 text-purple-600" />
               </div>
@@ -135,7 +155,7 @@ const AdvancedReporting = () => {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm text-gray-600 dark:text-gray-400">Active Campaigns</p>
-                  <p className="text-2xl font-bold text-orange-600">{dashboard.overview.activeCampaigns}</p>
+                  <p className="text-2xl font-bold text-orange-600">{dashboard?.overview?.activeCampaigns ?? 0}</p>
                 </div>
                 <Calendar className="h-8 w-8 text-orange-600" />
               </div>
@@ -206,7 +226,7 @@ const AdvancedReporting = () => {
         )}
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {reports.map(report => (
+          {(Array.isArray(reports) ? reports : []).map(report => (
             <motion.div
               key={report._id}
               initial={{ opacity: 0, scale: 0.95 }}

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import toast from 'react-hot-toast';
-import axios from 'axios';
+import axios from '../lib/axios';
 import { motion } from 'framer-motion';
 import { Users, TrendingUp, Calendar, BarChart3 } from 'lucide-react';
 import { DashboardLayout } from '../components/layout/DashboardLayout';
@@ -32,8 +32,10 @@ const CohortAnalysis = () => {
   const fetchCohorts = async () => {
     try {
       const { data } = await axios.get('/api/cohort');
-      setCohorts(data);
+      const payload = (data?.data ?? data) as any;
+      setCohorts(Array.isArray(payload) ? payload : []);
     } catch (error) {
+      setCohorts([]);
       toast.error('Failed to fetch cohorts');
     }
   };
@@ -46,7 +48,8 @@ const CohortAnalysis = () => {
 
     try {
       const { data } = await axios.post('/api/cohort/create', newCohort);
-      setCohorts([data, ...cohorts]);
+      const created = (data?.data ?? data) as any;
+      setCohorts([created, ...cohorts]);
       setNewCohort({ name: '', signupDate: '', segmentType: 'monthly' });
       toast.success('Cohort created successfully!');
     } catch (error) {
@@ -57,9 +60,12 @@ const CohortAnalysis = () => {
   const analyzeCohort = async (cohortId: string) => {
     try {
       const { data } = await axios.get(`/api/cohort/${cohortId}/analysis`);
-      setSelectedCohort(data.cohort);
-      setAnalysis(data);
+      const payload = (data?.data ?? data) as any;
+      setSelectedCohort(payload?.cohort ?? null);
+      setAnalysis(payload || null);
     } catch (error) {
+      setSelectedCohort(null);
+      setAnalysis(null);
       toast.error('Failed to analyze cohort');
     }
   };
@@ -254,7 +260,7 @@ const CohortAnalysis = () => {
                       </tr>
                     </thead>
                     <tbody>
-                      {analysis.retentionRates.map((rate: any, index: number) => (
+                      {(analysis?.retentionRates ?? []).map((rate: any, index: number) => (
                         <tr key={index} className="border-t">
                           <td className="px-4 py-2">{rate.period}</td>
                           <td className="px-4 py-2">{rate.retained}</td>

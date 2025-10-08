@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import toast from 'react-hot-toast';
-import axios from 'axios';
+import axios from '../lib/axios';
 import { motion } from 'framer-motion';
 import { Zap, Plus, BarChart3, TestTube } from 'lucide-react';
 import { DashboardLayout } from '../components/layout/DashboardLayout';
@@ -32,8 +32,10 @@ const SmartTriggers = () => {
   const fetchTriggers = async () => {
     try {
       const { data } = await axios.get('/api/triggers');
-      setTriggers(data);
+      const payload = (data?.data ?? data) as any;
+      setTriggers(Array.isArray(payload) ? payload : []);
     } catch (error) {
+      setTriggers([]);
       toast.error('Failed to fetch triggers');
     }
   };
@@ -46,7 +48,8 @@ const SmartTriggers = () => {
 
     try {
       const { data } = await axios.post('/api/triggers/smart', formData);
-      setTriggers([data, ...triggers]);
+      const created = (data?.data ?? data) as any;
+      setTriggers([created, ...triggers]);
       toast.success('Trigger created successfully!');
       setFormData({ name: '', type: 'email_open', conditions: {}, actions: [] });
       setShowCreateForm(false);

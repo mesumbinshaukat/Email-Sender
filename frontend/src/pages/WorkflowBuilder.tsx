@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import toast from 'react-hot-toast';
-import axios from 'axios';
+import axios from '../lib/axios';
 import { motion } from 'framer-motion';
 import { GitBranch, Play, Settings } from 'lucide-react';
 import { DashboardLayout } from '../components/layout/DashboardLayout';
@@ -27,8 +27,10 @@ const WorkflowBuilder = () => {
   const fetchWorkflows = async () => {
     try {
       const { data } = await axios.get('/api/workflows');
-      setWorkflows(data);
+      const payload = (data?.data ?? data) as any;
+      setWorkflows(Array.isArray(payload) ? payload : []);
     } catch (error) {
+      setWorkflows([]);
       toast.error('Failed to fetch workflows');
     }
   };
@@ -47,7 +49,8 @@ const WorkflowBuilder = () => {
         nodes: [],
         edges: []
       });
-      setWorkflows([data, ...workflows]);
+      const created = (data?.data ?? data) as any;
+      setWorkflows([created, ...workflows]);
       toast.success('Workflow created successfully!');
       setName('');
       setDescription('');

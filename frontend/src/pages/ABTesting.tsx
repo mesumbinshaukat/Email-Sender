@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import toast from 'react-hot-toast';
-import axios from 'axios';
+import axios from '../lib/axios';
 import { motion } from 'framer-motion';
 import { FlaskConical, Plus, Play, Trophy, BarChart3 } from 'lucide-react';
 import { DashboardLayout } from '../components/layout/DashboardLayout';
@@ -37,8 +37,10 @@ const ABTesting = () => {
   const fetchTests = async () => {
     try {
       const { data } = await axios.get('/api/ab-test');
-      setTests(data);
+      const payload = (data?.data ?? data) as any;
+      setTests(Array.isArray(payload) ? payload : []);
     } catch (error) {
+      setTests([]);
       toast.error('Failed to fetch A/B tests');
     }
   };
@@ -51,7 +53,8 @@ const ABTesting = () => {
 
     try {
       const { data } = await axios.post('/api/ab-test/create', formData);
-      setTests([data, ...tests]);
+      const created = (data?.data ?? data) as any;
+      setTests([created, ...tests]);
       setFormData({
         name: '',
         testType: 'subject_line',
@@ -80,8 +83,10 @@ const ABTesting = () => {
   const analyzeTest = async (testId: string) => {
     try {
       const { data } = await axios.get(`/api/ab-test/${testId}/analysis`);
-      setSelectedTest(data.abTest);
-      setAnalysis(data.analysis);
+      const abTest = (data?.abTest ?? data?.data?.abTest ?? null) as any;
+      const analysisPayload = (data?.analysis ?? data?.data?.analysis ?? null) as any;
+      setSelectedTest(abTest);
+      setAnalysis(analysisPayload);
     } catch (error) {
       toast.error('Failed to analyze test');
     }
@@ -132,7 +137,7 @@ const ABTesting = () => {
           animate={{ opacity: 1, y: 0 }}
           className="mb-8"
         >
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white flex items-center gap-3">
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-black flex items-center gap-3">
             <FlaskConical className="h-8 w-8 text-blue-600" />
             A/B Testing
           </h1>
@@ -305,7 +310,7 @@ const ABTesting = () => {
                   Analysis: {selectedTest.name}
                 </h2>
 
-                {analysis.winner && (
+                {analysis?.winner && (
                   <>
                     <div className="mb-6 p-4 bg-green-50 dark:bg-green-900 rounded-lg">
                       <div className="flex items-center gap-2 mb-2">
@@ -329,7 +334,7 @@ const ABTesting = () => {
                     <div className="mb-6">
                   <h3 className="text-lg font-semibold mb-4">Performance Comparison</h3>
                   <ResponsiveContainer width="100%" height={300}>
-                    <BarChart data={selectedTest.variants.map((variant) => ({
+                    <BarChart data={(selectedTest?.variants ?? []).map((variant: any) => ({
                       name: variant.name,
                       opens: variant.opens || 0,
                       clicks: variant.clicks || 0
@@ -346,7 +351,7 @@ const ABTesting = () => {
 
                 <div>
                   <div className="space-y-3">
-                    {selectedTest.variants.map((variant, index) => (
+                    {(selectedTest?.variants ?? []).map((variant: any, index: number) => (
                       <div key={index} className="flex justify-between items-center p-3 border rounded">
                         <div>
                           <span className="font-medium">{variant.name}</span>
@@ -356,10 +361,10 @@ const ABTesting = () => {
                         </div>
                         <div className="text-right">
                           <div className="font-semibold">
-                            {variant.sampleSize > 0 ? Math.round((variant.opens / variant.sampleSize) * 100) : 0}% open rate
+                            {variant.sampleSize > 0 ? Math.round(((variant.opens || 0) / variant.sampleSize) * 100) : 0}% open rate
                           </div>
                           <div className="text-sm text-gray-600 dark:text-gray-400">
-                            {variant.sampleSize > 0 ? Math.round((variant.clicks / variant.sampleSize) * 100) : 0}% click rate
+                            {variant.sampleSize > 0 ? Math.round(((variant.clicks || 0) / variant.sampleSize) * 100) : 0}% click rate
                           </div>
                         </div>
                       </div>

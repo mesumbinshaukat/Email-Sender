@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import toast from 'react-hot-toast';
 import axios from 'axios';
 import { motion } from 'framer-motion';
-import { Mic, Play, Square, FileText, Download } from 'lucide-react';
+import { Mic, Square, FileText } from 'lucide-react';
 import { DashboardLayout } from '../components/layout/DashboardLayout';
 
 interface VoiceEmail {

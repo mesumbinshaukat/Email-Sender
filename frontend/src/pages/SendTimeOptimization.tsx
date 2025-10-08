@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import toast from 'react-hot-toast';
-import axios from 'axios';
+import axios from '../lib/axios';
 import { motion } from 'framer-motion';
 import { Clock, TrendingUp, Calendar, Target, BarChart3, Zap } from 'lucide-react';
 import { DashboardLayout } from '../components/layout/DashboardLayout';
@@ -34,8 +34,10 @@ const SendTimeOptimization = () => {
   const fetchOptimizations = async () => {
     try {
       const { data } = await axios.get('/api/send-time-optimization');
-      setOptimizations(data);
+      const payload = (data?.data ?? data) as any;
+      setOptimizations(Array.isArray(payload) ? payload : []);
     } catch (error) {
+      setOptimizations([]);
       toast.error('Failed to fetch optimizations');
     }
   };
@@ -48,7 +50,8 @@ const SendTimeOptimization = () => {
 
     try {
       const { data } = await axios.post('/api/send-time-optimization/start', formData);
-      setOptimizations([data, ...optimizations]);
+      const created = (data?.data ?? data) as any;
+      setOptimizations([created, ...optimizations]);
       setFormData({ campaignId: '', segmentId: '' });
       setShowCreateForm(false);
       toast.success('Optimization started! This may take a few minutes.');
@@ -60,8 +63,10 @@ const SendTimeOptimization = () => {
   const getOptimizationDetails = async (optimizationId: string) => {
     try {
       const { data } = await axios.get(`/api/send-time-optimization/${optimizationId}`);
-      setSelectedOptimization(data);
+      const payload = (data?.data ?? data) as any;
+      setSelectedOptimization(payload || null);
     } catch (error) {
+      setSelectedOptimization(null);
       toast.error('Failed to fetch optimization details');
     }
   };
@@ -69,8 +74,10 @@ const SendTimeOptimization = () => {
   const getInsights = async (optimizationId: string) => {
     try {
       const { data } = await axios.get(`/api/send-time-optimization/${optimizationId}/insights`);
-      setInsights(data);
+      const payload = (data?.data ?? data) as any;
+      setInsights(payload || null);
     } catch (error) {
+      setInsights(null);
       toast.error('Failed to fetch insights');
     }
   };
@@ -272,7 +279,7 @@ const SendTimeOptimization = () => {
                         Recommended Send Times
                       </h3>
                       <div className="space-y-3">
-                        {selectedOptimization.optimizedSchedule.slice(0, 5).map((schedule: any, index: number) => (
+                        {(selectedOptimization?.optimizedSchedule ?? []).slice(0, 5).map((schedule: any, index: number) => (
                           <div key={index} className="flex justify-between items-center p-3 border rounded">
                             <div>
                               <span className="font-medium">
@@ -349,7 +356,7 @@ const SendTimeOptimization = () => {
 
                 <div className="space-y-6">
                   {/* Best Days Chart */}
-                  {insights.bestPerformingDays && (
+                  {Array.isArray(insights?.bestPerformingDays) && (
                     <div>
                       <h3 className="text-lg font-semibold mb-4">Best Performing Days</h3>
                       <ResponsiveContainer width="100%" height={200}>
@@ -365,11 +372,11 @@ const SendTimeOptimization = () => {
                   )}
 
                   {/* Best Hours Chart */}
-                  {insights.bestPerformingHours && (
+                  {Array.isArray(insights?.bestPerformingHours) && (
                     <div>
                       <h3 className="text-lg font-semibold mb-4">Best Performing Hours</h3>
                       <ResponsiveContainer width="100%" height={200}>
-                        <LineChart data={insights.bestPerformingHours.slice(0, 12)}>
+                        <LineChart data={(insights.bestPerformingHours ?? []).slice(0, 12)}>
                           <CartesianGrid strokeDasharray="3 3" />
                           <XAxis dataKey="hour" />
                           <YAxis />
@@ -384,7 +391,7 @@ const SendTimeOptimization = () => {
                   <div>
                     <h3 className="text-lg font-semibold mb-4">Recommendations</h3>
                     <div className="space-y-3">
-                      {insights.recommendations?.map((rec: any, index: number) => (
+                      {(insights?.recommendations ?? []).map((rec: any, index: number) => (
                         <div key={index} className="p-3 bg-blue-50 dark:bg-blue-900 rounded">
                           <p className="font-medium text-blue-800 dark:text-blue-200">{rec.message}</p>
                           <p className="text-sm text-blue-600 dark:text-blue-400">{rec.action}</p>

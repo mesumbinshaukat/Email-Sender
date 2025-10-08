@@ -170,6 +170,7 @@ app.use('/api/retention', retentionRoutes);
 app.use('/api/accessibility', accessibilityRoutes);
 app.use('/api/revenue', revenueRoutes);
 app.use('/api/competitors', competitorRoutes);
+app.use('/api/leads', leadRoutes);
 app.use('/api/hygiene', hygieneRoutes);
 app.use('/api/compliance', complianceRoutes);
 app.use('/api/design', designRoutes);
@@ -209,10 +210,18 @@ app.use('/api/staggered-send', staggeredSendRoutes);
 app.use('/api/liquid', liquidRoutes);
 app.use('/api/cross-channel', crossChannelRoutes);
 app.use('/api/zero-party', zeroPartyRoutes);
+app.use('/api/analytics', heatmapRoutes);
 
 // Favicon - avoid 404 noise in logs
 app.get('/favicon.ico', (req, res) => {
   res.status(204).end();
+});
+
+// Minimal contacts endpoint to avoid 404s in frontend calls
+// TODO: Replace with full contacts service when ready
+app.get('/api/contacts', (req, res) => {
+  const limit = parseInt(req.query.limit || '100', 10);
+  res.json({ success: true, data: [] , limit });
 });
 
 // Error handling middleware

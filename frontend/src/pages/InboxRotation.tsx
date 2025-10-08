@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import toast from 'react-hot-toast';
-import axios from 'axios';
+import axios from '../lib/axios';
 import { motion } from 'framer-motion';
 import { Mail, RotateCcw, TrendingUp, Shield, Plus } from 'lucide-react';
 import { DashboardLayout } from '../components/layout/DashboardLayout';
@@ -28,8 +28,10 @@ const InboxRotation = () => {
   const fetchInboxes = async () => {
     try {
       const { data } = await axios.get('/api/inbox-rotation');
-      setInboxes(data);
+      const payload = (data?.data ?? data) as any;
+      setInboxes(Array.isArray(payload) ? payload : []);
     } catch (error) {
+      setInboxes([]);
       toast.error('Failed to fetch inboxes');
     }
   };
@@ -37,7 +39,8 @@ const InboxRotation = () => {
   const addInbox = async (formData: Record<string, any>) => {
     try {
       const response = await axios.post('/api/inbox-rotation', formData);
-      setInboxes([...inboxes, response.data]);
+      const created = (response?.data?.data ?? response?.data) as any;
+      setInboxes([...inboxes, created]);
       setShowAddForm(false);
       toast.success('Inbox added successfully');
     } catch (error) {
@@ -58,7 +61,8 @@ const InboxRotation = () => {
   const getRecommendation = async () => {
     try {
       const response = await axios.get('/api/inbox-rotation/rotation/recommend');
-      setRotationRecommendation(response.data.recommendation);
+      const rec = (response?.data?.data?.recommendation ?? response?.data?.recommendation ?? '') as string;
+      setRotationRecommendation(rec);
     } catch (error) {
       toast.error('Failed to get recommendation');
     }

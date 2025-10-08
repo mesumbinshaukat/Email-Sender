@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import toast from 'react-hot-toast';
-import axios from 'axios';
+import axios from '../lib/axios';
 import { motion } from 'framer-motion';
-import { Brain, Zap, TrendingUp, Target, Play, Pause } from 'lucide-react';
+import { Brain, Zap, TrendingUp, Target} from 'lucide-react';
 import { DashboardLayout } from '../components/layout/DashboardLayout';
 
 interface AIModel {
@@ -25,8 +25,10 @@ const AITraining = () => {
   const fetchModels = async () => {
     try {
       const { data } = await axios.get('/api/ai-training');
-      setModels(data);
+      const payload = (data?.data ?? data) as any;
+      setModels(Array.isArray(payload) ? payload : []);
     } catch (error) {
+      setModels([]);
       toast.error('Failed to fetch AI models');
     }
   };

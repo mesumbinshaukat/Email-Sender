@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import toast from 'react-hot-toast';
-import axios from 'axios';
+import axios from '../lib/axios';
 import { motion } from 'framer-motion';
 import { Palette, Wand2, Eye, Save, FileText } from 'lucide-react';
 import { DashboardLayout } from '../components/layout/DashboardLayout';
@@ -36,8 +36,10 @@ const EmailDesigner = () => {
   const fetchTemplates = async () => {
     try {
       const { data } = await axios.get('/api/design/templates');
-      setTemplates(data);
+      const payload = (data?.data ?? data) as any;
+      setTemplates(Array.isArray(payload) ? payload : []);
     } catch (error) {
+      setTemplates([]);
       toast.error('Failed to fetch templates');
     }
   };
@@ -45,8 +47,10 @@ const EmailDesigner = () => {
   const fetchBrandKits = async () => {
     try {
       const { data } = await axios.get('/api/design/brand-kits');
-      setBrandKits(data);
+      const payload = (data?.data ?? data) as any;
+      setBrandKits(Array.isArray(payload) ? payload : []);
     } catch (error) {
+      setBrandKits([]);
       toast.error('Failed to fetch brand kits');
     }
   };
@@ -63,7 +67,8 @@ const EmailDesigner = () => {
         description,
         brandKitId: brandKitId || undefined
       });
-      setTemplates([data, ...templates]);
+      const created = (data?.data ?? data) as any;
+      setTemplates([created, ...templates]);
       toast.success('Template generated successfully!');
       setDescription('');
     } catch (error) {
@@ -78,7 +83,8 @@ const EmailDesigner = () => {
       const { data } = await axios.get(`/api/design/preview/${templateId}`);
       const template = templates.find(t => t._id === templateId);
       if (template) {
-        setPreviewTemplate({ ...template, html: data.html });
+        const html = (data?.data?.html ?? data?.html ?? template.html) as string;
+        setPreviewTemplate({ ...template, html });
       }
     } catch (error) {
       toast.error('Failed to load preview');
@@ -138,7 +144,7 @@ const EmailDesigner = () => {
                     className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500"
                   >
                     <option value="">Use default</option>
-                    {brandKits.map(kit => (
+                    {(Array.isArray(brandKits) ? brandKits : []).map(kit => (
                       <option key={kit._id} value={kit._id}>{kit.name}</option>
                     ))}
                   </select>
@@ -178,7 +184,7 @@ const EmailDesigner = () => {
                 </p>
               ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {templates.map(template => (
+                  {(Array.isArray(templates) ? templates : []).map(template => (
                     <div
                       key={template._id}
                       className="border rounded-lg p-4 hover:shadow-md transition-shadow"

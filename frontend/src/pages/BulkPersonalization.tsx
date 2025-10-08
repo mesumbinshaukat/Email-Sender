@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import toast from 'react-hot-toast';
-import axios from 'axios';
+import axios from '../lib/axios';
 import { motion } from 'framer-motion';
 import { Upload, Send, Eye, FileText, Users, CheckCircle } from 'lucide-react';
 import { DashboardLayout } from '../components/layout/DashboardLayout';
@@ -39,8 +39,10 @@ const BulkPersonalization = () => {
   const fetchBulkJobs = async () => {
     try {
       const { data } = await axios.get('/api/bulk/jobs');
-      setBulkJobs(data);
+      const payload = (data?.data ?? data) as any;
+      setBulkJobs(Array.isArray(payload) ? payload : []);
     } catch (error) {
+      setBulkJobs([]);
       toast.error('Failed to fetch bulk jobs');
     }
   };
@@ -48,8 +50,10 @@ const BulkPersonalization = () => {
   const fetchTemplates = async () => {
     try {
       const { data } = await axios.get('/api/design/templates');
-      setTemplates(data);
+      const payload = (data?.data ?? data) as any;
+      setTemplates(Array.isArray(payload) ? payload : []);
     } catch (error) {
+      setTemplates([]);
       toast.error('Failed to fetch templates');
     }
   };
@@ -79,7 +83,8 @@ const BulkPersonalization = () => {
         csvContent,
         name: jobName
       });
-      setBulkJobs([data, ...bulkJobs]);
+      const created = (data?.data ?? data) as any;
+      setBulkJobs([created, ...bulkJobs]);
       toast.success('CSV uploaded successfully!');
       setCsvFile(null);
       setCsvContent('');
@@ -215,7 +220,7 @@ const BulkPersonalization = () => {
                     className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-500"
                   >
                     <option value="">Select template</option>
-                    {templates.map(template => (
+                    {(Array.isArray(templates) ? templates : []).map(template => (
                       <option key={template._id} value={template._id}>
                         {template.name}
                       </option>

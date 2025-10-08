@@ -56,9 +56,8 @@ export const Campaigns: React.FC = () => {
   const fetchCampaigns = async () => {
     try {
       const response = await axios.get('/agentic/campaigns');
-      if (response.data.success) {
-        setCampaigns(response.data.data);
-      }
+      const payload = response?.data?.data ?? response?.data ?? [];
+      setCampaigns(Array.isArray(payload) ? payload : []);
     } catch (error: any) {
       toast.error('Failed to fetch campaigns');
     } finally {
@@ -76,8 +75,8 @@ export const Campaigns: React.FC = () => {
 
     try {
       const response = await axios.post('/agentic/campaigns', newCampaign);
-      
-      if (response.data.success) {
+      const ok = response?.data?.success ?? true;
+      if (ok) {
         toast.success('Campaign created successfully!');
         setShowCreateModal(false);
         setNewCampaign({
@@ -102,8 +101,8 @@ export const Campaigns: React.FC = () => {
     
     try {
       const response = await axios.post(`/agentic/campaigns/${campaignId}/optimize`);
-      
-      if (response.data.success) {
+      const ok = response?.data?.success ?? true;
+      if (ok) {
         toast.success('Campaign optimized successfully!');
         fetchCampaigns();
       }
@@ -132,7 +131,8 @@ export const Campaigns: React.FC = () => {
         aiOptimization: selectedCampaign.aiOptimization,
       });
       
-      if (response.data.success) {
+      const ok = response?.data?.success ?? true;
+      if (ok) {
         toast.success('Campaign updated successfully!');
         setShowSettingsModal(false);
         setSelectedCampaign(null);
@@ -198,7 +198,7 @@ export const Campaigns: React.FC = () => {
                       <div className="flex-1">
                         <CardTitle className="flex items-center space-x-2">
                           <span>{campaign.name}</span>
-                          {campaign.aiOptimization.enabled && (
+                          {campaign?.aiOptimization?.enabled && (
                             <span className="px-2 py-1 bg-purple-100 text-purple-800 text-xs font-medium rounded-full flex items-center">
                               <Zap className="h-3 w-3 mr-1" />
                               AI Enabled
@@ -220,39 +220,39 @@ export const Campaigns: React.FC = () => {
                   <CardContent>
                     <div className="grid grid-cols-3 gap-4 mb-6">
                       <div className="text-center">
-                        <div className="text-2xl font-bold text-gray-900">{campaign.performance.totalSent}</div>
+                        <div className="text-2xl font-bold text-gray-900">{campaign?.performance?.totalSent ?? 0}</div>
                         <div className="text-sm text-gray-600">Sent</div>
                       </div>
                       <div className="text-center">
-                        <div className="text-2xl font-bold text-primary-600">{campaign.performance.openRate}%</div>
+                        <div className="text-2xl font-bold text-primary-600">{campaign?.performance?.openRate ?? 0}%</div>
                         <div className="text-sm text-gray-600">Open Rate</div>
                       </div>
                       <div className="text-center">
-                        <div className="text-2xl font-bold text-green-600">{campaign.performance.clickRate}%</div>
+                        <div className="text-2xl font-bold text-green-600">{campaign?.performance?.clickRate ?? 0}%</div>
                         <div className="text-sm text-gray-600">Click Rate</div>
                       </div>
                     </div>
 
-                    {campaign.aiOptimization.enabled && (
+                    {campaign?.aiOptimization?.enabled && (
                       <div className="bg-purple-50 rounded-lg p-4 mb-4">
                         <h4 className="text-sm font-semibold text-purple-900 mb-2 flex items-center">
                           <Zap className="h-4 w-4 mr-1" />
                           AI Optimizations Active
                         </h4>
                         <div className="space-y-1 text-xs text-purple-800">
-                          {campaign.aiOptimization.autoAdjustSendTime && (
+                          {campaign?.aiOptimization?.autoAdjustSendTime && (
                             <div className="flex items-center">
                               <Clock className="h-3 w-3 mr-2" />
                               Auto-adjust send times
                             </div>
                           )}
-                          {campaign.aiOptimization.autoOptimizeSubject && (
+                          {campaign?.aiOptimization?.autoOptimizeSubject && (
                             <div className="flex items-center">
                               <TrendingUp className="h-3 w-3 mr-2" />
                               Subject line optimization
                             </div>
                           )}
-                          {campaign.aiOptimization.autoFollowUp && (
+                          {campaign?.aiOptimization?.autoFollowUp && (
                             <div className="flex items-center">
                               <Users className="h-3 w-3 mr-2" />
                               Intelligent follow-ups

@@ -93,7 +93,8 @@ export const HeatmapAnalytics: React.FC = () => {
   };
 
   const renderClickHeatmap = () => {
-    if (!heatmapData?.clicks.length) {
+    const clicks = heatmapData?.clicks ?? [];
+    if (!clicks.length) {
       return (
         <div className="flex items-center justify-center h-64 text-gray-500">
           No click data available for this email
@@ -103,7 +104,7 @@ export const HeatmapAnalytics: React.FC = () => {
 
     return (
       <div className="relative bg-gray-100 rounded-lg p-4" style={{ height: '400px' }}>
-        {heatmapData.clicks.map((click, index) => (
+        {clicks.map((click, index) => (
           <div
             key={index}
             className="absolute w-3 h-3 bg-red-500 rounded-full opacity-70 transform -translate-x-1/2 -translate-y-1/2"
@@ -115,14 +116,15 @@ export const HeatmapAnalytics: React.FC = () => {
           />
         ))}
         <div className="absolute bottom-2 left-2 text-sm text-gray-600 dark:text-gray-400">
-          {heatmapData.clicks.length} total clicks
+          {clicks.length} total clicks
         </div>
       </div>
     );
   };
 
   const renderScrollDepth = () => {
-    if (!heatmapData?.scrolls.length) {
+    const scrolls = heatmapData?.scrolls ?? [];
+    if (!scrolls.length) {
       return (
         <div className="flex items-center justify-center h-64 text-gray-500">
           No scroll data available
@@ -132,7 +134,7 @@ export const HeatmapAnalytics: React.FC = () => {
 
     // Group scrolls by depth ranges
     const scrollBuckets: Record<number, number> = {};
-    heatmapData.scrolls.forEach(scroll => {
+    scrolls.forEach(scroll => {
       const bucket = Math.floor(scroll.depth / 10) * 10;
       scrollBuckets[bucket] = (scrollBuckets[bucket] || 0) + 1;
     });
@@ -160,7 +162,8 @@ export const HeatmapAnalytics: React.FC = () => {
   };
 
   const renderTimeSpent = () => {
-    if (!heatmapData?.timeTracking.length) {
+    const timeTracking = heatmapData?.timeTracking ?? [];
+    if (!timeTracking.length) {
       return (
         <div className="flex items-center justify-center h-64 text-gray-500">
           No time tracking data available
@@ -170,7 +173,7 @@ export const HeatmapAnalytics: React.FC = () => {
 
     // Group by time ranges
     const timeBuckets: Record<number, number> = {};
-    heatmapData.timeTracking.forEach(session => {
+    timeTracking.forEach(session => {
       const bucket = Math.floor(session.totalTime / 30) * 30;
       timeBuckets[bucket] = (timeBuckets[bucket] || 0) + 1;
     });
@@ -198,7 +201,8 @@ export const HeatmapAnalytics: React.FC = () => {
   };
 
   const renderGeographic = () => {
-    if (!heatmapData?.geographic.length) {
+    const geographic = heatmapData?.geographic ?? [];
+    if (!geographic.length) {
       return (
         <div className="flex items-center justify-center h-64 text-gray-500">
           No geographic data available
@@ -208,7 +212,7 @@ export const HeatmapAnalytics: React.FC = () => {
 
     // Group by country
     const countryStats: Record<string, number> = {};
-    heatmapData.geographic.forEach(geo => {
+    geographic.forEach(geo => {
       countryStats[geo.country] = (countryStats[geo.country] || 0) + 1;
     });
 

@@ -297,19 +297,6 @@ export const Sidebar: React.FC<SidebarProps> = ({ isCollapsed, onToggle }) => {
         })}
       </nav>
 
-      {/* Footer */}
-      {!isCollapsed && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          className="absolute bottom-0 left-0 right-0 p-4 border-t border-white/10 bg-black/20 backdrop-blur-sm"
-        >
-          <div className="text-xs text-white/60 text-center">
-            <p>© 2025 Email Tracker</p>
-            <p className="mt-1">v1.0.0</p>
-          </div>
-        </motion.div>
-      )}
     </motion.aside>
   );
 };
