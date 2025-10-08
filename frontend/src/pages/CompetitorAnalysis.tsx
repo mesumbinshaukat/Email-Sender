@@ -249,7 +249,7 @@ export const CompetitorAnalysis: React.FC = () => {
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold text-blue-600">
-                {benchmarks?.metrics.averageOpenRate.toFixed(1) || 0}%
+                {(benchmarks?.metrics?.averageOpenRate != null ? benchmarks.metrics.averageOpenRate.toFixed(1) : '0')}%
               </div>
             </CardContent>
           </Card>
@@ -407,23 +407,23 @@ export const CompetitorAnalysis: React.FC = () => {
               <CardContent className="space-y-4">
                 <div className="flex justify-between items-center">
                   <span className="text-gray-600 dark:text-gray-400">Average Open Rate</span>
-                  <span className="font-medium text-green-600">{benchmarks.metrics.averageOpenRate.toFixed(1)}%</span>
+                  <span className="font-medium text-green-600">{benchmarks?.metrics?.averageOpenRate != null ? benchmarks.metrics.averageOpenRate.toFixed(1) : '0'}%</span>
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="text-gray-600 dark:text-gray-400">Average Click Rate</span>
-                  <span className="font-medium text-blue-600">{benchmarks.metrics.averageClickRate.toFixed(1)}%</span>
+                  <span className="font-medium text-blue-600">{benchmarks?.metrics?.averageClickRate != null ? benchmarks.metrics.averageClickRate.toFixed(1) : '0'}%</span>
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="text-gray-600 dark:text-gray-400">Average Unsubscribe Rate</span>
-                  <span className="font-medium text-red-600">{benchmarks.metrics.averageUnsubscribeRate.toFixed(1)}%</span>
+                  <span className="font-medium text-red-600">{benchmarks?.metrics?.averageUnsubscribeRate != null ? benchmarks.metrics.averageUnsubscribeRate.toFixed(1) : '0'}%</span>
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="text-gray-600 dark:text-gray-400">Image Usage Rate</span>
-                  <span className="font-medium text-purple-600">{benchmarks.metrics.imageUsageRate}%</span>
+                  <span className="font-medium text-purple-600">{benchmarks?.metrics?.imageUsageRate ?? 0}%</span>
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="text-gray-600 dark:text-gray-400">Personalization Rate</span>
-                  <span className="font-medium text-orange-600">{benchmarks.metrics.personalizationRate}%</span>
+                  <span className="font-medium text-orange-600">{benchmarks?.metrics?.personalizationRate ?? 0}%</span>
                 </div>
               </CardContent>
             </Card>
@@ -436,7 +436,7 @@ export const CompetitorAnalysis: React.FC = () => {
                 <div>
                   <div className="text-sm font-medium mb-2">Optimal Send Days</div>
                   <div className="flex flex-wrap gap-1">
-                    {benchmarks.metrics.optimalSendDays.map((day, index) => (
+                    {(benchmarks?.metrics?.optimalSendDays ?? []).map((day, index) => (
                       <Badge key={index} variant="outline" className="capitalize">
                         {day}
                       </Badge>
@@ -447,7 +447,7 @@ export const CompetitorAnalysis: React.FC = () => {
                 <div>
                   <div className="text-sm font-medium mb-2">Optimal Send Times</div>
                   <div className="flex flex-wrap gap-1">
-                    {benchmarks.metrics.optimalSendTimes.map((time, index) => (
+                    {(benchmarks?.metrics?.optimalSendTimes ?? []).map((time, index) => (
                       <Badge key={index} variant="outline">
                         {time}
                       </Badge>
@@ -458,7 +458,7 @@ export const CompetitorAnalysis: React.FC = () => {
                 <div>
                   <div className="text-sm font-medium mb-2">Top Subject Keywords</div>
                   <div className="flex flex-wrap gap-1">
-                    {benchmarks.metrics.topSubjectKeywords.slice(0, 5).map((keyword, index) => (
+                    {(benchmarks?.metrics?.topSubjectKeywords ?? []).slice(0, 5).map((keyword, index) => (
                       <Badge key={index} className="bg-blue-100 text-blue-800">
                         {keyword}
                       </Badge>

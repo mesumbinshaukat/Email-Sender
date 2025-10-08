@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { DollarSign, TrendingUp, Target, PieChart, BarChart3, Calendar, Users, ShoppingCart } from 'lucide-react';
+import { DollarSign, TrendingUp, Target, PieChart, BarChart3, Users, ShoppingCart } from 'lucide-react';
 import { DashboardLayout } from '../components/layout/DashboardLayout';
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/Card';
 import { Button } from '../components/ui/Button';
@@ -306,7 +306,7 @@ export const RevenueAttribution: React.FC = () => {
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold text-green-600">
-                  {formatCurrency(attributionData.metrics.totalRevenue)}
+                  {formatCurrency(attributionData?.metrics?.totalRevenue ?? 0)}
                 </div>
               </CardContent>
             </Card>
@@ -318,7 +318,7 @@ export const RevenueAttribution: React.FC = () => {
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold text-blue-600">
-                  {attributionData.metrics.totalConversions}
+                  {attributionData?.metrics?.totalConversions ?? 0}
                 </div>
               </CardContent>
             </Card>
@@ -330,7 +330,7 @@ export const RevenueAttribution: React.FC = () => {
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold text-purple-600">
-                  {formatCurrency(attributionData.metrics.averageOrderValue)}
+                  {formatCurrency(attributionData?.metrics?.averageOrderValue ?? 0)}
                 </div>
               </CardContent>
             </Card>
@@ -345,19 +345,19 @@ export const RevenueAttribution: React.FC = () => {
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div className="text-center p-4 border rounded-lg">
                   <div className="text-xl font-bold text-blue-600">
-                    {formatCurrency(attributionData.metrics.attributionBreakdown.firstTouch)}
+                    {formatCurrency(attributionData?.metrics?.attributionBreakdown?.firstTouch ?? 0)}
                   </div>
                   <div className="text-sm text-gray-600 dark:text-gray-400">First Touch</div>
                 </div>
                 <div className="text-center p-4 border rounded-lg">
                   <div className="text-xl font-bold text-green-600">
-                    {formatCurrency(attributionData.metrics.attributionBreakdown.lastTouch)}
+                    {formatCurrency(attributionData?.metrics?.attributionBreakdown?.lastTouch ?? 0)}
                   </div>
                   <div className="text-sm text-gray-600 dark:text-gray-400">Last Touch</div>
                 </div>
                 <div className="text-center p-4 border rounded-lg">
                   <div className="text-xl font-bold text-purple-600">
-                    {formatCurrency(attributionData.metrics.attributionBreakdown.multiTouch)}
+                    {formatCurrency(attributionData?.metrics?.attributionBreakdown?.multiTouch ?? 0)}
                   </div>
                   <div className="text-sm text-gray-600 dark:text-gray-400">Multi Touch</div>
                 </div>
@@ -374,19 +374,19 @@ export const RevenueAttribution: React.FC = () => {
               <div className="space-y-4">
                 <div className="flex items-center justify-between p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
                   <span className="font-medium">Emails Sent</span>
-                  <span className="text-lg font-bold">{attributionData.metrics.conversionFunnel.emailsSent}</span>
+                  <span className="text-lg font-bold">{attributionData?.metrics?.conversionFunnel?.emailsSent ?? 0}</span>
                 </div>
                 <div className="flex items-center justify-between p-3 bg-green-50 dark:bg-green-900/20 rounded-lg">
                   <span className="font-medium">Emails Opened</span>
-                  <span className="text-lg font-bold">{attributionData.metrics.conversionFunnel.emailsOpened}</span>
+                  <span className="text-lg font-bold">{attributionData?.metrics?.conversionFunnel?.emailsOpened ?? 0}</span>
                 </div>
                 <div className="flex items-center justify-between p-3 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg">
                   <span className="font-medium">Emails Clicked</span>
-                  <span className="text-lg font-bold">{attributionData.metrics.conversionFunnel.emailsClicked}</span>
+                  <span className="text-lg font-bold">{attributionData?.metrics?.conversionFunnel?.emailsClicked ?? 0}</span>
                 </div>
                 <div className="flex items-center justify-between p-3 bg-purple-50 dark:bg-purple-900/20 rounded-lg">
                   <span className="font-medium">Conversions</span>
-                  <span className="text-lg font-bold">{attributionData.metrics.conversionFunnel.conversions}</span>
+                  <span className="text-lg font-bold">{attributionData?.metrics?.conversionFunnel?.conversions ?? 0}</span>
                 </div>
               </div>
             </CardContent>
@@ -446,7 +446,7 @@ export const RevenueAttribution: React.FC = () => {
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
-                {forecastData.forecast.map((month, index) => (
+                {forecastData.forecast.map((month) => (
                   <div key={month.month} className="flex items-center space-x-4">
                     <div className="w-24 text-sm font-medium">{month.month}</div>
                     <div className="flex-1">

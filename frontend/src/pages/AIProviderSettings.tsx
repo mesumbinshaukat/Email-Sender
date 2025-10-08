@@ -285,7 +285,13 @@ export default function AIProviderSettings() {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {providers.map((provider) => {
-              const info = providerInfo[provider.provider as keyof typeof providerInfo];
+              const info = providerInfo[provider.provider as keyof typeof providerInfo] || {
+                name: provider.provider,
+                description: 'Custom provider',
+                icon: '🤖',
+                color: 'from-gray-400 to-gray-500',
+                recommended: false,
+              };
               return (
                 <motion.div
                   key={provider._id}

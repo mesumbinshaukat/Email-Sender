@@ -181,7 +181,7 @@ const WhiteLabelSolution = () => {
           animate={{ opacity: 1, y: 0 }}
           className="mb-8"
         >
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white flex items-center gap-3">
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-black flex items-center gap-3">
             <Palette className="h-8 w-8 text-blue-600" />
             White Label Solution
           </h1>

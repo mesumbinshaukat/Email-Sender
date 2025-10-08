@@ -210,6 +210,11 @@ app.use('/api/liquid', liquidRoutes);
 app.use('/api/cross-channel', crossChannelRoutes);
 app.use('/api/zero-party', zeroPartyRoutes);
 
+// Favicon - avoid 404 noise in logs
+app.get('/favicon.ico', (req, res) => {
+  res.status(204).end();
+});
+
 // Error handling middleware
 app.use(notFound);
 app.use(errorHandler);
